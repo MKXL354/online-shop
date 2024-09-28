@@ -1,0 +1,25 @@
+@startuml online-shop
+    abstract class User{
+        uuid: String
+        username: String
+        password: String
+    }
+    class WebUser extends User{
+        carts: Set<Cart>
+    }
+    class Admin extends User{
+
+    }
+    class Cart{
+        uuid: String
+        owner: WebUser
+        products: Set<Product>
+    }
+    class Product{
+        uuid: String
+        name: String
+        description: String
+        price: int
+        count: int
+    }
+@enduml
