@@ -20,7 +20,7 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setObject(1, user.getId());
             statement.setString(2, user.getUsername());
-            statement.setString(1, user.getPassword());
+            statement.setString(3, user.getPassword());
             statement.executeUpdate();
         }
         catch(SQLException e){
