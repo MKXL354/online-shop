@@ -6,7 +6,7 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import org.h2.jdbcx.JdbcConnectionPool;
 
-public class TomcatContextListener implements ServletContextListener {
+public class BootstrapListener implements ServletContextListener {
 //    TODO: use DataSource abstraction? DAO is currently tied to h2 pool. Maybe a simple wrapper suffices
     private JdbcConnectionPool connectionPool;
 
@@ -15,6 +15,7 @@ public class TomcatContextListener implements ServletContextListener {
         setConnectionPool();
         UserDAO userDAO = new UserDAO(connectionPool);
         UserManagementService userManagementService = new UserManagementService(userDAO);
+        sce.getServletContext().setAttribute("userManagementService", userManagementService);
     }
 
     @Override

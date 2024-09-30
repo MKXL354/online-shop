@@ -20,5 +20,6 @@ public class UserManagementService {
         User user = new WebUser(id, username, password, null);
         userDAO.insertUser(user);
         System.out.println("success");
+//        TODO: give User object back
     }
 }
