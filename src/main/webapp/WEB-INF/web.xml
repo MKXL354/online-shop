@@ -4,4 +4,12 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>com.local.servlet.usermanagement.AddUserServlet</servlet-name>
+    <servlet-class>com.local.servlet.usermanagement.AddUserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>com.local.servlet.usermanagement.AddUserServlet</servlet-name>
+    <url-pattern>/add-user</url-pattern>
+  </servlet-mapping>
 </web-app>

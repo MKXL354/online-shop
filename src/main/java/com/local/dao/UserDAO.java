@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class UserDAO {
-    private final JdbcConnectionPool connectionPool;
+    private JdbcConnectionPool connectionPool;
 
     public UserDAO(JdbcConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
@@ -24,7 +24,7 @@ public class UserDAO {
             statement.executeUpdate();
         }
         catch(SQLException e){
-//            TODO: exception handling and constraint breakage logic
+//            TODO: exception handling: reconnection and constraint breakage logic
             e.printStackTrace();
         }
     }
