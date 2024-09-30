@@ -1,6 +1,7 @@
 .gitignore
 tasks/
-db/
+db/online-shop.mv.db
+db/online-shop.trace.db
 
 target/
 !.mvn/wrapper/maven-wrapper.jar
