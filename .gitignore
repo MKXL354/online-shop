@@ -2,6 +2,7 @@
 tasks/
 db/online-shop.mv.db
 db/online-shop.trace.db
+src/main/java/com/local/bootstrap/DatabaseDetail.java
 
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -41,3 +42,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/src/main/java/com/local/bootstrap/DatabaseDetail.java

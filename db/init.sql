@@ -1,7 +1,7 @@
 create table if not exists users(
     id uuid primary key,
-    user_name varchar(255) unique not null,
-    pass_word varchar(255) not null
+    username varchar(255) unique not null,
+    password varchar(255) not null
 );
 
 create table if not exists carts(
