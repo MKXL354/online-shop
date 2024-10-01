@@ -1,14 +1,16 @@
 package com.local.bootstrap;
 
 import com.local.dao.UserDAO;
+import com.local.db.ConnectionPool;
+import com.local.db.DatabaseConfig;
+import com.local.db.H2ConnectionPool;
 import com.local.service.UserManagementService;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
-import org.h2.jdbcx.JdbcConnectionPool;
 
 public class BootstrapListener implements ServletContextListener {
-//    TODO: use DataSource abstraction? DAO is currently tied to h2 pool. Maybe a simple wrapper suffices
-    private JdbcConnectionPool connectionPool;
+    private final String databaseConfigFileLocation = "resources/db.properties";
+    private ConnectionPool connectionPool;
 
     @Override
     public void contextInitialized(ServletContextEvent sce){
@@ -20,14 +22,17 @@ public class BootstrapListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        connectionPool.dispose();
+        connectionPool.closePool();
     }
 
     private void setConnectionPool(){
-//        TODO: config .properties file: exception instead of compilation error for outside users. also JNDI?
-        String url = DatabaseDetail.URL;
-        String username = DatabaseDetail.USERNAME;
-        String password = DatabaseDetail.PASSWORD;
-        this.connectionPool = JdbcConnectionPool.create(url, username, password);
+        try{
+            DatabaseConfig databaseConfig = new DatabaseConfig(databaseConfigFileLocation);
+            this.connectionPool = new H2ConnectionPool(databaseConfig);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 }

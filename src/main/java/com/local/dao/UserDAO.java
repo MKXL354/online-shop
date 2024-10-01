@@ -1,16 +1,16 @@
 package com.local.dao;
 
+import com.local.db.ConnectionPool;
 import com.local.model.User;
-import org.h2.jdbcx.JdbcConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class UserDAO {
-    private JdbcConnectionPool connectionPool;
+    private ConnectionPool connectionPool;
 
-    public UserDAO(JdbcConnectionPool connectionPool) {
+    public UserDAO(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
     }
 
