@@ -1,20 +1,8 @@
 package com.local.model;
 
-import java.util.UUID;
-
 public class WebUser extends User{
-    private Cart cart;
-
-    public WebUser(UUID id, String username, String password, Cart cart) {
+//    TODO: add cart to user?
+    public WebUser(int id, String username, String password) {
         super(id, username, password);
-        this.cart = cart;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
     }
 }

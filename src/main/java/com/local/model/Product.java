@@ -1,21 +1,19 @@
 package com.local.model;
 
-import java.util.UUID;
-
 public class Product {
-    private final UUID id;
+    private final int id;
     private String name;
     private float price;
     private int count;
 
-    public Product(UUID id, String name, float price, int count) {
+    public Product(int id, String name, float price, int count) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.count = count;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 

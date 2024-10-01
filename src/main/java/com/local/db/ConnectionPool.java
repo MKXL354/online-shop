@@ -11,6 +11,6 @@ public abstract class ConnectionPool {
     }
 
     public abstract void openPool();
-    public abstract Connection getConnection() throws SQLException;
+    public abstract Connection getConnection() throws DataBaseConnectionException;
     public abstract void closePool();
 }

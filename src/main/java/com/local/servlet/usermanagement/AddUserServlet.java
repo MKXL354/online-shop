@@ -1,5 +1,6 @@
 package com.local.servlet.usermanagement;
 
+import com.local.commonexceptions.ServiceException;
 import com.local.service.UserManagementService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -22,6 +23,11 @@ public class AddUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        userManagementService.addUser(username, password);
+        try {
+            userManagementService.addUser(username, password);
+        } catch (ServiceException e) {
+//            TODO: exception handling related to response
+            e.printStackTrace();
+        }
     }
 }

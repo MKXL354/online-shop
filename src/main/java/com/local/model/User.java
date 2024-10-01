@@ -1,19 +1,17 @@
 package com.local.model;
 
-import java.util.UUID;
-
 public abstract class User {
-    protected final UUID id;
+    protected final int id;
     protected String username;
     protected String password;
 
-    public User(UUID id, String username, String password) {
+    public User(int id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 

@@ -5,6 +5,11 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
 
+  <context-param>
+    <param-name>resources</param-name>
+    <param-value>/WEB-INF/classes/</param-value>
+  </context-param>
+
   <filter>
     <filter-name>UncaughtExceptionFilter</filter-name>
     <filter-class>com.local.filter.UncaughtExceptionFilter</filter-class>

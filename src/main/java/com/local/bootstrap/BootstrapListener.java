@@ -9,12 +9,13 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 
 public class BootstrapListener implements ServletContextListener {
-    private final String databaseConfigFileLocation = "resources/db.properties";
+    private final String relativeDatabaseConfigFileLocation = "/WEB-INF/classes/db.properties";
     private ConnectionPool connectionPool;
 
     @Override
     public void contextInitialized(ServletContextEvent sce){
-        setConnectionPool();
+        String absoluteDatabaseConfigFileLocation = sce.getServletContext().getRealPath(relativeDatabaseConfigFileLocation);
+        openDatabaseConnectionPool(absoluteDatabaseConfigFileLocation);
         UserDAO userDAO = new UserDAO(connectionPool);
         UserManagementService userManagementService = new UserManagementService(userDAO);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
@@ -25,10 +26,11 @@ public class BootstrapListener implements ServletContextListener {
         connectionPool.closePool();
     }
 
-    private void setConnectionPool(){
+    private void openDatabaseConnectionPool(String absoluteDatabaseConfigFileLocation){
         try{
-            DatabaseConfig databaseConfig = new DatabaseConfig(databaseConfigFileLocation);
+            DatabaseConfig databaseConfig = new DatabaseConfig(absoluteDatabaseConfigFileLocation);
             this.connectionPool = new H2ConnectionPool(databaseConfig);
+            connectionPool.openPool();
         }
         catch(Exception e){
             e.printStackTrace();
@@ -36,3 +38,4 @@ public class BootstrapListener implements ServletContextListener {
         }
     }
 }
+//TODO: maybe learn and add logging
