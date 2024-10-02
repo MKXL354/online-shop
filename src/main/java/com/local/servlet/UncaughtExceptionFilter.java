@@ -1,4 +1,4 @@
-package com.local.filter;
+package com.local.servlet;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;

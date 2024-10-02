@@ -1,7 +1,6 @@
 package com.local.db;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public abstract class ConnectionPool {
     protected DatabaseConfig config;

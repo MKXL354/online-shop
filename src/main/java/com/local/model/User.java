@@ -1,11 +1,19 @@
 package com.local.model;
 
 import com.local.service.UserType;
+import com.local.validator.NotNull;
 
 public class User {
+    @NotNull(message = "id can't be null")
     private final int id;
+
+    @NotNull(message = "username can't be null")
     private String username;
+
+    @NotNull(message = "password can't be null")
     private String password;
+
+    @NotNull(message = "userType can't be null")
     private UserType userType;
 
     public User(int id, String username, String password, UserType userType) {

@@ -18,12 +18,12 @@ public class UserDAO {
     }
 
     public void insertUser(User user) throws DataAccessException {
-//        TODO: also do validation in the upper layer (like request object validation)
         try(Connection conn = connectionPool.getConnection()){
-            String query = "insert into USERS(USERNAME, PASSWORD) values(?,?)";
+            String query = "insert into USERS(USERNAME, PASSWORD, TYPE) values(?,?,?)";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
+            statement.setObject(3, user.getUserType());
             statement.executeUpdate();
         }
         catch(DataBaseConnectionException e){
@@ -42,13 +42,15 @@ public class UserDAO {
             statement.setString(2, user.getPassword());
             statement.setObject(3, user.getUserType());
             statement.setInt(4, user.getId());
-            statement.executeUpdate();
+            if(statement.executeUpdate() == 0){
+                throw new DataAccessException("user does not exist", null);
+            }
         }
         catch(DataBaseConnectionException e){
             throw new DataAccessException(e.getMessage(), e);
         }
         catch(SQLException e){
-            throw new DataAccessException("constraint violation or user does not exist", e);
+            throw new DataAccessException("constraint violation", e);
         }
     }
 
@@ -57,7 +59,9 @@ public class UserDAO {
             String query = "delete from USERS where ID = ?";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, id);
-            statement.executeUpdate();
+            if(statement.executeUpdate() == 0){
+                throw new DataAccessException("user does not exist", null);
+            }
         }
         catch(DataBaseConnectionException e){
             throw new DataAccessException(e.getMessage(), e);
@@ -74,6 +78,9 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
+            if(!resultSet.first()){
+                throw new DataAccessException("user does not exist", null);
+            }
             while(resultSet.next()){
                 String username = resultSet.getString("USERNAME");
                 String password = resultSet.getString("PASSWORD");
@@ -85,7 +92,7 @@ public class UserDAO {
             throw new DataAccessException(e.getMessage(), e);
         }
         catch(SQLException e){
-            throw new DataAccessException("user does not exist", e);
+            throw new DataAccessException("unexpected exception", e);
         }
         return user;
     }
