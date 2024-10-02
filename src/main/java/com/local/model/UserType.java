@@ -1,4 +1,4 @@
-package com.local.service;
+package com.local.model;
 
 public enum UserType {
     WEB_USER,

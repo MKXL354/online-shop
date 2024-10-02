@@ -1,7 +1,7 @@
 package com.local.model;
 
 public class Product {
-    private final int id;
+    private int id;
     private String name;
     private float price;
     private int count;
@@ -27,17 +27,5 @@ public class Product {
 
     public int getCount() {
         return count;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 }

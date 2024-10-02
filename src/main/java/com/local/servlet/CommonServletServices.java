@@ -11,14 +11,14 @@ import java.io.PrintWriter;
 public class CommonServletServices {
     private static Gson gson = new Gson();
 
-    public <T> T getObjectFromRequest(ServletRequest request, Class<T> objectType) throws IOException {
+    public <T> T getObjectFromJsonRequest(ServletRequest request, Class<T> objectType) throws IOException {
         BufferedReader reader = request.getReader();
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         String line;
         while((line = reader.readLine()) != null){
-            stringBuilder.append(line);
+            result.append(line);
         }
-        return gson.fromJson(stringBuilder.toString(), objectType);
+        return gson.fromJson(result.toString(), objectType);
     }
 
     public void writeResponse(HttpServletResponse response, String result) throws IOException {

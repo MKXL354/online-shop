@@ -3,12 +3,9 @@ package com.local.dao;
 import com.local.db.ConnectionPool;
 import com.local.db.DataBaseConnectionException;
 import com.local.model.User;
-import com.local.service.UserType;
+import com.local.model.UserType;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class UserDAO {
     private ConnectionPool connectionPool;
@@ -23,7 +20,7 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
-            statement.setObject(3, user.getUserType());
+            statement.setString(3, user.getUserType().toString());
             statement.executeUpdate();
         }
         catch(DataBaseConnectionException e){
@@ -40,7 +37,7 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
-            statement.setObject(3, user.getUserType());
+            statement.setString(3, user.getUserType().toString());
             statement.setInt(4, user.getId());
             if(statement.executeUpdate() == 0){
                 throw new DataAccessException("user does not exist", null);
@@ -67,7 +64,7 @@ public class UserDAO {
             throw new DataAccessException(e.getMessage(), e);
         }
         catch(SQLException e){
-            throw new DataAccessException("user does not exist", e);
+            throw new DataAccessException("unexpected exception", e);
         }
     }
 

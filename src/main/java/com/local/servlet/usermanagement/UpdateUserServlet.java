@@ -25,7 +25,7 @@ public class UpdateUserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        User user = (User)getServletContext().getAttribute("user");
+        User user = (User)request.getAttribute("user");
         try {
             userManagementService.updateUser(user);
             commonServletServices.writeResponse(response, "success");

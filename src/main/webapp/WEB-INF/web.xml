@@ -35,8 +35,17 @@
     <servlet-name>AddUserServlet</servlet-name>
     <servlet-class>com.local.servlet.usermanagement.AddUserServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>UpdateUserServlet</servlet-name>
+    <servlet-class>com.local.servlet.usermanagement.UpdateUserServlet</servlet-class>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>AddUserServlet</servlet-name>
     <url-pattern>/add-user</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UpdateUserServlet</servlet-name>
+    <url-pattern>/update-user</url-pattern>
   </servlet-mapping>
 </web-app>

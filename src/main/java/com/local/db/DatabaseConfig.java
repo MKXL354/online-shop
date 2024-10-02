@@ -10,13 +10,15 @@ public class DatabaseConfig {
     private String password;
 
     public DatabaseConfig(String configFileLocation) throws IOException {
-        Properties property = new Properties();
-        property.load(new FileInputStream(configFileLocation));
-        this.url = property.getProperty("url");
-        this.username = property.getProperty("username");
-        this.password = property.getProperty("password");
-        if(url == null || username == null || password == null){
-            throw new DatabaseConfigException("bad config file format", null);
+        try(FileInputStream fis = new FileInputStream(configFileLocation)) {
+            Properties property = new Properties();
+            property.load(fis);
+            this.url = property.getProperty("url");
+            this.username = property.getProperty("username");
+            this.password = property.getProperty("password");
+            if(url == null || username == null || password == null){
+                throw new DatabaseConfigException("bad config file format", null);
+            }
         }
     }
 

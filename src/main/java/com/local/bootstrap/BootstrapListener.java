@@ -5,6 +5,7 @@ import com.local.db.ConnectionPool;
 import com.local.db.DatabaseConfig;
 import com.local.db.H2ConnectionPool;
 import com.local.service.UserManagementService;
+import com.local.servlet.CommonServletServices;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 
@@ -19,6 +20,8 @@ public class BootstrapListener implements ServletContextListener {
         UserDAO userDAO = new UserDAO(connectionPool);
         UserManagementService userManagementService = new UserManagementService(userDAO);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
+        CommonServletServices commonServletServices = new CommonServletServices();
+        sce.getServletContext().setAttribute("commonServletServices", commonServletServices);
     }
 
     @Override

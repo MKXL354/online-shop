@@ -3,8 +3,8 @@ package com.local.model;
 import java.util.Set;
 
 public class Cart {
-    private final int id;
-    private final User owner;
+    private int id;
+    private User owner;
     private Set<Product> products;
 
     public Cart(int id, User owner, Set<Product> products) {
@@ -23,9 +23,5 @@ public class Cart {
 
     public Set<Product> getProducts() {
         return products;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
     }
 }

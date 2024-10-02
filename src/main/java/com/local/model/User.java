@@ -1,11 +1,10 @@
 package com.local.model;
 
-import com.local.service.UserType;
 import com.local.validator.NotNull;
 
 public class User {
     @NotNull(message = "id can't be null")
-    private final int id;
+    private int id;
 
     @NotNull(message = "username can't be null")
     private String username;
@@ -37,17 +36,5 @@ public class User {
 
     public UserType getUserType() {
         return userType;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
     }
 }

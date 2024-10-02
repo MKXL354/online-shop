@@ -2,7 +2,8 @@ create table users(
     id int auto_increment primary key,
     username varchar(255) unique not null,
     password varchar(255) not null,
-    type enum('web_user', 'admin')
+    type varchar(50) not null,
+    check (type in ('WEB_USER', 'ADMIN'))
 );
 
 create table carts(
