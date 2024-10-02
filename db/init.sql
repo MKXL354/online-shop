@@ -1,7 +1,8 @@
 create table users(
     id int auto_increment primary key,
     username varchar(255) unique not null,
-    password varchar(255) not null
+    password varchar(255) not null,
+    type enum('web_user', 'admin')
 );
 
 create table carts(
@@ -27,4 +28,4 @@ create table products(
     check (price > 0 and count > 0)
 );
 
-insert into users(ID, USERNAME, PASSWORD) values (0, 'admin', 'admin');
+insert into users(ID, USERNAME, PASSWORD, TYPE) values (0, 'admin', 'admin', 'admin');

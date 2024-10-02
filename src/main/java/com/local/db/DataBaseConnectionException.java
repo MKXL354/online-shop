@@ -1,8 +1,8 @@
 package com.local.db;
 
-import com.local.commonexceptions.ServiceException;
+import com.local.commonexceptions.ApplicationException;
 
-public class DataBaseConnectionException extends ServiceException {
+public class DataBaseConnectionException extends ApplicationException {
     public DataBaseConnectionException(String message, Throwable cause) {
         super(message, cause);
     }

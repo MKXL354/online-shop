@@ -38,4 +38,3 @@ public class BootstrapListener implements ServletContextListener {
         }
     }
 }
-//TODO: maybe learn and add logging
