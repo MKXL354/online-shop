@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-public class AddUserServlet extends HttpServlet {
+public class UpdateUserServlet extends HttpServlet {
     private UserManagementService userManagementService;
     private CommonServletServices commonServletServices;
 
@@ -27,7 +27,7 @@ public class AddUserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User user = (User)getServletContext().getAttribute("user");
         try {
-            userManagementService.addUser(user);
+            userManagementService.updateUser(user);
             commonServletServices.writeResponse(response, "success");
         } catch (ServiceException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
