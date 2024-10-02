@@ -12,14 +12,14 @@ public class User {
     @NotNull(message = "password can't be null")
     private String password;
 
-    @NotNull(message = "userType can't be null")
-    private UserType userType;
+    @NotNull(message = "type can't be null")
+    private UserType type;
 
-    public User(int id, String username, String password, UserType userType) {
+    public User(int id, String username, String password, UserType type) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.userType = userType;
+        this.type = type;
     }
 
     public int getId() {
@@ -34,7 +34,7 @@ public class User {
         return password;
     }
 
-    public UserType getUserType() {
-        return userType;
+    public UserType getType() {
+        return type;
     }
 }

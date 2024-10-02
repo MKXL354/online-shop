@@ -12,6 +12,7 @@ create table carts(
     foreign key (user_id) references users(id)
 );
 -- maybe add an "active" attr. later if you want to record past carts
+-- there might be the need for some cascading operation when a user gets deleted, etc.
 
 create table carts_products(
     cart_id int,

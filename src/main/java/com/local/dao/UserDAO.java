@@ -20,7 +20,7 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
-            statement.setString(3, user.getUserType().toString());
+            statement.setString(3, user.getType().toString());
             statement.executeUpdate();
         }
         catch(DataBaseConnectionException e){
@@ -37,9 +37,10 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
-            statement.setString(3, user.getUserType().toString());
+            statement.setString(3, user.getType().toString());
             statement.setInt(4, user.getId());
-            if(statement.executeUpdate() == 0){
+            int result = statement.executeUpdate();
+            if(result == 0){
                 throw new DataAccessException("user does not exist", null);
             }
         }
@@ -56,7 +57,8 @@ public class UserDAO {
             String query = "delete from USERS where ID = ?";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, id);
-            if(statement.executeUpdate() == 0){
+            int result = statement.executeUpdate();
+            if(result == 0){
                 throw new DataAccessException("user does not exist", null);
             }
         }
@@ -69,20 +71,20 @@ public class UserDAO {
     }
 
     public User findUserById(int id) throws DataAccessException {
-        User user = null;
         try(Connection conn = connectionPool.getConnection()){
             String query = "select * from USERS where ID = ?";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            if(!resultSet.first()){
-                throw new DataAccessException("user does not exist", null);
-            }
-            while(resultSet.next()){
+            if(resultSet.next()){
                 String username = resultSet.getString("USERNAME");
                 String password = resultSet.getString("PASSWORD");
-                UserType type = (UserType)resultSet.getObject("TYPE");
-                user = new User(id, username, password, type);
+                UserType type = UserType.valueOf(resultSet.getString("TYPE"));
+                return new User(id, username, password, type);
+
+            }
+            else{
+                throw new DataAccessException("user does not exist", null);
             }
         }
         catch(DataBaseConnectionException e){
@@ -91,6 +93,6 @@ public class UserDAO {
         catch(SQLException e){
             throw new DataAccessException("unexpected exception", e);
         }
-        return user;
     }
 }
+//TODO: turn constraint violations into informative errors sent to user

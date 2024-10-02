@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashSet;
 
-public class UserManagementFilter implements Filter {
+public class AddUpdateUserFilter implements Filter {
     private CommonServletServices commonServletServices;
     private ObjectValidator validator;
 
