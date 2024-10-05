@@ -1,8 +1,8 @@
 create table users(
     id int auto_increment primary key,
-    username varchar(255) unique not null,
-    password varchar(255) not null,
-    type varchar(50) not null,
+    username varchar(256) unique not null,
+    password varchar(512) not null,
+    type varchar(64) not null,
     check (type in ('WEB_USER', 'ADMIN'))
 );
 
@@ -24,10 +24,8 @@ create table carts_products(
 
 create table products(
     id int auto_increment primary key,
-    name varchar(255),
+    name varchar(256),
     price decimal(15, 3) not null,
     count int not null,
     check (price > 0 and count > 0)
 );
-
-insert into users(ID, USERNAME, PASSWORD, TYPE) values (0, 'admin', 'admin', 'admin');

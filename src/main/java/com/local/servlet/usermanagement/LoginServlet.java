@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-public class GetUserServlet extends HttpServlet {
+public class LoginServlet extends HttpServlet {
     private UserManagementService userManagementService;
     private CommonServletServices commonServletServices;
 
@@ -26,8 +26,10 @@ public class GetUserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            int id = (int)request.getAttribute("id");
-            User user = userManagementService.getUserById(id);
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+            User user = userManagementService.login(username, password);
+
             commonServletServices.writeResponse(response, user);
         } catch (ServiceException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -35,3 +37,4 @@ public class GetUserServlet extends HttpServlet {
         }
     }
 }
+//TODO: maybe add GetUserServlet(using id)?

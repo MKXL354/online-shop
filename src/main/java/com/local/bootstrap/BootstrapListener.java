@@ -1,5 +1,6 @@
 package com.local.bootstrap;
 
+import com.local.dao.PasswordEncryptor;
 import com.local.dao.UserDAO;
 import com.local.db.ConnectionPool;
 import com.local.db.DatabaseConfig;
@@ -18,7 +19,8 @@ public class BootstrapListener implements ServletContextListener {
         String absoluteDatabaseConfigFileLocation = sce.getServletContext().getRealPath(relativeDatabaseConfigFileLocation);
         openDatabaseConnectionPool(absoluteDatabaseConfigFileLocation);
         UserDAO userDAO = new UserDAO(connectionPool);
-        UserManagementService userManagementService = new UserManagementService(userDAO);
+        PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
+        UserManagementService userManagementService = new UserManagementService(userDAO, passwordEncryptor);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
         CommonServletServices commonServletServices = new CommonServletServices();
         sce.getServletContext().setAttribute("commonServletServices", commonServletServices);
@@ -41,4 +43,3 @@ public class BootstrapListener implements ServletContextListener {
         }
     }
 }
-//TODO: use intellij to deploy your project

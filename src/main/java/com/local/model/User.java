@@ -12,7 +12,7 @@ public class User {
     @NotNull(message = "password can't be null")
     private String password;
 
-    @NotNull(message = "type can't be null")
+    @NotNull(message = "wrong or null user type")
     private UserType type;
 
     public User(int id, String username, String password, UserType type) {

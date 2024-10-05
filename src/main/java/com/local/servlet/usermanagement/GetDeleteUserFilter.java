@@ -28,3 +28,4 @@ public class GetDeleteUserFilter implements Filter {
         }
     }
 }
+//TODO: currently only used for delete, which might also be changed later

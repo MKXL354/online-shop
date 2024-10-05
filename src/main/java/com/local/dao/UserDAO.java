@@ -14,7 +14,7 @@ public class UserDAO {
         this.connectionPool = connectionPool;
     }
 
-    public void insertUser(User user) throws DataAccessException {
+    public void addUser(User user) throws DataAccessException {
         try(Connection conn = connectionPool.getConnection()){
             String query = "insert into USERS(USERNAME, PASSWORD, TYPE) values(?,?,?)";
             PreparedStatement statement = conn.prepareStatement(query);
@@ -77,14 +77,10 @@ public class UserDAO {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
-                String username = resultSet.getString("USERNAME");
-                String password = resultSet.getString("PASSWORD");
-                UserType type = UserType.valueOf(resultSet.getString("TYPE"));
-                return new User(id, username, password, type);
-
+                return createUserFromResultSet(resultSet);
             }
             else{
-                throw new DataAccessException("user does not exist", null);
+                return null;
             }
         }
         catch(DataBaseConnectionException e){
@@ -94,5 +90,39 @@ public class UserDAO {
             throw new DataAccessException("unexpected exception", e);
         }
     }
+
+    public User findUserByUsername(String username) throws DataAccessException {
+        try(Connection conn = connectionPool.getConnection()){
+            String query = "select * from USERS where USERNAME = ?";
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return createUserFromResultSet(resultSet);
+            }
+            else{
+                return null;
+            }
+        }
+        catch(DataBaseConnectionException e){
+            throw new DataAccessException(e.getMessage(), e);
+        }
+        catch(SQLException e){
+            throw new DataAccessException("unexpected exception", e);
+        }
+    }
+
+    private User createUserFromResultSet(ResultSet resultSet) throws DataAccessException {
+        try{
+            int id = resultSet.getInt("ID");
+            String username = resultSet.getString("USERNAME");
+            String password = resultSet.getString("PASSWORD");
+            UserType type = UserType.valueOf(resultSet.getString("TYPE"));
+            return new User(id, username, password, type);
+        }
+        catch(SQLException e){
+            throw new DataAccessException("unexpected exception", e);
+        }
+    }
 }
-//TODO: turn constraint violations into informative errors sent to user
+//TODO: check service constraints programmatically
