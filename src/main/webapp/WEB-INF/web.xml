@@ -4,10 +4,23 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  
+  <context-param>
+    <param-name>relativeDatabaseConfigFileLocation</param-name>
+    <param-value>/WEB-INF/classes/db.properties</param-value>
+  </context-param>
+  <context-param>
+    <param-name>relativeTokenManagerConfigFileLocation</param-name>
+    <param-value>/WEB-INF/classes/tokenManager.properties</param-value>
+  </context-param>
 
   <filter>
     <filter-name>UncaughtExceptionFilter</filter-name>
     <filter-class>com.local.servlet.UncaughtExceptionFilter</filter-class>
+    <init-param>
+      <param-name>relativeLogOutputDirectory</param-name>
+      <param-value>/WEB-INF/</param-value>
+    </init-param>
   </filter>
   <filter>
     <filter-name>AddUpdateUserFilter</filter-name>

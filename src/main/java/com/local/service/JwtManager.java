@@ -23,14 +23,13 @@ public class JwtManager extends TokenManager {
     private Key readSecretKey() {
         String secretKey = super.propertyManager.getProperty("secretKey");
         if (secretKey == null) {
-            throw new ApplicationRuntimeException("secretKey not found in config", null);
+            throw new ApplicationRuntimeException("bad config file format", null);
         }
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-//    TODO: maybe this is unnecessary because jjwt api is fluent enough
-    public String getJwsToken(Map<String, Object> claims){
+    public String getSignedToken(Map<String, Object> claims){
         long startTimeMillis = System.currentTimeMillis();
         long endTimeMillis = startTimeMillis + lifeTimeMillis;
         JwtBuilder jwtBuilder = Jwts.builder();

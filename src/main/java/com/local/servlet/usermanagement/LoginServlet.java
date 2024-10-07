@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
 
             Map<String, Object> claims = new HashMap<>();
             claims.put("role", user.getType());
-            String jws = tokenManager.getJwsToken(claims);
+            String jws = tokenManager.getSignedToken(claims);
 
             response.setHeader("Authorization", jws);
             commonServletService.writeResponse(response, user);

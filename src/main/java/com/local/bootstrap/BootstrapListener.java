@@ -15,12 +15,11 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 
 public class BootstrapListener implements ServletContextListener {
-    private String relativeDatabaseConfigFileLocation = "/WEB-INF/classes/db.properties";
-    private String relativeTokenManagerConfigFileLocation = "/WEB-INF/classes/tokenManager.properties";
     private ConnectionPool connectionPool;
 
     @Override
     public void contextInitialized(ServletContextEvent sce){
+        String relativeDatabaseConfigFileLocation = sce.getServletContext().getInitParameter("relativeDatabaseConfigFileLocation");
         String absoluteDatabaseConfigFileLocation = sce.getServletContext().getRealPath(relativeDatabaseConfigFileLocation);
         PropertyManager databasePropertyManager = new PropertyManager(absoluteDatabaseConfigFileLocation);
         this.connectionPool = new H2ConnectionPool(databasePropertyManager, 5, 500);
@@ -34,6 +33,7 @@ public class BootstrapListener implements ServletContextListener {
         CommonServletService commonServletService = new CommonServletService();
         sce.getServletContext().setAttribute("commonServletServices", commonServletService);
 
+        String relativeTokenManagerConfigFileLocation = sce.getServletContext().getInitParameter("relativeTokenManagerConfigFileLocation");
         String absoluteTokenManagerConfigFileLocation = sce.getServletContext().getRealPath(relativeTokenManagerConfigFileLocation);
         TokenManager jwtManager = new JwtManager(absoluteTokenManagerConfigFileLocation, 10000);
         sce.getServletContext().setAttribute("tokenManager", jwtManager);

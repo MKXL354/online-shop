@@ -1,5 +1,6 @@
 package com.local.db;
 
+import com.local.commonexceptions.ApplicationRuntimeException;
 import com.local.util.PropertyManager;
 import org.h2.jdbcx.JdbcConnectionPool;
 
@@ -22,6 +23,9 @@ public class H2ConnectionPool extends ConnectionPool {
         String url = propertyManager.getProperty("url");
         String username = propertyManager.getProperty("password");
         String password = propertyManager.getProperty("password");
+        if(url == null || username == null || password == null) {
+            throw new ApplicationRuntimeException("bad config file format", null);
+        }
         this.connectionPool = JdbcConnectionPool.create(url, username, password);
     }
 

@@ -11,5 +11,6 @@ public abstract class TokenManager {
         propertyManager = new PropertyManager(configFileLocation);
     }
 
-    public abstract String getJwsToken(Map<String, Object> claims);
+    public abstract String getSignedToken(Map<String, Object> claims);
+//    TODO: maybe add normal and encrypted token as well
 }
