@@ -1,5 +1,5 @@
 .gitignore
-tasks/
+tasks.txt
 db/online-shop.mv.db
 db/online-shop.trace.db
 

@@ -13,7 +13,7 @@ public class UncaughtExceptionFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
         }
         catch(Exception e){
-//            TODO: change how exceptions are handled in Web layer to allow for logging
+//            TODO: make a general logging component out of this listener or add a new class (single responsibility?)
             e.printStackTrace();
             HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
             httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

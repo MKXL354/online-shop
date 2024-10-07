@@ -1,12 +1,14 @@
 package com.local.db;
 
+import com.local.util.PropertyManager;
+
 import java.sql.Connection;
 
 public abstract class ConnectionPool {
-    protected DatabaseConfig config;
+    protected PropertyManager propertyManager;
 
-    public ConnectionPool(DatabaseConfig config){
-        this.config = config;
+    public ConnectionPool(PropertyManager propertyManager){
+        this.propertyManager = propertyManager;
     }
 
     public abstract void openPool();

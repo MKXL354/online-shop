@@ -1,9 +1,10 @@
 package com.local.servlet.usermanagement;
 
 import com.local.model.User;
-import com.local.service.ServiceException;
+import com.local.service.TokenManager;
+import com.local.service.UserManagementServiceException;
 import com.local.service.UserManagementService;
-import com.local.servlet.CommonServletServices;
+import com.local.servlet.CommonServletService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -11,16 +12,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginServlet extends HttpServlet {
     private UserManagementService userManagementService;
-    private CommonServletServices commonServletServices;
+    private CommonServletService commonServletService;
+    private TokenManager tokenManager;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         userManagementService = (UserManagementService)getServletContext().getAttribute("userManagementService");
-        commonServletServices = (CommonServletServices)getServletContext().getAttribute("commonServletServices");
+        commonServletService = (CommonServletService)getServletContext().getAttribute("commonServletServices");
+        tokenManager = (TokenManager)getServletContext().getAttribute("tokenManager");
     }
 
     @Override
@@ -30,11 +35,16 @@ public class LoginServlet extends HttpServlet {
             String password = request.getParameter("password");
             User user = userManagementService.login(username, password);
 
-            commonServletServices.writeResponse(response, user);
-        } catch (ServiceException e) {
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("role", user.getType());
+            String jws = tokenManager.getJwsToken(claims);
+
+            response.setHeader("Authorization", jws);
+            commonServletService.writeResponse(response, user);
+        } catch (UserManagementServiceException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            commonServletServices.writeResponse(response, e.getMessage());
+            commonServletService.writeResponse(response, e.getMessage());
         }
     }
 }
-//TODO: maybe add GetUserServlet(using id)?
+//TODO: maybe add GetUser(id) and GetUsers() too?

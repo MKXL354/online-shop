@@ -1,8 +1,8 @@
 package com.local.service;
 
-import com.local.dao.DataAccessException;
-import com.local.dao.PasswordEncryptor;
 import com.local.dao.UserDAO;
+import com.local.dao.UserDAOException;
+import com.local.dao.PasswordEncryptor;
 import com.local.model.User;
 
 public class UserManagementService {
@@ -14,47 +14,47 @@ public class UserManagementService {
         this.passwordEncryptor = passwordEncryptor;
     }
 
-    public void addUser(User user) throws ServiceException {
+    public void addUser(User user) throws UserManagementServiceException {
         try {
             if(userDAO.findUserByUsername(user.getUsername()) != null) {
-                throw new ServiceException("duplicate username not allowed", null);
+                throw new UserManagementServiceException("duplicate username not allowed", null);
             }
             String hashedPassword = passwordEncryptor.hashPassword(user.getPassword());
             User DBUser = new User(user.getId(), user.getUsername(), hashedPassword, user.getType());
             userDAO.addUser(DBUser);
-        } catch (DataAccessException e) {
-            throw new ServiceException(e.getMessage(), e);
+        } catch (UserDAOException e) {
+            throw new UserManagementServiceException(e.getMessage(), e);
         }
     }
 
-    public void updateUser(User user) throws ServiceException {
+    public void updateUser(User user) throws UserManagementServiceException {
         try {
             userDAO.updateUser(user);
-        } catch (DataAccessException e) {
-            throw new ServiceException(e.getMessage(), e);
+        } catch (UserDAOException e) {
+            throw new UserManagementServiceException(e.getMessage(), e);
         }
     }
 
-    public void deleteUser(int id) throws ServiceException {
+    public void deleteUser(int id) throws UserManagementServiceException {
         try {
             userDAO.deleteUser(id);
-        } catch (DataAccessException e) {
-            throw new ServiceException(e.getMessage(), e);
+        } catch (UserDAOException e) {
+            throw new UserManagementServiceException(e.getMessage(), e);
         }
     }
 
-    public User login(String username, String password) throws ServiceException {
+    public User login(String username, String password) throws UserManagementServiceException {
         try {
             User user = userDAO.findUserByUsername(username);
             if(user == null) {
-                throw new ServiceException("user not found", null);
+                throw new UserManagementServiceException("user not found", null);
             }
             if(!passwordEncryptor.checkPassword(password, user.getPassword())) {
-                throw new ServiceException("wrong password", null);
+                throw new UserManagementServiceException("wrong password", null);
             }
             return user;
-        } catch (DataAccessException e) {
-            throw new ServiceException(e.getMessage(), e);
+        } catch (UserDAOException e) {
+            throw new UserManagementServiceException(e.getMessage(), e);
         }
     }
 }

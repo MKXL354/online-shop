@@ -1,5 +1,6 @@
 package com.local.db;
 
+import com.local.util.PropertyManager;
 import org.h2.jdbcx.JdbcConnectionPool;
 
 import java.sql.Connection;
@@ -7,18 +8,20 @@ import java.sql.SQLException;
 
 public class H2ConnectionPool extends ConnectionPool {
     private JdbcConnectionPool connectionPool;
-    private final int retryCount = 5;
-    private final int retryDelay = 500;
+    private int retryCount;
+    private int retryDelayMillis;
 
-    public H2ConnectionPool(DatabaseConfig config) {
-        super(config);
+    public H2ConnectionPool(PropertyManager propertyManager, int retryCount, int retryDelayMillis) {
+        super(propertyManager);
+        this.retryCount = retryCount;
+        this.retryDelayMillis = retryDelayMillis;
     }
 
     @Override
     public void openPool() {
-        String url = config.getUrl();
-        String username = config.getUsername();
-        String password = config.getPassword();
+        String url = propertyManager.getProperty("url");
+        String username = propertyManager.getProperty("password");
+        String password = propertyManager.getProperty("password");
         this.connectionPool = JdbcConnectionPool.create(url, username, password);
     }
 
@@ -33,7 +36,7 @@ public class H2ConnectionPool extends ConnectionPool {
             catch (SQLException e){
                 if(i < retryCount - 1){
                     try{
-                        Thread.sleep(retryDelay);
+                        Thread.sleep(retryDelayMillis);
                     }
                     catch(InterruptedException ie){
                         Thread.currentThread().interrupt();
