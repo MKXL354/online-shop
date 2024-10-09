@@ -13,14 +13,14 @@
     <param-name>relativeTokenManagerConfigFileLocation</param-name>
     <param-value>/WEB-INF/classes/tokenManager.properties</param-value>
   </context-param>
+  <context-param>
+    <param-name>relativeBatchLogOutputDirectory</param-name>
+    <param-value>/WEB-INF/logs/</param-value>
+  </context-param>
 
   <filter>
-    <filter-name>UncaughtExceptionFilter</filter-name>
-    <filter-class>com.local.servlet.UncaughtExceptionFilter</filter-class>
-    <init-param>
-      <param-name>relativeLogOutputDirectory</param-name>
-      <param-value>/WEB-INF/</param-value>
-    </init-param>
+    <filter-name>LoggingFilter</filter-name>
+    <filter-class>com.local.servlet.LoggingFilter</filter-class>
   </filter>
   <filter>
     <filter-name>AddUpdateUserFilter</filter-name>
@@ -32,7 +32,7 @@
   </filter>
 
   <filter-mapping>
-    <filter-name>UncaughtExceptionFilter</filter-name>
+    <filter-name>LoggingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
   <filter-mapping>
@@ -53,7 +53,7 @@
   </filter-mapping>
 
   <listener>
-    <listener-class>com.local.bootstrap.BootstrapListener</listener-class>
+    <listener-class>com.local.BootstrapListener</listener-class>
   </listener>
 
   <servlet>

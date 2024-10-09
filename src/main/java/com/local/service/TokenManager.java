@@ -12,5 +12,4 @@ public abstract class TokenManager {
     }
 
     public abstract String getSignedToken(Map<String, Object> claims);
-//    TODO: maybe add normal and encrypted token as well
 }

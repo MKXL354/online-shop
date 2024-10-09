@@ -137,4 +137,3 @@ public class UserDAOImpl implements UserDAO{
         }
     }
 }
-//TODO: check the constraints programmatically in the service layer

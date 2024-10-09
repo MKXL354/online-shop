@@ -47,4 +47,3 @@ public class LoginServlet extends HttpServlet {
         }
     }
 }
-//TODO: maybe add GetUser(id) and GetUsers() too?
