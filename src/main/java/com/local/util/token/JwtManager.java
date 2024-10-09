@@ -1,17 +1,16 @@
-package com.local.service;
+package com.local.util.token;
 
 import com.local.commonexceptions.ApplicationRuntimeException;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 
 public class JwtManager extends TokenManager {
-    private Key secretKey;
+    private SecretKey secretKey;
     private long lifeTimeMillis;
 
     public JwtManager(String configFileLocation, long lifeTimeMillis) {
@@ -20,7 +19,7 @@ public class JwtManager extends TokenManager {
         this.lifeTimeMillis = lifeTimeMillis;
     }
 
-    private Key readSecretKey() {
+    private SecretKey readSecretKey() {
         String secretKey = super.propertyManager.getProperty("secretKey");
         if (secretKey == null) {
             throw new ApplicationRuntimeException("bad config file format", null);
@@ -29,11 +28,29 @@ public class JwtManager extends TokenManager {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    @Override
     public String getSignedToken(Map<String, Object> claims){
         long startTimeMillis = System.currentTimeMillis();
         long endTimeMillis = startTimeMillis + lifeTimeMillis;
         JwtBuilder jwtBuilder = Jwts.builder();
         claims.forEach(jwtBuilder::claim);
         return jwtBuilder.issuedAt(new Date(startTimeMillis)).expiration(new Date(endTimeMillis)).signWith(secretKey).compact();
+    }
+
+    public void validateSignedToken(String compactJws, Map<String, Object> claims) throws InvalidTokenException, TokenExpiredException{
+        try{
+            JwtParserBuilder jwtParserBuilder = Jwts.parser();
+            claims.forEach(jwtParserBuilder::require);
+            jwtParserBuilder.verifyWith(secretKey).build().parseSignedClaims(compactJws);
+        }
+        catch(ExpiredJwtException e){
+            throw new TokenExpiredException("expired token", e);
+        }
+        catch(InvalidClaimException e){
+            throw new InvalidTokenException("unauthorized claims", e);
+        }
+        catch(JwtException e){
+            throw new InvalidTokenException("invalid token", e);
+        }
     }
 }

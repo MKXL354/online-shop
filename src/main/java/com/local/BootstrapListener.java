@@ -7,9 +7,9 @@ import com.local.dao.UserDAOImpl;
 import com.local.db.ConnectionPool;
 import com.local.db.H2ConnectionPool;
 import com.local.service.UserManagementService;
-import com.local.servlet.CommonServletService;
-import com.local.service.JwtManager;
-import com.local.service.TokenManager;
+import com.local.servlet.CommonWebComponentService;
+import com.local.util.token.JwtManager;
+import com.local.util.token.TokenManager;
 import com.local.util.PropertyManager;
 import com.local.util.logging.BatchLogManager;
 import jakarta.servlet.ServletContextEvent;
@@ -38,13 +38,13 @@ public class BootstrapListener implements ServletContextListener {
         UserManagementService userManagementService = new UserManagementService(userDAOImpl, passwordEncryptorImpl);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
 
-        CommonServletService commonServletService = new CommonServletService();
-        sce.getServletContext().setAttribute("commonServletServices", commonServletService);
-
         String relativeTokenManagerConfigFileLocation = sce.getServletContext().getInitParameter("relativeTokenManagerConfigFileLocation");
         String absoluteTokenManagerConfigFileLocation = sce.getServletContext().getRealPath(relativeTokenManagerConfigFileLocation);
-        TokenManager jwtManager = new JwtManager(absoluteTokenManagerConfigFileLocation, 15*60*1000);
+        TokenManager jwtManager = new JwtManager(absoluteTokenManagerConfigFileLocation, /*15*60*/5000);
         sce.getServletContext().setAttribute("tokenManager", jwtManager);
+
+        CommonWebComponentService commonWebComponentService = new CommonWebComponentService(jwtManager);
+        sce.getServletContext().setAttribute("commonWebComponentService", commonWebComponentService);
     }
 
     @Override

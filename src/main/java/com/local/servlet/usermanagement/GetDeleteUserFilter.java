@@ -1,17 +1,17 @@
 package com.local.servlet.usermanagement;
 
-import com.local.servlet.CommonServletService;
+import com.local.servlet.CommonWebComponentService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
 public class GetDeleteUserFilter implements Filter {
-    private CommonServletService commonServletService;
+    private CommonWebComponentService commonWebComponentService;
 
     @Override
     public void init(FilterConfig filterConfig) {
-        commonServletService = (CommonServletService)filterConfig.getServletContext().getAttribute("commonServletServices");
+        commonWebComponentService = (CommonWebComponentService)filterConfig.getServletContext().getAttribute("commonWebComponentService");
     }
 
     @Override
@@ -24,7 +24,7 @@ public class GetDeleteUserFilter implements Filter {
         catch(NumberFormatException e){
             HttpServletResponse httpResponse = (HttpServletResponse)servletResponse;
             httpResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            commonServletService.writeResponse(httpResponse, "bad id format");
+            commonWebComponentService.writeResponse(httpResponse, "bad id format");
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.local.service;
+package com.local.util.token;
 
 import com.local.util.PropertyManager;
 
@@ -12,4 +12,6 @@ public abstract class TokenManager {
     }
 
     public abstract String getSignedToken(Map<String, Object> claims);
+
+    public abstract void validateSignedToken(String compactJws, Map<String, Object> claims) throws InvalidTokenException, TokenExpiredException;
 }

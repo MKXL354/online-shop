@@ -43,7 +43,12 @@ public class LoggingFilter implements Filter {
             httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             httpServletResponse.getWriter().print("Internal Server Error");
             logLevel = LogLevel.ERROR;
-            message = e.getMessage();
+            StringBuilder stackTrace = new StringBuilder();
+            stackTrace.append(e.getMessage()).append("\n");
+            for(StackTraceElement stackTraceElement : e.getStackTrace()){
+                stackTrace.append("\t").append(stackTraceElement.toString()).append("\n");
+            }
+            message = stackTrace.toString();
         }
         finally{
             log.setLevel(logLevel);

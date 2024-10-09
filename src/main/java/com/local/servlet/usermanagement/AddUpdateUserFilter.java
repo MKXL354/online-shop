@@ -2,7 +2,7 @@ package com.local.servlet.usermanagement;
 
 import com.local.commonexceptions.ApplicationRuntimeException;
 import com.local.model.User;
-import com.local.servlet.CommonServletService;
+import com.local.servlet.CommonWebComponentService;
 import com.local.validator.ObjectValidator;
 import com.local.validator.ValidatorException;
 import jakarta.servlet.*;
@@ -12,19 +12,19 @@ import java.io.IOException;
 import java.util.HashSet;
 
 public class AddUpdateUserFilter implements Filter {
-    private CommonServletService commonServletService;
+    private CommonWebComponentService commonWebComponentService;
     private ObjectValidator validator;
 
     @Override
     public void init(FilterConfig filterConfig) {
-        commonServletService = (CommonServletService)filterConfig.getServletContext().getAttribute("commonServletServices");
+        commonWebComponentService = (CommonWebComponentService)filterConfig.getServletContext().getAttribute("commonWebComponentService");
         validator = new ObjectValidator();
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try{
-            User user = commonServletService.getObjectFromJsonRequest(servletRequest, User.class);
+            User user = commonWebComponentService.getObjectFromJsonRequest(servletRequest, User.class);
             HashSet<String> violationMessages = validator.validate(user);
             if(violationMessages.isEmpty()){
                 servletRequest.setAttribute("user", user);
@@ -35,7 +35,7 @@ public class AddUpdateUserFilter implements Filter {
                 violationMessages.forEach(result::append);
                 HttpServletResponse httpResponse = (HttpServletResponse)servletResponse;
                 httpResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                commonServletService.writeResponse(httpResponse, result.toString());
+                commonWebComponentService.writeResponse(httpResponse, result.toString());
             }
         }
         catch(ValidatorException e){
