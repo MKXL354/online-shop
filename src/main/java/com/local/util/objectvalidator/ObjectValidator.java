@@ -16,7 +16,6 @@ public class ObjectValidator{
 			messages.add("object can't be null");
 			return messages;
 		}
-		StringBuilder result = new StringBuilder();
         Field[] fields = obj.getClass().getDeclaredFields();
         Annotation[] annotations;
         ValidatedBy validatedBy;
@@ -48,7 +47,7 @@ public class ObjectValidator{
 						throw new ValidatorException("cannot create objectvalidator: " + e.getMessage(), e);
 					}
 					catch(IllegalAccessException | InvocationTargetException e){
-						e.printStackTrace();
+						throw new ValidatorException("unexpected exception: " + e.getMessage(), e);
 					}
                 }
             }
