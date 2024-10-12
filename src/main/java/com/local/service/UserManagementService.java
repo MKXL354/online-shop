@@ -1,8 +1,8 @@
 package com.local.service;
 
-import com.local.dao.UserDAO;
-import com.local.dao.UserDAOException;
-import com.local.dao.PasswordEncryptor;
+import com.local.dao.user.UserDAO;
+import com.local.dao.user.UserDAOException;
+import com.local.util.password.PasswordEncryptor;
 import com.local.model.User;
 
 public class UserManagementService {
@@ -22,22 +22,6 @@ public class UserManagementService {
             String hashedPassword = passwordEncryptor.hashPassword(user.getPassword());
             User DBUser = new User(user.getId(), user.getUsername(), hashedPassword, user.getType());
             userDAO.addUser(DBUser);
-        } catch (UserDAOException e) {
-            throw new UserManagementServiceException(e.getMessage(), e);
-        }
-    }
-
-    public void updateUser(User user) throws UserManagementServiceException {
-        try {
-            userDAO.updateUser(user);
-        } catch (UserDAOException e) {
-            throw new UserManagementServiceException(e.getMessage(), e);
-        }
-    }
-
-    public void deleteUser(int id) throws UserManagementServiceException {
-        try {
-            userDAO.deleteUser(id);
         } catch (UserDAOException e) {
             throw new UserManagementServiceException(e.getMessage(), e);
         }

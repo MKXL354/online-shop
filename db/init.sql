@@ -24,8 +24,9 @@ create table carts_products(
 
 create table products(
     id int auto_increment primary key,
-    name varchar(256),
+    name varchar(256) unique,
     price decimal(15, 3) not null,
     count int not null,
-    check (price > 0 and count > 0)
+    check (price > 0),
+    check (count > 0)
 );

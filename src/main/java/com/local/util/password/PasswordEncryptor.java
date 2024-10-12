@@ -1,4 +1,4 @@
-package com.local.dao;
+package com.local.util.password;
 
 public interface PasswordEncryptor {
     String hashPassword(String password);

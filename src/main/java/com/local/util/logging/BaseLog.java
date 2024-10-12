@@ -26,6 +26,7 @@ public abstract class BaseLog {
 
     @Override
     public String toString() {
-        return String.format("[startTime: %s][endTime: %s][%s] -%s", requestTime.toString(), responseTime.toString(), level.toString(), message);
+        String displayMessage = message == null ? "" : " -" + message;
+        return String.format("[startTime: %s][endTime: %s][%s]%s", requestTime.toString(), responseTime.toString(), level.toString(), displayMessage);
     }
 }

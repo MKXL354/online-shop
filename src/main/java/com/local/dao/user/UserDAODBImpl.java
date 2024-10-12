@@ -1,4 +1,4 @@
-package com.local.dao;
+package com.local.dao.user;
 
 import com.local.db.ConnectionPool;
 import com.local.db.DataBaseConnectionException;
@@ -7,10 +7,10 @@ import com.local.model.UserType;
 
 import java.sql.*;
 
-public class UserDAOImpl implements UserDAO{
+public class UserDAODBImpl implements UserDAO{
     private ConnectionPool connectionPool;
 
-    public UserDAOImpl(ConnectionPool connectionPool) {
+    public UserDAODBImpl(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
     }
 

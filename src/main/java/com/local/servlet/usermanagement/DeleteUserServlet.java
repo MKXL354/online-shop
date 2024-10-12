@@ -24,13 +24,13 @@ public class DeleteUserServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
-            int id = (int)request.getAttribute("id");
-            userManagementService.deleteUser(id);
-            commonWebComponentService.writeResponse(response, "success");
-        } catch (UserManagementServiceException e) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            commonWebComponentService.writeResponse(response, e.getMessage());
-        }
+//        try {
+//            int id = (int)request.getAttribute("id");
+//            userManagementService.deleteUser(id);
+//            commonWebComponentService.writeResponse(response, "success");
+//        } catch (UserManagementServiceException e) {
+//            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//            commonWebComponentService.writeResponse(response, e.getMessage());
+//        }
     }
 }

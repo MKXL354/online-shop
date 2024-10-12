@@ -25,13 +25,13 @@ public class UpdateUserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        User user = (User)request.getAttribute("user");
-        try {
-            userManagementService.updateUser(user);
-            commonWebComponentService.writeResponse(response, "success");
-        } catch (UserManagementServiceException e) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            commonWebComponentService.writeResponse(response, e.getMessage());
-        }
+//        User user = (User)request.getAttribute("user");
+//        try {
+//            userManagementService.updateUser(user);
+//            commonWebComponentService.writeResponse(response, "success");
+//        } catch (UserManagementServiceException e) {
+//            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//            commonWebComponentService.writeResponse(response, e.getMessage());
+//        }
     }
 }

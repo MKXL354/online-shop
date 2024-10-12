@@ -1,9 +1,12 @@
 package com.local;
 
-import com.local.dao.PasswordEncryptor;
-import com.local.dao.PasswordEncryptorImpl;
-import com.local.dao.UserDAO;
-import com.local.dao.UserDAOImpl;
+import com.local.dao.product.ProductDAO;
+import com.local.dao.product.ProductDAOMemImpl;
+import com.local.service.ProductManagementService;
+import com.local.util.password.PasswordEncryptor;
+import com.local.util.password.PasswordEncryptorImpl;
+import com.local.dao.user.UserDAO;
+import com.local.dao.user.UserDAODBImpl;
 import com.local.db.ConnectionPool;
 import com.local.db.H2ConnectionPool;
 import com.local.service.UserManagementService;
@@ -33,10 +36,14 @@ public class BootstrapListener implements ServletContextListener {
         batchLogManager.start();
         sce.getServletContext().setAttribute("batchLogManager", batchLogManager);
 
-        UserDAO userDAOImpl = new UserDAOImpl(connectionPool);
+        UserDAO userDAODBImpl = new UserDAODBImpl(connectionPool);
         PasswordEncryptor passwordEncryptorImpl = new PasswordEncryptorImpl(1000, 32, 256);
-        UserManagementService userManagementService = new UserManagementService(userDAOImpl, passwordEncryptorImpl);
+        UserManagementService userManagementService = new UserManagementService(userDAODBImpl, passwordEncryptorImpl);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
+
+        ProductDAO productDAOMemImpl = new ProductDAOMemImpl();
+        ProductManagementService productManagementService = new ProductManagementService(productDAOMemImpl);
+        sce.getServletContext().setAttribute("productManagementService", productManagementService);
 
         String relativeTokenManagerConfigFileLocation = sce.getServletContext().getInitParameter("relativeTokenManagerConfigFileLocation");
         String absoluteTokenManagerConfigFileLocation = sce.getServletContext().getRealPath(relativeTokenManagerConfigFileLocation);
@@ -53,3 +60,4 @@ public class BootstrapListener implements ServletContextListener {
         batchLogManager.shutDown();
     }
 }
+//TODO: config using a file not injection

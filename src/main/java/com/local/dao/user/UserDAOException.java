@@ -1,4 +1,4 @@
-package com.local.dao;
+package com.local.dao.user;
 
 import com.local.commonexceptions.ApplicationException;
 
