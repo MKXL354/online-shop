@@ -3,8 +3,8 @@ package com.local.servlet.usermanagement;
 import com.local.commonexceptions.ApplicationRuntimeException;
 import com.local.model.User;
 import com.local.servlet.CommonWebComponentService;
-import com.local.validator.ObjectValidator;
-import com.local.validator.ValidatorException;
+import com.local.util.objectvalidator.ObjectValidator;
+import com.local.util.objectvalidator.ValidatorException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
 

@@ -24,7 +24,7 @@ public class GetAllProductsServlet extends HttpServlet {
         commonWebComponentService = (CommonWebComponentService)getServletContext().getAttribute("commonWebComponentService");
     }
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try{
             List<Product> products = productManagementService.getAllProducts();
             commonWebComponentService.writeResponse(response, products);

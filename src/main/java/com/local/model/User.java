@@ -1,6 +1,6 @@
 package com.local.model;
 
-import com.local.validator.NotNull;
+import com.local.util.objectvalidator.NotNull;
 
 public class User {
     @NotNull(message = "id can't be null")

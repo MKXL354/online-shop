@@ -1,6 +1,5 @@
 package com.local.servlet.usermanagement;
 
-import com.local.service.UserManagementServiceException;
 import com.local.service.UserManagementService;
 import com.local.servlet.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
@@ -23,7 +22,7 @@ public class DeleteUserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
 //        try {
 //            int id = (int)request.getAttribute("id");
 //            userManagementService.deleteUser(id);

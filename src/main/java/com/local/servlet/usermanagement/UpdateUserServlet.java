@@ -1,7 +1,5 @@
 package com.local.servlet.usermanagement;
 
-import com.local.model.User;
-import com.local.service.UserManagementServiceException;
 import com.local.service.UserManagementService;
 import com.local.servlet.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
@@ -24,7 +22,7 @@ public class UpdateUserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 //        User user = (User)request.getAttribute("user");
 //        try {
 //            userManagementService.updateUser(user);

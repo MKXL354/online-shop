@@ -1,6 +1,6 @@
 package com.local.model;
 
-import com.local.validator.NotNull;
+import com.local.util.objectvalidator.NotNull;
 
 public class Product {
     @NotNull(message = "id can't be null")
