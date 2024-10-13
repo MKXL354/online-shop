@@ -52,5 +52,8 @@ public class JwtManager extends TokenManager {
         catch(JwtException e){
             throw new InvalidTokenException("invalid token", e);
         }
+        catch(IllegalArgumentException e){
+            throw new InvalidTokenException("empty token", e);
+        }
     }
 }

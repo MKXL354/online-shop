@@ -44,9 +44,9 @@ public class LoggingFilter implements Filter {
             httpServletResponse.getWriter().print("Internal Server Error");
             logLevel = LogLevel.ERROR;
             StringBuilder stackTrace = new StringBuilder();
-            stackTrace.append(e.getMessage()).append("\n");
+            stackTrace.append(e).append("\n");
             for(StackTraceElement stackTraceElement : e.getStackTrace()){
-                stackTrace.append("\t").append(stackTraceElement.toString()).append("\n");
+                stackTrace.append("\tat ").append(stackTraceElement.toString()).append("\n");
             }
             message = stackTrace.toString();
         }
@@ -58,3 +58,4 @@ public class LoggingFilter implements Filter {
         batchLogManager.addLog(log);
     }
 }
+//TODO: error object and global exception handling

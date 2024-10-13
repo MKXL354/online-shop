@@ -1,4 +1,6 @@
 .gitignore
+src/main/resources/db.properties
+src/main/resources/tokenManager.properties
 TODO.txt
 concurrent_curl.bat
 db/online-shop.mv.db

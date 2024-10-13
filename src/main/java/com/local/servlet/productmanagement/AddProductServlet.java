@@ -35,5 +35,3 @@ public class AddProductServlet extends HttpServlet {
         }
     }
 }
-//TODO: read about exceptions in response and http codes like 401, 403, etc.
-//TODO: read about API design

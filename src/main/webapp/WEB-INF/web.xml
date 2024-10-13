@@ -27,6 +27,10 @@
     <filter-class>com.local.servlet.AdminAuthorizationFilter</filter-class>
   </filter>
   <filter>
+    <filter-name>WebUserAuthorizationFilter</filter-name>
+    <filter-class>com.local.servlet.WebUserAuthorizationFilter</filter-class>
+  </filter>
+  <filter>
     <filter-name>AddUpdateUserFilter</filter-name>
     <filter-class>com.local.servlet.usermanagement.AddUpdateUserFilter</filter-class>
   </filter>
@@ -46,6 +50,14 @@
   <filter-mapping>
     <filter-name>AdminAuthorizationFilter</filter-name>
     <url-pattern>/add-user</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>AdminAuthorizationFilter</filter-name>
+    <url-pattern>/add-product</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>WebUserAuthorizationFilter</filter-name>
+    <url-pattern>/get-products</url-pattern>
   </filter-mapping>
   <filter-mapping>
     <filter-name>AddUpdateUserFilter</filter-name>

@@ -1,12 +1,13 @@
 package com.local;
 
+import com.local.dao.DAOType;
 import com.local.dao.product.ProductDAO;
-import com.local.dao.product.ProductDAOMemImpl;
+import com.local.dao.product.ProductDAOFactory;
+import com.local.dao.user.UserDAOFactory;
 import com.local.service.ProductManagementService;
 import com.local.util.password.PasswordEncryptor;
 import com.local.util.password.PasswordEncryptorImpl;
 import com.local.dao.user.UserDAO;
-import com.local.dao.user.UserDAODBImpl;
 import com.local.db.ConnectionPool;
 import com.local.db.H2ConnectionPool;
 import com.local.service.UserManagementService;
@@ -36,18 +37,18 @@ public class BootstrapListener implements ServletContextListener {
         batchLogManager.start();
         sce.getServletContext().setAttribute("batchLogManager", batchLogManager);
 
-        UserDAO userDAODBImpl = new UserDAODBImpl(connectionPool);
+        UserDAO userDAODBImpl = UserDAOFactory.getUserDAO(DAOType.DB, connectionPool);
         PasswordEncryptor passwordEncryptorImpl = new PasswordEncryptorImpl(1000, 32, 256);
         UserManagementService userManagementService = new UserManagementService(userDAODBImpl, passwordEncryptorImpl);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
 
-        ProductDAO productDAOMemImpl = new ProductDAOMemImpl();
+        ProductDAO productDAOMemImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, null);
         ProductManagementService productManagementService = new ProductManagementService(productDAOMemImpl);
         sce.getServletContext().setAttribute("productManagementService", productManagementService);
 
         String relativeTokenManagerConfigFileLocation = sce.getServletContext().getInitParameter("relativeTokenManagerConfigFileLocation");
         String absoluteTokenManagerConfigFileLocation = sce.getServletContext().getRealPath(relativeTokenManagerConfigFileLocation);
-        TokenManager jwtManager = new JwtManager(absoluteTokenManagerConfigFileLocation, /*15*60*/5000);
+        TokenManager jwtManager = new JwtManager(absoluteTokenManagerConfigFileLocation, 15*60*1000);
         sce.getServletContext().setAttribute("tokenManager", jwtManager);
 
         CommonWebComponentService commonWebComponentService = new CommonWebComponentService(jwtManager);
@@ -60,4 +61,4 @@ public class BootstrapListener implements ServletContextListener {
         batchLogManager.shutDown();
     }
 }
-//TODO: config using a file not injection
+//TODO: config dependencies using file and maybe look for a better DAOFactory design later
