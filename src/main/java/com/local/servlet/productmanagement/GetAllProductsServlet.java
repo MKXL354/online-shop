@@ -35,4 +35,3 @@ public class GetAllProductsServlet extends HttpServlet {
         }
     }
 }
-//TODO: add WEB_USER auth
