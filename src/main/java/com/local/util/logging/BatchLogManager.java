@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.*;
 
@@ -24,7 +23,7 @@ public class BatchLogManager {
         createDirectory();
         this.maxWaitTimeMillis = maxWaitTimeMillis;
         this.maxLogsToWrite = maxLogsToWrite;
-        this.logs = new ArrayDeque<>();
+        this.logs = new ConcurrentLinkedDeque<>();
     }
 
     private void createDirectory(){
