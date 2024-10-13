@@ -43,7 +43,7 @@ public class ObjectValidator{
 						throw new ValidatorException("cannot find " + e.getMessage(), e);
 					}
 					catch(InstantiationException e){
-						throw new ValidatorException("cannot create objectvalidator: " + e.getMessage(), e);
+						throw new ValidatorException("cannot create object validator: " + e.getMessage(), e);
 					}
 					catch(IllegalAccessException | InvocationTargetException e){
 						throw new ValidatorException("unexpected exception: " + e.getMessage(), e);
@@ -54,3 +54,5 @@ public class ObjectValidator{
         return errors.toString();
 	}
 }
+//TODO: maybe change how this returns the errors(use exceptions?)
+//TODO: gson NumberFormatException and check for null in Product object validation

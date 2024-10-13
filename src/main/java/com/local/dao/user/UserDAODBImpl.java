@@ -43,10 +43,7 @@ public class UserDAODBImpl implements UserDAO{
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getType().toString());
             statement.setInt(4, user.getId());
-            int result = statement.executeUpdate();
-            if(result == 0){
-                throw new UserDAOException("user does not exist", null);
-            }
+            statement.executeUpdate();
         }
         catch(DataBaseConnectionException e){
             throw new UserDAOException(e.getMessage(), e);
@@ -63,10 +60,7 @@ public class UserDAODBImpl implements UserDAO{
             PreparedStatement statement = conn.prepareStatement(query)){
 
             statement.setInt(1, id);
-            int result = statement.executeUpdate();
-            if(result == 0){
-                throw new UserDAOException("user does not exist", null);
-            }
+            statement.executeUpdate();
         }
         catch(DataBaseConnectionException e){
             throw new UserDAOException(e.getMessage(), e);

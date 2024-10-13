@@ -1,7 +1,6 @@
-package com.local.servlet.usermanagement;
+package com.local.servlet;
 
 import com.local.model.UserType;
-import com.local.servlet.CommonWebComponentService;
 import com.local.util.token.InvalidTokenException;
 import com.local.util.token.TokenExpiredException;
 import jakarta.servlet.*;

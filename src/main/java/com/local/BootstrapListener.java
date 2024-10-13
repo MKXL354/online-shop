@@ -53,7 +53,9 @@ public class BootstrapListener implements ServletContextListener {
         sce.getServletContext().setAttribute("tokenManager", jwtManager);
 
         ObjectValidator objectValidator = new ObjectValidator();
-        CommonWebComponentService commonWebComponentService = new CommonWebComponentService(jwtManager, objectValidator);
+        sce.getServletContext().setAttribute("objectValidator", objectValidator);
+
+        CommonWebComponentService commonWebComponentService = new CommonWebComponentService(jwtManager);
         sce.getServletContext().setAttribute("commonWebComponentService", commonWebComponentService);
     }
 

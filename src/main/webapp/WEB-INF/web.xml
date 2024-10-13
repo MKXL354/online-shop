@@ -28,15 +28,15 @@
   </filter>
   <filter>
     <filter-name>WebUserAuthorizationFilter</filter-name>
-    <filter-class>com.local.servlet.usermanagement.WebUserAuthorizationFilter</filter-class>
+    <filter-class>com.local.servlet.WebUserAuthorizationFilter</filter-class>
   </filter>
   <filter>
-    <filter-name>AddUpdateUserFilter</filter-name>
-    <filter-class>com.local.servlet.usermanagement.AddUpdateUserFilter</filter-class>
+    <filter-name>UserObjectValidationFilter</filter-name>
+    <filter-class>com.local.servlet.usermanagement.UserObjectValidationFilter</filter-class>
   </filter>
   <filter>
-    <filter-name>AddUpdateProductFilter</filter-name>
-    <filter-class>com.local.servlet.productmanagement.AddUpdateProductFilter</filter-class>
+    <filter-name>ProductObjectValidationFilter</filter-name>
+    <filter-class>com.local.servlet.ProductObjectValidationFilter</filter-class>
   </filter>
 
   <filter-mapping>
@@ -56,11 +56,11 @@
     <url-pattern>/get-products</url-pattern>
   </filter-mapping>
   <filter-mapping>
-    <filter-name>AddUpdateUserFilter</filter-name>
+    <filter-name>UserObjectValidationFilter</filter-name>
     <url-pattern>/add-user</url-pattern>
   </filter-mapping>
   <filter-mapping>
-    <filter-name>AddUpdateProductFilter</filter-name>
+    <filter-name>ProductObjectValidationFilter</filter-name>
     <url-pattern>/add-product</url-pattern>
   </filter-mapping>
 

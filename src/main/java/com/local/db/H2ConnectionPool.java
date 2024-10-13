@@ -47,7 +47,7 @@ public class H2ConnectionPool extends ConnectionPool {
                     }
                 }
                 else{
-                    throw new DataBaseConnectionException("Failed to get connection", e);
+                    throw new DataBaseConnectionException("Failed to get database connection", e);
                 }
             }
         }
