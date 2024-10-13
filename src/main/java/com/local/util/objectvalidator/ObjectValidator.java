@@ -2,7 +2,6 @@ package com.local.util.objectvalidator;
 
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.HashSet;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.annotation.Annotation;
@@ -10,11 +9,11 @@ import java.lang.annotation.Annotation;
 public class ObjectValidator{
 	private ConcurrentMap<String, Validator> validators = new ConcurrentHashMap<>();
 	
-	public HashSet<String> validate(Object obj) throws ValidatorException{
-		HashSet<String> messages = new HashSet<>();
+	public String validate(Object obj) throws ValidatorException{
+		StringBuilder errors = new StringBuilder();
 		if(obj == null){
-			messages.add("object can't be null");
-			return messages;
+			errors.append("object can't be null").append("\n");
+			return errors.toString();
 		}
         Field[] fields = obj.getClass().getDeclaredFields();
         Annotation[] annotations;
@@ -37,7 +36,7 @@ public class ObjectValidator{
 						field.setAccessible(true);
 						if(!validator.isValid(field.get(obj))){
 							message = (String) annotation.annotationType().getMethod("message").invoke(annotation);
-							messages.add(message);
+							errors.append(message).append("\n");
 						}
 					}
 					catch(ClassNotFoundException | NoSuchMethodException e){
@@ -52,6 +51,6 @@ public class ObjectValidator{
                 }
             }
         }
-        return messages;
+        return errors.toString();
 	}
 }

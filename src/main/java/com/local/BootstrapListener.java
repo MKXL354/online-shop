@@ -5,6 +5,7 @@ import com.local.dao.product.ProductDAO;
 import com.local.dao.product.ProductDAOFactory;
 import com.local.dao.user.UserDAOFactory;
 import com.local.service.ProductManagementService;
+import com.local.util.objectvalidator.ObjectValidator;
 import com.local.util.password.PasswordEncryptor;
 import com.local.util.password.PasswordEncryptorImpl;
 import com.local.dao.user.UserDAO;
@@ -51,7 +52,8 @@ public class BootstrapListener implements ServletContextListener {
         TokenManager jwtManager = new JwtManager(absoluteTokenManagerConfigFileLocation, 15*60*1000);
         sce.getServletContext().setAttribute("tokenManager", jwtManager);
 
-        CommonWebComponentService commonWebComponentService = new CommonWebComponentService(jwtManager);
+        ObjectValidator objectValidator = new ObjectValidator();
+        CommonWebComponentService commonWebComponentService = new CommonWebComponentService(jwtManager, objectValidator);
         sce.getServletContext().setAttribute("commonWebComponentService", commonWebComponentService);
     }
 
