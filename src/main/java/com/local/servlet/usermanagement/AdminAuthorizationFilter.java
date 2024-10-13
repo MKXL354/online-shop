@@ -1,6 +1,7 @@
-package com.local.servlet;
+package com.local.servlet.usermanagement;
 
 import com.local.model.UserType;
+import com.local.servlet.CommonWebComponentService;
 import com.local.util.token.InvalidTokenException;
 import com.local.util.token.TokenExpiredException;
 import jakarta.servlet.*;
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WebUserAuthorizationFilter implements Filter {
+public class AdminAuthorizationFilter implements Filter {
     private CommonWebComponentService commonWebComponentService;
 
     @Override
@@ -22,7 +23,7 @@ public class WebUserAuthorizationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", UserType.WEB_USER.toString());
+        claims.put("role", UserType.ADMIN.toString());
         try{
             commonWebComponentService.validateToken(servletRequest, claims);
             filterChain.doFilter(servletRequest, servletResponse);
@@ -34,3 +35,4 @@ public class WebUserAuthorizationFilter implements Filter {
         }
     }
 }
+//TODO: maybe apply "template method" to remove duplication not composition

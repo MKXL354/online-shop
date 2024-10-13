@@ -1,8 +1,9 @@
 package com.local.servlet.usermanagement;
 
+import com.local.dao.user.UserDAOException;
 import com.local.model.User;
-import com.local.service.UserManagementServiceException;
-import com.local.service.UserManagementService;
+import com.local.service.usermanagement.DuplicateUsernameException;
+import com.local.service.usermanagement.UserManagementService;
 import com.local.servlet.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -24,14 +25,13 @@ public class AddUserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         User user = (User)request.getAttribute("user");
         try {
             userManagementService.addUser(user);
             commonWebComponentService.writeResponse(response, "success");
-        } catch (UserManagementServiceException e) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            commonWebComponentService.writeResponse(response, e.getMessage());
+        } catch (DuplicateUsernameException | UserDAOException e) {
+            throw new ServletException(e);
         }
     }
 }

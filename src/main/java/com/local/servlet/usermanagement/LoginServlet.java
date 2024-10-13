@@ -1,9 +1,11 @@
 package com.local.servlet.usermanagement;
 
+import com.local.dao.user.UserDAOException;
 import com.local.model.User;
+import com.local.service.usermanagement.UserNotFoundException;
+import com.local.service.usermanagement.WrongPasswordException;
 import com.local.util.token.TokenManager;
-import com.local.service.UserManagementServiceException;
-import com.local.service.UserManagementService;
+import com.local.service.usermanagement.UserManagementService;
 import com.local.servlet.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -29,7 +31,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
@@ -41,9 +43,8 @@ public class LoginServlet extends HttpServlet {
 
             response.setHeader("Authorization", jws);
             commonWebComponentService.writeResponse(response, user);
-        } catch (UserManagementServiceException e) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            commonWebComponentService.writeResponse(response, e.getMessage());
+        } catch (UserNotFoundException | WrongPasswordException | UserDAOException e) {
+            throw new ServletException(e);
         }
     }
 }

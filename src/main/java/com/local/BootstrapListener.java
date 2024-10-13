@@ -11,7 +11,7 @@ import com.local.util.password.PasswordEncryptorImpl;
 import com.local.dao.user.UserDAO;
 import com.local.db.ConnectionPool;
 import com.local.db.H2ConnectionPool;
-import com.local.service.UserManagementService;
+import com.local.service.usermanagement.UserManagementService;
 import com.local.servlet.CommonWebComponentService;
 import com.local.util.token.JwtManager;
 import com.local.util.token.TokenManager;
