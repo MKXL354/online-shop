@@ -8,16 +8,13 @@ import jakarta.servlet.*;
 import java.io.IOException;
 
 public class ProductObjectValidationFilter extends ObjectValidationFilter {
-    private Product product;
-
     @Override
     protected Object getObjectToValidate(ServletRequest servletRequest) throws IOException, JsonFormatException {
-        product = super.commonWebComponentService.getObjectFromJsonRequest(servletRequest, Product.class);
-        return product;
+        return super.commonWebComponentService.getObjectFromJsonRequest(servletRequest, Product.class);
     }
 
     @Override
-    protected void setObjectAsAttribute(ServletRequest servletRequest) {
-        servletRequest.setAttribute("product", product);
+    protected void setObjectAsAttribute(ServletRequest servletRequest, Object obj) {
+        servletRequest.setAttribute("product", obj);
     }
 }

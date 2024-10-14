@@ -26,7 +26,7 @@ public abstract class ObjectValidationFilter implements Filter {
         }
         String violationMessages = objectValidator.validate(obj);
         if(violationMessages.isEmpty()){
-            setObjectAsAttribute(servletRequest);
+            setObjectAsAttribute(servletRequest, obj);
             filterChain.doFilter(servletRequest, servletResponse);
         }
         else{
@@ -36,6 +36,6 @@ public abstract class ObjectValidationFilter implements Filter {
     }
 
     protected abstract Object getObjectToValidate(ServletRequest servletRequest) throws IOException, JsonFormatException;
-    protected abstract void setObjectAsAttribute(ServletRequest servletRequest);
+    protected abstract void setObjectAsAttribute(ServletRequest servletRequest, Object obj);
 }
 //TODO: redesign 400 bad request
