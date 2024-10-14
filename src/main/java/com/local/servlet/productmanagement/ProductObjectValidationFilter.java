@@ -1,6 +1,7 @@
 package com.local.servlet.productmanagement;
 
 import com.local.model.Product;
+import com.local.servlet.JsonFormatException;
 import com.local.servlet.ObjectValidationFilter;
 import jakarta.servlet.*;
 
@@ -10,7 +11,7 @@ public class ProductObjectValidationFilter extends ObjectValidationFilter {
     private Product product;
 
     @Override
-    protected Object getObjectToValidate(ServletRequest servletRequest) throws IOException {
+    protected Object getObjectToValidate(ServletRequest servletRequest) throws IOException, JsonFormatException {
         product = super.commonWebComponentService.getObjectFromJsonRequest(servletRequest, Product.class);
         return product;
     }

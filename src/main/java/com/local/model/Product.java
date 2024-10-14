@@ -3,16 +3,13 @@ package com.local.model;
 import com.local.util.objectvalidator.NotNull;
 
 public class Product {
-    @NotNull(message = "id can't be null")
     private int id;
 
     @NotNull(message = "name can't be null")
     private String name;
 
-    @NotNull(message = "price can't be null")
     private float price;
 
-    @NotNull(message = "count can't be null")
     private int count;
 
     public Product(int id, String name, float price, int count) {
@@ -36,5 +33,15 @@ public class Product {
 
     public int getCount() {
         return count;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", count=" + count +
+                '}';
     }
 }

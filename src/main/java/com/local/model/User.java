@@ -3,7 +3,6 @@ package com.local.model;
 import com.local.util.objectvalidator.NotNull;
 
 public class User {
-    @NotNull(message = "id can't be null")
     private int id;
 
     @NotNull(message = "username can't be null")

@@ -1,6 +1,7 @@
 package com.local.servlet;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 
@@ -15,14 +16,22 @@ public class CommonWebComponentService {
         gson = new Gson();
     }
 
-    public <T> T getObjectFromJsonRequest(ServletRequest request, Class<T> objectType) throws IOException {
+    public <T> T getObjectFromJsonRequest(ServletRequest request, Class<T> objectType) throws IOException, JsonFormatException {
         BufferedReader reader = request.getReader();
         StringBuilder result = new StringBuilder();
         String line;
         while((line = reader.readLine()) != null){
             result.append(line);
         }
-        return gson.fromJson(result.toString(), objectType);
+        T object;
+        try{
+            object = gson.fromJson(result.toString(), objectType);
+            System.out.println(object);
+        }
+        catch(JsonParseException e){
+            throw new JsonFormatException("cannot parse json", e);
+        }
+        return object;
     }
 
     public void writeResponse(ServletResponse response, String result) throws IOException {

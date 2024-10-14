@@ -18,7 +18,13 @@ public abstract class ObjectValidationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        Object obj = getObjectToValidate(servletRequest);
+        Object obj;
+        try{
+            obj = getObjectToValidate(servletRequest);
+        }
+        catch(JsonFormatException e){
+            throw new ServletException(e);
+        }
         String violationMessages = objectValidator.validate(obj);
         if(violationMessages.isEmpty()){
             setObjectAsAttribute(servletRequest);
@@ -30,6 +36,7 @@ public abstract class ObjectValidationFilter implements Filter {
         }
     }
 
-    protected abstract Object getObjectToValidate(ServletRequest servletRequest) throws IOException;
+    protected abstract Object getObjectToValidate(ServletRequest servletRequest) throws IOException, JsonFormatException;
     protected abstract void setObjectAsAttribute(ServletRequest servletRequest);
 }
+//TODO: redesign 400 bad request
