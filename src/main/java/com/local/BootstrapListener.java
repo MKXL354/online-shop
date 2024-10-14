@@ -4,7 +4,7 @@ import com.local.dao.DAOType;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.product.ProductDAOFactory;
 import com.local.dao.user.UserDAOFactory;
-import com.local.service.ProductManagementService;
+import com.local.service.productmanagement.ProductManagementService;
 import com.local.util.objectvalidator.ObjectValidator;
 import com.local.util.password.PasswordEncryptor;
 import com.local.util.password.PasswordEncryptorImpl;

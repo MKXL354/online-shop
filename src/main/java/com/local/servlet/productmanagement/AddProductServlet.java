@@ -1,8 +1,8 @@
 package com.local.servlet.productmanagement;
 
+import com.local.dao.DAOException;
 import com.local.model.Product;
-import com.local.service.ProductManagementService;
-import com.local.service.ProductManagementServiceException;
+import com.local.service.productmanagement.*;
 import com.local.servlet.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -24,14 +24,13 @@ public class AddProductServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Product product = (Product)request.getAttribute("product");
         try {
             productManagementService.addProduct(product);
             commonWebComponentService.writeResponse(response, "success");
-        } catch (ProductManagementServiceException e) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            commonWebComponentService.writeResponse(response, e.getMessage());
+        } catch (NonPositiveProductCountException | NonPositiveProductPriceException | DuplicateProductNameException | DAOException e) {
+            throw new ServletException(e);
         }
     }
 }

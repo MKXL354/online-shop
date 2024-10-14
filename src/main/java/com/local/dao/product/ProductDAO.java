@@ -1,14 +1,15 @@
 package com.local.dao.product;
 
+import com.local.dao.DAOException;
 import com.local.model.Product;
 
 import java.util.List;
 
 public interface ProductDAO {
-    void addProduct(Product product) throws ProductDAOException;
-    void updateProduct(Product product) throws ProductDAOException;
-    void deleteProduct(int id) throws ProductDAOException;
-    Product findProductById(int id) throws ProductDAOException;
-    Product findProductByName(String name) throws ProductDAOException;
-    List<Product> findAllProducts() throws ProductDAOException;
+    void addProduct(Product product) throws DAOException;
+    void updateProduct(Product product) throws DAOException;
+    void deleteProduct(int id) throws DAOException;
+    Product findProductById(int id) throws DAOException;
+    Product findProductByName(String name) throws DAOException;
+    List<Product> findAllProducts() throws DAOException;
 }

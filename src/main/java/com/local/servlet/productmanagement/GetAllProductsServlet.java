@@ -1,8 +1,8 @@
 package com.local.servlet.productmanagement;
 
+import com.local.dao.DAOException;
 import com.local.model.Product;
-import com.local.service.ProductManagementService;
-import com.local.service.ProductManagementServiceException;
+import com.local.service.productmanagement.ProductManagementService;
 import com.local.servlet.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -24,14 +24,13 @@ public class GetAllProductsServlet extends HttpServlet {
         commonWebComponentService = (CommonWebComponentService)getServletContext().getAttribute("commonWebComponentService");
     }
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try{
             List<Product> products = productManagementService.getAllProducts();
             commonWebComponentService.writeResponse(response, products);
         }
-        catch (ProductManagementServiceException e) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            commonWebComponentService.writeResponse(response, e.getMessage());
+        catch (DAOException e) {
+            throw new ServletException(e);
         }
     }
 }
