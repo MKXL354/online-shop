@@ -3,13 +3,12 @@ package com.local.util.objectvalidator;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.annotation.Annotation;
 
 public class ObjectValidator{
 	private ConcurrentMap<String, Validator> validators = new ConcurrentHashMap<>();
 	
-	public String validate(Object obj) throws ValidatorException{
+	public String validate(Object obj) {
 		StringBuilder errors = new StringBuilder();
 		if(obj == null){
 			errors.append("object can't be null").append("\n");
@@ -39,14 +38,8 @@ public class ObjectValidator{
 							errors.append(message).append("\n");
 						}
 					}
-					catch(ClassNotFoundException | NoSuchMethodException e){
-						throw new ValidatorException("cannot find " + e.getMessage(), e);
-					}
-					catch(InstantiationException e){
-						throw new ValidatorException("cannot create object validator: " + e.getMessage(), e);
-					}
-					catch(IllegalAccessException | InvocationTargetException e){
-						throw new ValidatorException("unexpected exception: " + e.getMessage(), e);
+					catch(ReflectiveOperationException e){
+						throw new RuntimeException("object validator error: " + e.getMessage(), e);
 					}
                 }
             }
@@ -54,5 +47,4 @@ public class ObjectValidator{
         return errors.toString();
 	}
 }
-//TODO: maybe change how this returns the errors(use exceptions?)
 //TODO: gson NumberFormatException and check for null in Product object validation

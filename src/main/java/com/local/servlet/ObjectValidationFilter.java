@@ -1,9 +1,7 @@
 package com.local.servlet;
 
-import com.local.commonexceptions.ApplicationRuntimeException;
 import com.local.servlet.usermanagement.InvalidUserRequestObjectException;
 import com.local.util.objectvalidator.ObjectValidator;
-import com.local.util.objectvalidator.ValidatorException;
 import jakarta.servlet.*;
 
 import java.io.IOException;
@@ -21,18 +19,14 @@ public abstract class ObjectValidationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         Object obj = getObjectToValidate(servletRequest);
-        try {
-            String violationMessages = objectValidator.validate(obj);
-            if(violationMessages.isEmpty()){
-                setObjectAsAttribute(servletRequest);
-                filterChain.doFilter(servletRequest, servletResponse);
-            }
-            else{
-                System.out.println(violationMessages);
-                throw new ServletException(new InvalidUserRequestObjectException(violationMessages, null));
-            }
-        } catch (ValidatorException e) {
-            throw new ApplicationRuntimeException(e.getMessage(), e);
+        String violationMessages = objectValidator.validate(obj);
+        if(violationMessages.isEmpty()){
+            setObjectAsAttribute(servletRequest);
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
+        else{
+            System.out.println(violationMessages);
+            throw new ServletException(new InvalidUserRequestObjectException(violationMessages, null));
         }
     }
 
