@@ -5,11 +5,11 @@ import com.local.servlet.UserAuthorizationFilter;
 
 import java.util.HashMap;
 
-public class AdminAuthorizationFilter extends UserAuthorizationFilter {
+public class WebUserAuthorizationFilter extends UserAuthorizationFilter {
     @Override
     protected HashMap<String, Object> setClaims() {
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put("role", UserType.ADMIN.toString());
+        claims.put("role", UserType.WEB_USER.toString());
         return claims;
     }
 }

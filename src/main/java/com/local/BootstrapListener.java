@@ -55,8 +55,13 @@ public class BootstrapListener implements ServletContextListener {
         ObjectValidator objectValidator = new ObjectValidator();
         sce.getServletContext().setAttribute("objectValidator", objectValidator);
 
-        CommonWebComponentService commonWebComponentService = new CommonWebComponentService(jwtManager);
+        CommonWebComponentService commonWebComponentService = new CommonWebComponentService();
         sce.getServletContext().setAttribute("commonWebComponentService", commonWebComponentService);
+
+        String relativeErrorResponseConfigLocation = sce.getServletContext().getInitParameter("relativeErrorResponseConfigFileLocation");
+        String absoluteErrorResponseConfigLocation = sce.getServletContext().getRealPath(relativeErrorResponseConfigLocation);
+        PropertyManager errorResponsePropertyManager = new PropertyManager(absoluteErrorResponseConfigLocation);
+        sce.getServletContext().setAttribute("errorResponsePropertyManager", errorResponsePropertyManager);
     }
 
     @Override

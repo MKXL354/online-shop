@@ -32,7 +32,7 @@ public class LoggingFilter implements Filter {
 
         try{
             filterChain.doFilter(servletRequest, servletResponse);
-            if(httpServletResponse.getStatus() < 300){
+            if(httpServletResponse.getStatus() < 400){
                 logLevel = LogLevel.OK;
             }
             else{
@@ -58,4 +58,3 @@ public class LoggingFilter implements Filter {
         batchLogManager.addLog(log);
     }
 }
-//TODO: error object and global exception handling

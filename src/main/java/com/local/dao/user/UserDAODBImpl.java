@@ -1,5 +1,6 @@
 package com.local.dao.user;
 
+import com.local.dao.DAOException;
 import com.local.db.ConnectionPool;
 import com.local.db.DataBaseConnectionException;
 import com.local.model.User;
@@ -15,7 +16,7 @@ public class UserDAODBImpl implements UserDAO{
     }
 
     @Override
-    public void addUser(User user) throws UserDAOException {
+    public void addUser(User user) throws DAOException {
         String query = "insert into USERS(USERNAME, PASSWORD, TYPE) values(?,?,?)";
         try(Connection conn = connectionPool.getConnection();
             PreparedStatement statement = conn.prepareStatement(query)){
@@ -26,15 +27,15 @@ public class UserDAODBImpl implements UserDAO{
             statement.executeUpdate();
         }
         catch(DataBaseConnectionException e){
-            throw new UserDAOException(e.getMessage(), e);
+            throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            throw new UserDAOException("constraint violation", e);
+            throw new DAOException("constraint violation", e);
         }
     }
 
     @Override
-    public void updateUser(User user) throws UserDAOException {
+    public void updateUser(User user) throws DAOException {
         String query = "update USERS set USERNAME = ?, PASSWORD = ?, TYPE = ? where ID = ?";
         try(Connection conn = connectionPool.getConnection();
             PreparedStatement statement = conn.prepareStatement(query)){
@@ -46,15 +47,15 @@ public class UserDAODBImpl implements UserDAO{
             statement.executeUpdate();
         }
         catch(DataBaseConnectionException e){
-            throw new UserDAOException(e.getMessage(), e);
+            throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            throw new UserDAOException("constraint violation", e);
+            throw new DAOException("constraint violation", e);
         }
     }
 
     @Override
-    public void deleteUser(int id) throws UserDAOException {
+    public void deleteUser(int id) throws DAOException {
         String query = "delete from USERS where ID = ?";
         try(Connection conn = connectionPool.getConnection();
             PreparedStatement statement = conn.prepareStatement(query)){
@@ -63,15 +64,15 @@ public class UserDAODBImpl implements UserDAO{
             statement.executeUpdate();
         }
         catch(DataBaseConnectionException e){
-            throw new UserDAOException(e.getMessage(), e);
+            throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            throw new UserDAOException("unexpected exception", e);
+            throw new DAOException("unexpected exception", e);
         }
     }
 
     @Override
-    public User findUserById(int id) throws UserDAOException {
+    public User findUserById(int id) throws DAOException {
         String query = "select * from USERS where ID = ?";
         try(Connection conn = connectionPool.getConnection();
             PreparedStatement statement = conn.prepareStatement(query)){
@@ -87,15 +88,15 @@ public class UserDAODBImpl implements UserDAO{
             }
         }
         catch(DataBaseConnectionException e){
-            throw new UserDAOException(e.getMessage(), e);
+            throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            throw new UserDAOException("unexpected exception", e);
+            throw new DAOException("unexpected exception", e);
         }
     }
 
     @Override
-    public User findUserByUsername(String username) throws UserDAOException {
+    public User findUserByUsername(String username) throws DAOException {
         String query = "select * from USERS where USERNAME = ?";
         try(Connection conn = connectionPool.getConnection();
             PreparedStatement statement = conn.prepareStatement(query)){
@@ -111,14 +112,14 @@ public class UserDAODBImpl implements UserDAO{
             }
         }
         catch(DataBaseConnectionException e){
-            throw new UserDAOException(e.getMessage(), e);
+            throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            throw new UserDAOException("unexpected exception", e);
+            throw new DAOException("unexpected exception", e);
         }
     }
 
-    private User createUserFromResultSet(ResultSet resultSet) throws UserDAOException {
+    private User createUserFromResultSet(ResultSet resultSet) throws DAOException {
         try{
             int id = resultSet.getInt("ID");
             String username = resultSet.getString("USERNAME");
@@ -127,7 +128,7 @@ public class UserDAODBImpl implements UserDAO{
             return new User(id, username, password, type);
         }
         catch(SQLException e){
-            throw new UserDAOException("unexpected exception", e);
+            throw new DAOException("unexpected exception", e);
         }
     }
 }

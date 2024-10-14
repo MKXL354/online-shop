@@ -1,6 +1,6 @@
 package com.local.servlet.usermanagement;
 
-import com.local.dao.user.UserDAOException;
+import com.local.dao.DAOException;
 import com.local.model.User;
 import com.local.service.usermanagement.UserNotFoundException;
 import com.local.service.usermanagement.WrongPasswordException;
@@ -43,7 +43,7 @@ public class LoginServlet extends HttpServlet {
 
             response.setHeader("Authorization", jws);
             commonWebComponentService.writeResponse(response, user);
-        } catch (UserNotFoundException | WrongPasswordException | UserDAOException e) {
+        } catch (UserNotFoundException | WrongPasswordException | DAOException e) {
             throw new ServletException(e);
         }
     }

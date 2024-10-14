@@ -37,11 +37,14 @@ public class JwtManager extends TokenManager {
         return jwtBuilder.issuedAt(new Date(startTimeMillis)).expiration(new Date(endTimeMillis)).signWith(secretKey).compact();
     }
 
-    public void validateSignedToken(String compactJws, Map<String, Object> claims) throws InvalidTokenException, TokenExpiredException{
+    public void validateSignedToken(String jws, Map<String, Object> claims) throws InvalidTokenException, TokenExpiredException{
         try{
             JwtParserBuilder jwtParserBuilder = Jwts.parser();
             claims.forEach(jwtParserBuilder::require);
-            jwtParserBuilder.verifyWith(secretKey).build().parseSignedClaims(compactJws);
+            jwtParserBuilder.verifyWith(secretKey).build().parseSignedClaims(jws);
+        }
+        catch(IllegalArgumentException e){
+            throw new InvalidTokenException("empty token", e);
         }
         catch(ExpiredJwtException e){
             throw new TokenExpiredException("expired token", e);
@@ -51,9 +54,6 @@ public class JwtManager extends TokenManager {
         }
         catch(JwtException e){
             throw new InvalidTokenException("invalid token", e);
-        }
-        catch(IllegalArgumentException e){
-            throw new InvalidTokenException("empty token", e);
         }
     }
 }

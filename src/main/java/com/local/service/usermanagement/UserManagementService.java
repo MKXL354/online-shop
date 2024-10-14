@@ -1,7 +1,7 @@
 package com.local.service.usermanagement;
 
+import com.local.dao.DAOException;
 import com.local.dao.user.UserDAO;
-import com.local.dao.user.UserDAOException;
 import com.local.util.password.PasswordEncryptor;
 import com.local.model.User;
 
@@ -14,7 +14,7 @@ public class UserManagementService {
         this.passwordEncryptor = passwordEncryptor;
     }
 
-    public void addUser(User user) throws DuplicateUsernameException, UserDAOException {
+    public void addUser(User user) throws DuplicateUsernameException, DAOException {
         if(userDAO.findUserByUsername(user.getUsername()) != null) {
             throw new DuplicateUsernameException("duplicate username not allowed", null);
         }
@@ -23,7 +23,7 @@ public class UserManagementService {
         userDAO.addUser(DBUser);
     }
 
-    public User login(String username, String password) throws UserNotFoundException, WrongPasswordException, UserDAOException {
+    public User login(String username, String password) throws UserNotFoundException, WrongPasswordException, DAOException {
         User user = userDAO.findUserByUsername(username);
         if(user == null) {
             throw new UserNotFoundException("user not found", null);

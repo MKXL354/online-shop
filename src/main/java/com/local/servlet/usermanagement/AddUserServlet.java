@@ -1,6 +1,6 @@
 package com.local.servlet.usermanagement;
 
-import com.local.dao.user.UserDAOException;
+import com.local.dao.DAOException;
 import com.local.model.User;
 import com.local.service.usermanagement.DuplicateUsernameException;
 import com.local.service.usermanagement.UserManagementService;
@@ -30,7 +30,7 @@ public class AddUserServlet extends HttpServlet {
         try {
             userManagementService.addUser(user);
             commonWebComponentService.writeResponse(response, "success");
-        } catch (DuplicateUsernameException | UserDAOException e) {
+        } catch (DuplicateUsernameException | DAOException e) {
             throw new ServletException(e);
         }
     }

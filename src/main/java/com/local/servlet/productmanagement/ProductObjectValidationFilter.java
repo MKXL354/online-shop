@@ -1,6 +1,7 @@
-package com.local.servlet;
+package com.local.servlet.productmanagement;
 
 import com.local.model.Product;
+import com.local.servlet.ObjectValidationFilter;
 import jakarta.servlet.*;
 
 import java.io.IOException;
