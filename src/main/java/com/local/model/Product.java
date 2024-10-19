@@ -2,6 +2,8 @@ package com.local.model;
 
 import com.local.util.objectvalidator.NotNull;
 
+import java.util.Objects;
+
 public class Product {
     private int id;
 
@@ -36,12 +38,14 @@ public class Product {
     }
 
     @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", count=" + count +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product product)) return false;
+        return id == product.id && Float.compare(price, product.price) == 0 && count == product.count && Objects.equals(name, product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, count);
     }
 }

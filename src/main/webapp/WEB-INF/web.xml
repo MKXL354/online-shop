@@ -46,6 +46,10 @@
     <filter-name>ProductObjectValidationFilter</filter-name>
     <filter-class>com.local.servlet.productmanagement.ProductObjectValidationFilter</filter-class>
   </filter>
+  <filter>
+    <filter-name>ProductDTOObjectValidationFilter</filter-name>
+    <filter-class>com.local.servlet.cartmanagement.ProductDTOObjectValidationFilter</filter-class>
+  </filter>
 
   <filter-mapping>
     <filter-name>LoggingFilter</filter-name>
@@ -75,6 +79,10 @@
     <filter-name>ProductObjectValidationFilter</filter-name>
     <url-pattern>/add-product</url-pattern>
   </filter-mapping>
+  <filter-mapping>
+    <filter-name>ProductDTOObjectValidationFilter</filter-name>
+    <url-pattern>/add-product-to-cart</url-pattern>
+  </filter-mapping>
 
   <listener>
     <listener-class>com.local.BootstrapListener</listener-class>
@@ -96,6 +104,10 @@
     <servlet-name>GetAllProductsServlet</servlet-name>
     <servlet-class>com.local.servlet.productmanagement.GetAllProductsServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>AddProductToCartServlet</servlet-name>
+    <servlet-class>com.local.servlet.cartmanagement.AddProductToCartServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>AddUserServlet</servlet-name>
@@ -112,5 +124,9 @@
   <servlet-mapping>
     <servlet-name>GetAllProductsServlet</servlet-name>
     <url-pattern>/get-products</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AddProductToCartServlet</servlet-name>
+    <url-pattern>/add-product-to-cart</url-pattern>
   </servlet-mapping>
 </web-app>

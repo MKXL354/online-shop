@@ -1,17 +1,17 @@
-package com.local.servlet.usermanagement;
+package com.local.servlet.cartmanagement;
 
-import com.local.model.User;
+import com.local.dto.ProductDTO;
 import com.local.servlet.ObjectValidationFilter;
 import jakarta.servlet.*;
 
-public class UserObjectValidationFilter extends ObjectValidationFilter {
+public class ProductDTOObjectValidationFilter extends ObjectValidationFilter {
     @Override
     protected Class<?> getObjectClass(ServletRequest servletRequest) {
-        return User.class;
+        return ProductDTO.class;
     }
 
     @Override
     protected String getObjectName() {
-        return "user";
+        return "productDTO";
     }
 }

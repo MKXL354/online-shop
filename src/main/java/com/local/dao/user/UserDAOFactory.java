@@ -5,11 +5,14 @@ import com.local.dao.DAOType;
 import com.local.db.ConnectionPool;
 
 public class UserDAOFactory {
+    private static UserDAO userDAODB;
+
     public static UserDAO getUserDAO(DAOType type, ConnectionPool connectionPool) {
         switch(type){
             case MEM -> throw new ApplicationRuntimeException("UserDAOMem not implemented", null);
             case DB -> {
-                return new UserDAODBImpl(connectionPool);
+                userDAODB = new UserDAODBImpl(connectionPool);
+                return userDAODB;
             }
             default -> throw new ApplicationRuntimeException("unsupported UserDAO type", null);
         }

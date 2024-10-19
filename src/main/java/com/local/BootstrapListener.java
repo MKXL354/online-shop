@@ -1,10 +1,14 @@
 package com.local;
 
 import com.local.dao.DAOType;
+import com.local.dao.cart.CartDAO;
+import com.local.dao.cart.CartDAOFactory;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.product.ProductDAOFactory;
 import com.local.dao.user.UserDAOFactory;
+import com.local.service.cartmanagement.CartManagementService;
 import com.local.service.productmanagement.ProductManagementService;
+import com.local.servlet.mapper.ProductDTOMapper;
 import com.local.util.objectvalidator.ObjectValidator;
 import com.local.util.password.PasswordEncryptor;
 import com.local.util.password.PasswordEncryptorImpl;
@@ -43,7 +47,7 @@ public class BootstrapListener implements ServletContextListener {
         UserManagementService userManagementService = new UserManagementService(userDAODBImpl, passwordEncryptorImpl);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
 
-        ProductDAO productDAOMemImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, null);
+        ProductDAO productDAOMemImpl = ProductDAOFactory.getProductDAO(DAOType.DB, connectionPool);
         ProductManagementService productManagementService = new ProductManagementService(productDAOMemImpl);
         sce.getServletContext().setAttribute("productManagementService", productManagementService);
 
@@ -62,6 +66,13 @@ public class BootstrapListener implements ServletContextListener {
         String absoluteErrorResponseConfigLocation = sce.getServletContext().getRealPath(relativeErrorResponseConfigLocation);
         PropertyManager errorResponsePropertyManager = new PropertyManager(absoluteErrorResponseConfigLocation);
         sce.getServletContext().setAttribute("errorResponsePropertyManager", errorResponsePropertyManager);
+
+        ProductDTOMapper productDTOMapper= new ProductDTOMapper(productManagementService);
+        sce.getServletContext().setAttribute("productDTOMapper", productDTOMapper);
+
+        CartDAO cartDAODBImpl = CartDAOFactory.getCartDAO(DAOType.DB, connectionPool);
+        CartManagementService cartManagementService = new CartManagementService(cartDAODBImpl, productDAOMemImpl);
+        sce.getServletContext().setAttribute("cartManagementService", cartManagementService);
     }
 
     @Override

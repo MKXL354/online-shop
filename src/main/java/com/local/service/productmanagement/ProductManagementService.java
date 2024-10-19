@@ -13,7 +13,7 @@ public class ProductManagementService {
         this.productDAO = productDAO;
     }
 
-    public void constraintCheck(Product product) throws NonPositiveProductCountException, NonPositiveProductPriceException {
+    private void constraintCheck(Product product) throws NonPositiveProductCountException, NonPositiveProductPriceException {
         if(product.getCount() <= 0){
             throw new NonPositiveProductCountException("product count should be positive", null);
         }
@@ -24,13 +24,21 @@ public class ProductManagementService {
 
     public void addProduct(Product product) throws NonPositiveProductCountException, NonPositiveProductPriceException, DuplicateProductNameException, DAOException {
         constraintCheck(product);
-        if(productDAO.findProductByName(product.getName()) != null){
+        if(productDAO.getProductByName(product.getName()) != null){
             throw new DuplicateProductNameException("duplicate product name not allowed", null);
         }
         productDAO.addProduct(product);
     }
 
+    public Product getProductById(int id) throws ProductNotFoundException, DAOException {
+        Product product;
+        if((product = productDAO.getProductById(id)) == null){
+            throw new ProductNotFoundException("product not found", null);
+        }
+        return product;
+    }
+
     public List<Product> getAllProducts() throws DAOException{
-        return productDAO.findAllProducts();
+        return productDAO.getAllProducts();
     }
 }

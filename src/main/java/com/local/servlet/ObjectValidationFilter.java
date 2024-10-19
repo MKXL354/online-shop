@@ -19,23 +19,23 @@ public abstract class ObjectValidationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         Object obj;
         try{
-            obj = getObjectToValidate(servletRequest);
+            Class<?> objectClass= getObjectClass(servletRequest);
+            obj = commonWebComponentService.getObjectFromJsonRequest(servletRequest, objectClass);
         }
         catch(JsonFormatException e){
             throw new ServletException(e);
         }
         String violationMessages = objectValidator.validate(obj);
         if(violationMessages.isEmpty()){
-            setObjectAsAttribute(servletRequest, obj);
+            String objectName = getObjectName();
+            servletRequest.setAttribute(objectName, obj);
             filterChain.doFilter(servletRequest, servletResponse);
         }
         else{
-            System.out.println(violationMessages);
             throw new ServletException(new InvalidRequestObjectException(violationMessages, null));
         }
     }
 
-    protected abstract Object getObjectToValidate(ServletRequest servletRequest) throws IOException, JsonFormatException;
-    protected abstract void setObjectAsAttribute(ServletRequest servletRequest, Object obj);
+    protected abstract Class<?> getObjectClass(ServletRequest servletRequest);
+    protected abstract String getObjectName();
 }
-//TODO: redesign 400 bad request

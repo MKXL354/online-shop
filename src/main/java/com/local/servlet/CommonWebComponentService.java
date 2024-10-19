@@ -26,7 +26,6 @@ public class CommonWebComponentService {
         T object;
         try{
             object = gson.fromJson(result.toString(), objectType);
-            System.out.println(object);
         }
         catch(JsonParseException e){
             throw new JsonFormatException("cannot parse json", e);

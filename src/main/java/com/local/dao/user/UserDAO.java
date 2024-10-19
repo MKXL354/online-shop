@@ -7,7 +7,6 @@ public interface UserDAO {
     void addUser(User user) throws DAOException;
     void updateUser(User user) throws DAOException;
     void deleteUser(int id) throws DAOException;
-    User findUserById(int id) throws DAOException;
-    User findUserByUsername(String username) throws DAOException;
-//    TODO: list of all users
+    User getUserById(int id) throws DAOException;
+    User getUserByUsername(String username) throws DAOException;
 }

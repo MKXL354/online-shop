@@ -15,7 +15,7 @@ public class UserManagementService {
     }
 
     public void addUser(User user) throws DuplicateUsernameException, DAOException {
-        if(userDAO.findUserByUsername(user.getUsername()) != null) {
+        if(userDAO.getUserByUsername(user.getUsername()) != null) {
             throw new DuplicateUsernameException("duplicate username not allowed", null);
         }
         String hashedPassword = passwordEncryptor.hashPassword(user.getPassword());
@@ -23,9 +23,17 @@ public class UserManagementService {
         userDAO.addUser(DBUser);
     }
 
+    public User getUserById(int id) throws UserNotFoundException, DAOException {
+        User user;
+        if((user = userDAO.getUserById(id)) == null) {
+            throw new UserNotFoundException("user not found", null);
+        }
+        return user;
+    }
+
     public User login(String username, String password) throws UserNotFoundException, WrongPasswordException, DAOException {
-        User user = userDAO.findUserByUsername(username);
-        if(user == null) {
+        User user;
+        if((user = userDAO.getUserByUsername(username)) == null) {
             throw new UserNotFoundException("user not found", null);
         }
         if(!passwordEncryptor.checkPassword(password, user.getPassword())) {

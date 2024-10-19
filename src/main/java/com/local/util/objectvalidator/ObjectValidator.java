@@ -47,4 +47,3 @@ public class ObjectValidator{
         return errors.toString();
 	}
 }
-//TODO: gson NumberFormatException and check for null in Product object validation

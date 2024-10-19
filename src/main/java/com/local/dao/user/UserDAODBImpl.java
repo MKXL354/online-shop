@@ -72,7 +72,7 @@ public class UserDAODBImpl implements UserDAO{
     }
 
     @Override
-    public User findUserById(int id) throws DAOException {
+    public User getUserById(int id) throws DAOException {
         String query = "select * from USERS where ID = ?";
         try(Connection conn = connectionPool.getConnection();
             PreparedStatement statement = conn.prepareStatement(query)){
@@ -96,7 +96,7 @@ public class UserDAODBImpl implements UserDAO{
     }
 
     @Override
-    public User findUserByUsername(String username) throws DAOException {
+    public User getUserByUsername(String username) throws DAOException {
         String query = "select * from USERS where USERNAME = ?";
         try(Connection conn = connectionPool.getConnection();
             PreparedStatement statement = conn.prepareStatement(query)){

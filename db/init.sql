@@ -9,24 +9,25 @@ create table users(
 create table carts(
     id int auto_increment primary key,
     user_id int not null,
+    process_time datetime,
     foreign key (user_id) references users(id)
 );
--- maybe add an "active" attr. later if you want to record past carts
--- there might be the need for some cascading operation when a user gets deleted, etc.
+
+create table products(
+     id int auto_increment primary key,
+     name varchar(256) unique,
+     price decimal(15, 3) not null,
+     count int not null,
+     check (price > 0),
+     check (count > 0)
+);
 
 create table carts_products(
     cart_id int,
     product_id int,
     count int,
-    primary key (cart_id, product_id, count),
-    check (count > 0)
-);
-
-create table products(
-    id int auto_increment primary key,
-    name varchar(256) unique,
-    price decimal(15, 3) not null,
-    count int not null,
-    check (price > 0),
+    foreign key(cart_id) references carts(id),
+    foreign key(product_id) references products(id) on delete cascade,
+    primary key (cart_id, product_id),
     check (count > 0)
 );
