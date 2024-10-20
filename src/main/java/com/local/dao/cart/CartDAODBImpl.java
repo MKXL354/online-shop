@@ -92,6 +92,25 @@ public class CartDAODBImpl implements CartDAO{
     }
 
     @Override
+    public void removeProductFromCart(Cart cart, Product product) throws DAOException {
+        String query = "delete from CARTS_PRODUCTS where CART_ID = ? and Product_ID = ?";
+        try(Connection conn = connectionPool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(query)){
+
+            statement.setInt(1, cart.getId());
+            statement.setInt(2, product.getId());
+            statement.executeUpdate();
+        }
+        catch(DataBaseConnectionException e){
+            throw new DAOException(e.getMessage(), e);
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+            throw new DAOException("unexpected exception", e);
+        }
+    }
+
+    @Override
     public Cart getActiveCart(User user) throws DAOException {
         String query = "select ID from CARTS where USER_ID = ? and PROCESS_TIME is null";
         try(Connection conn = connectionPool.getConnection();

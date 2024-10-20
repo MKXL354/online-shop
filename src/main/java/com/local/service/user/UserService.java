@@ -6,7 +6,7 @@ import com.local.dao.product.ProductDAO;
 import com.local.model.Cart;
 import com.local.model.Product;
 import com.local.model.User;
-import com.local.service.productmanagement.NonPositiveProductCountException;
+import com.local.service.productmanagement.NegativeProductCountException;
 import com.local.service.productmanagement.ProductNotFoundException;
 
 public class UserService {
@@ -18,16 +18,16 @@ public class UserService {
         this.productDAO = productDAO;
     }
 
-    private void constraintCheck(Product product) throws NonPositiveProductCountException, ProductNotFoundException, DAOException {
+    private void constraintCheck(Product product) throws NegativeProductCountException, ProductNotFoundException, DAOException {
         if(productDAO.getProductById(product.getId()) == null){
             throw new ProductNotFoundException("product not found", null);
         }
-        if(product.getCount() <= 0){
-            throw new NonPositiveProductCountException("product count should be positive", null);
+        if(product.getCount() < 0){
+            throw new NegativeProductCountException("product count can't be negative", null);
         }
     }
 
-    public void addProductToCart(Cart cart, Product product) throws NonPositiveProductCountException, ProductNotFoundException, DAOException {
+    public void addProductToCart(Cart cart, Product product) throws NegativeProductCountException, ProductNotFoundException, DAOException {
         constraintCheck(product);
         if(cartDAO.getProductInCartById(cart.getId(), product.getId()) == null){
             cartDAO.addProductToCart(cart, product);

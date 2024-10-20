@@ -41,6 +41,12 @@ public class CartDAOMemImpl implements CartDAO {
     }
 
     @Override
+    public void removeProductFromCart(Cart cart, Product product) {
+        Set<Product> products = carts.get(cart.getId()).getProducts();
+        products.remove(product);
+    }
+
+    @Override
     public Cart getActiveCart(User user) {
         for(Cart cart : carts.values()) {
             if(cart.getUser().getId() == user.getId() && cart.getProcessTime() == null) {

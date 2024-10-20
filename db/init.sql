@@ -18,8 +18,8 @@ create table products(
      name varchar(256) unique,
      price decimal(15, 3) not null,
      count int not null,
-     check (price > 0),
-     check (count > 0)
+     check (price >= 0),
+     check (count >= 0)
 );
 
 create table carts_products(
