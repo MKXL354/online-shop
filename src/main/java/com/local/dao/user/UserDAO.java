@@ -5,8 +5,6 @@ import com.local.model.User;
 
 public interface UserDAO {
     void addUser(User user) throws DAOException;
-    void updateUser(User user) throws DAOException;
-    void deleteUser(int id) throws DAOException;
     User getUserById(int id) throws DAOException;
     User getUserByUsername(String username) throws DAOException;
 }

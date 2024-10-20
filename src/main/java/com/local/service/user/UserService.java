@@ -38,7 +38,16 @@ public class UserService {
     }
 
     public Cart getActiveCart(User user) throws DAOException{
-        return cartDAO.getActiveCart(user);
+        Cart cart;
+        if((cart = cartDAO.getActiveCart(user)) == null){
+            return cartDAO.addCartToUser(user);
+        }
+        return cart;
+    }
+
+    public void orderCart(User user){
+
     }
 }
 //TODO: maybe use other services instead of DAO (leads to service dependency but concentration of logic)?
+//TODO: repetitive constraint checks? concentrate them in a parent or separate class?

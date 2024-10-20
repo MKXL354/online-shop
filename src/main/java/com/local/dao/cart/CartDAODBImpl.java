@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Set;
 
 public class CartDAODBImpl implements CartDAO{
@@ -101,10 +102,10 @@ public class CartDAODBImpl implements CartDAO{
             if(resultSet.next()){
                 int id = resultSet.getInt("ID");
                 Set<Product> products = getProductsInCart(id);
-                return new Cart(id, user, products);
+                return new Cart(id, user, products, null);
             }
             else{
-                return addCartToUser(user);
+                return null;
             }
         }
         catch(DataBaseConnectionException e){
@@ -127,7 +128,9 @@ public class CartDAODBImpl implements CartDAO{
             statement.executeUpdate();
             try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 generatedKeys.next();
-                return new Cart(generatedKeys.getInt("ID"), user, null);
+                int id = generatedKeys.getInt("ID");
+                Set<Product> products = getProductsInCart(id);
+                return new Cart(id, user, products, null);
             }
         }
         catch(DataBaseConnectionException e){
@@ -141,8 +144,31 @@ public class CartDAODBImpl implements CartDAO{
 
     @Override
     public Set<Product> getProductsInCart(int cartId) throws DAOException {
-        return Set.of();
+        Set<Product> products = new HashSet<>();
+        String query = "select ID, NAME, PRICE, PRODUCTS.COUNT " +
+                "from CARTS_PRODUCTS inner join PRODUCTS on PRODUCT_ID = ID " +
+                "where CART_ID = ?";
+        try(Connection conn = connectionPool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(query)){
+
+            statement.setInt(1, cartId);
+            try(ResultSet resultSet = statement.executeQuery()){
+                while(resultSet.next()){
+                    int id = resultSet.getInt("ID");
+                    String name = resultSet.getString("NAME");
+                    float price = resultSet.getFloat("PRICE");
+                    int count = resultSet.getInt("COUNT");
+                    products.add(new Product(id, name, price, count));
+                }
+                return products;
+            }
+        }
+        catch(DataBaseConnectionException e){
+            throw new DAOException(e.getMessage(), e);
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+            throw new DAOException("unexpected exception", e);
+        }
     }
 }
-//TODO: smaller queries for test getActiveCart()
-//TODO: getProductsInCart()

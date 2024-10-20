@@ -12,6 +12,6 @@ public interface CartDAO {
     void addProductToCart(Cart cart, Product product) throws DAOException;
     void updateProductInCart(Cart cart, Product product) throws DAOException;
     Cart getActiveCart(User user) throws DAOException;
-    Set<Product> getProductsInCart(int cartId) throws DAOException;
     Cart addCartToUser(User user) throws DAOException;
+    Set<Product> getProductsInCart(int cartId) throws DAOException;
 }

@@ -35,43 +35,6 @@ public class UserDAODBImpl implements UserDAO{
     }
 
     @Override
-    public void updateUser(User user) throws DAOException {
-        String query = "update USERS set USERNAME = ?, PASSWORD = ?, TYPE = ? where ID = ?";
-        try(Connection conn = connectionPool.getConnection();
-            PreparedStatement statement = conn.prepareStatement(query)){
-
-            statement.setString(1, user.getUsername());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getType().toString());
-            statement.setInt(4, user.getId());
-            statement.executeUpdate();
-        }
-        catch(DataBaseConnectionException e){
-            throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
-            throw new DAOException("constraint violation", e);
-        }
-    }
-
-    @Override
-    public void deleteUser(int id) throws DAOException {
-        String query = "delete from USERS where ID = ?";
-        try(Connection conn = connectionPool.getConnection();
-            PreparedStatement statement = conn.prepareStatement(query)){
-
-            statement.setInt(1, id);
-            statement.executeUpdate();
-        }
-        catch(DataBaseConnectionException e){
-            throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
-            throw new DAOException("unexpected exception", e);
-        }
-    }
-
-    @Override
     public User getUserById(int id) throws DAOException {
         String query = "select * from USERS where ID = ?";
         try(Connection conn = connectionPool.getConnection();

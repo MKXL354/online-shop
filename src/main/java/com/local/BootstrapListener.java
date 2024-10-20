@@ -6,8 +6,8 @@ import com.local.dao.cart.CartDAOFactory;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.product.ProductDAOFactory;
 import com.local.dao.user.UserDAOFactory;
-import com.local.service.cartmanagement.CartManagementService;
 import com.local.service.productmanagement.ProductManagementService;
+import com.local.service.user.UserService;
 import com.local.servlet.mapper.ProductDTOMapper;
 import com.local.util.objectvalidator.ObjectValidator;
 import com.local.util.password.PasswordEncryptor;
@@ -71,8 +71,8 @@ public class BootstrapListener implements ServletContextListener {
         sce.getServletContext().setAttribute("productDTOMapper", productDTOMapper);
 
         CartDAO cartDAODBImpl = CartDAOFactory.getCartDAO(DAOType.DB, connectionPool);
-        CartManagementService cartManagementService = new CartManagementService(cartDAODBImpl, productDAOMemImpl);
-        sce.getServletContext().setAttribute("cartManagementService", cartManagementService);
+        UserService userService = new UserService(cartDAODBImpl, productDAOMemImpl);
+        sce.getServletContext().setAttribute("userService", userService);
     }
 
     @Override

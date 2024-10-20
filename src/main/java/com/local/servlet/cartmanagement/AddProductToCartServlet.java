@@ -4,7 +4,9 @@ import com.local.commonexceptions.ApplicationException;
 import com.local.dto.ProductDTO;
 import com.local.model.Cart;
 import com.local.model.Product;
-import com.local.service.cartmanagement.CartManagementService;
+import com.local.model.User;
+import com.local.service.user.UserService;
+import com.local.service.usermanagement.UserManagementService;
 import com.local.servlet.mapper.DTOMapper;
 import com.local.servlet.mapper.ProductDTOMapper;
 import jakarta.servlet.ServletConfig;
@@ -15,25 +17,30 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class AddProductToCartServlet extends HttpServlet {
     private DTOMapper<ProductDTO, Product> productDTOMapper;
-    private CartManagementService cartManagementService;
+    private UserManagementService userManagementService;
+    private UserService userService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productDTOMapper = (ProductDTOMapper)getServletContext().getAttribute("productDTOMapper");
-        cartManagementService = (CartManagementService)getServletContext().getAttribute("cartManagementService");
+        userManagementService = (UserManagementService)getServletContext().getAttribute("userManagementService");
+        userService = (UserService)getServletContext().getAttribute("userService");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         ProductDTO productDTO = (ProductDTO)request.getAttribute("productDTO");
+        int userId = Integer.parseInt(request.getParameter("userId"));
         try {
             Product product = productDTOMapper.map(productDTO);
-            Cart cart = new Cart(1, null, null);
-            cartManagementService.addProductToCart(cart, product);
+            User user = userManagementService.getUserById(userId);
+            Cart cart = userService.getActiveCart(user);
+            userService.addProductToCart(cart, product);
         } catch (ApplicationException e) {
             throw new ServletException(e);
         }
     }
 }
-//TODO: get active cart of the user. pass id in productDTO?
+//TODO: userId int validation or pass as object in dto?
+//TODO: maybe make the services bigger not so separated
