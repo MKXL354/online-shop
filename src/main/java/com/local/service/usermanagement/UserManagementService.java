@@ -11,16 +11,17 @@ import java.util.concurrent.locks.ReentrantLock;
 public class UserManagementService {
     private UserDAO userDAO;
     private PasswordEncryptor passwordEncryptor;
-    private ConcurrentHashMap<String, ReentrantLock> userLocks = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, ReentrantLock> userLocks;
 
     public UserManagementService(UserDAO userDAO, PasswordEncryptor passwordEncryptor) {
         this.userDAO = userDAO;
         this.passwordEncryptor = passwordEncryptor;
+        this.userLocks = new ConcurrentHashMap<>();
     }
 
     public void addUser(User user) throws DuplicateUsernameException, DAOException {
-        String userName = user.getUsername();
-        ReentrantLock lock = userLocks.computeIfAbsent(userName, (u) -> new ReentrantLock());
+        String username = user.getUsername();
+        ReentrantLock lock = userLocks.computeIfAbsent(username, (u) -> new ReentrantLock());
         lock.lock();
         try{
             if(userDAO.getUserByUsername(user.getUsername()) != null) {

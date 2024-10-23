@@ -29,7 +29,7 @@ public class AddProductServlet extends HttpServlet {
         try {
             productManagementService.addProduct(product);
             commonWebComponentService.writeResponse(response, "success");
-        } catch (NegativeProductCountException | NegativeProductPriceException | DuplicateProductNameException | DAOException e) {
+        } catch (NegativeProductCountException | NonPositiveProductPriceException | DuplicateProductNameException | DAOException e) {
             throw new ServletException(e);
         }
     }
