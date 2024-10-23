@@ -1,9 +1,8 @@
 package com.local.dto;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class ErrorResponse implements Serializable {
+public class ErrorResponse {
     private String timestamp;
     private int statusCode;
     private String errorResponseType;
@@ -32,5 +31,3 @@ public class ErrorResponse implements Serializable {
         return message;
     }
 }
-
-//TODO: why serializable? isn't it written using gson?

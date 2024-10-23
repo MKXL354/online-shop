@@ -87,7 +87,9 @@ public class BootstrapListener implements ServletContextListener {
 //TODO: wallet payment inside payment service
 //TODO: persistent payment entity
 
-//TODO: initialize dao inside memory classes? separate class for saving state between runs
+//
+
+//TODO: separate class for adding dao mem objects to memory and initialize the server using them each time
 
 //TODO: IoC container, config file and relative path
 //TODO: rewrite DB later

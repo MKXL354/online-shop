@@ -5,4 +5,3 @@ public class InvalidProductCountException extends ProductManagementServiceExcept
         super(message, cause);
     }
 }
-//TODO: changed condition for price and count in both cart and product dao

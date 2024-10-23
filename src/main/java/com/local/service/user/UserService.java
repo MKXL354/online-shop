@@ -61,7 +61,6 @@ public class UserService {
     }
 
 //    public void purchaseCart(Cart cart) throws DAOException {
-//        cartDAO.rollbackCart(cart);
+    //TODO: throw catastrophic TransactionException in case of failure: not caught and logged for admin
 //    }
 }
-//TODO: catastrophic TransactionException not caught and logged for admin
