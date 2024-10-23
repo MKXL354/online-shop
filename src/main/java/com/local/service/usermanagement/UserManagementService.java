@@ -5,9 +5,13 @@ import com.local.dao.user.UserDAO;
 import com.local.util.password.PasswordEncryptor;
 import com.local.model.User;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class UserManagementService {
     private UserDAO userDAO;
     private PasswordEncryptor passwordEncryptor;
+    private ConcurrentHashMap<String, ReentrantLock> userLocks = new ConcurrentHashMap<>();
 
     public UserManagementService(UserDAO userDAO, PasswordEncryptor passwordEncryptor) {
         this.userDAO = userDAO;
@@ -15,12 +19,20 @@ public class UserManagementService {
     }
 
     public void addUser(User user) throws DuplicateUsernameException, DAOException {
-        if(userDAO.getUserByUsername(user.getUsername()) != null) {
-            throw new DuplicateUsernameException("duplicate username not allowed", null);
+        String userName = user.getUsername();
+        ReentrantLock lock = userLocks.computeIfAbsent(userName, (u) -> new ReentrantLock());
+        lock.lock();
+        try{
+            if(userDAO.getUserByUsername(user.getUsername()) != null) {
+                throw new DuplicateUsernameException("duplicate username not allowed", null);
+            }
+            String hashedPassword = passwordEncryptor.hashPassword(user.getPassword());
+            user.setPassword(hashedPassword);
+            userDAO.addUser(user);
         }
-        String hashedPassword = passwordEncryptor.hashPassword(user.getPassword());
-        User DBUser = new User(user.getId(), user.getUsername(), hashedPassword, user.getType());
-        userDAO.addUser(DBUser);
+        finally {
+            lock.unlock();
+        }
     }
 
     public User getUserById(int id) throws UserNotFoundException, DAOException {

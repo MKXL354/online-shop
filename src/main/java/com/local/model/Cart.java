@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public class Cart {
-    private final int id;
-    private final User user;
+    private int id;
+    private User user;
     private Set<Product> products;
     private LocalDateTime processTime;
 
@@ -30,6 +30,14 @@ public class Cart {
 
     public LocalDateTime getProcessTime() {
         return processTime;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setProducts(Set<Product> products) {

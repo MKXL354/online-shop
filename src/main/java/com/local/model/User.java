@@ -3,7 +3,7 @@ package com.local.model;
 import com.local.util.objectvalidator.NotNull;
 
 public class User {
-    private final int id;
+    private int id;
 
     @NotNull(message = "username cant be null")
     private String username;
@@ -42,6 +42,10 @@ public class User {
 
     public double getBalance() {
         return balance;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setUsername(String username) {

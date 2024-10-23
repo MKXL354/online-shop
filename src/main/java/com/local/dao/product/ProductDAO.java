@@ -13,4 +13,4 @@ public interface ProductDAO {
     List<Product> getAllProducts() throws DAOException;
 }
 
-//TODO: review DB later
+//TODO: rewrite DB later

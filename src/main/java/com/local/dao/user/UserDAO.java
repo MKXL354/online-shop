@@ -9,4 +9,4 @@ public interface UserDAO {
     User getUserByUsername(String username) throws DAOException;
 }
 
-//TODO: review DB later
+//TODO: rewrite DB later

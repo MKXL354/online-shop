@@ -38,4 +38,4 @@ public interface CartDAO {
 
 //TODO: initialize dao inside memory classes?
 
-//TODO: review DB later
+//TODO: rewrite DB later
