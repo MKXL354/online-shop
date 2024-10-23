@@ -37,3 +37,5 @@ public interface CartDAO {
 //TODO: cartDAO: addCart, getActive, addPr, RemPr, upPrCount
 
 //TODO: initialize dao inside memory classes?
+
+//TODO: review DB later

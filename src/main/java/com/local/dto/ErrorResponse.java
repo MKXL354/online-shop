@@ -32,3 +32,5 @@ public class ErrorResponse implements Serializable {
         return message;
     }
 }
+
+//TODO: why serializable? isn't it written using gson?

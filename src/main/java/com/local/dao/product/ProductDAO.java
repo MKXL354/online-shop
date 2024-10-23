@@ -12,3 +12,5 @@ public interface ProductDAO {
     Product getProductByName(String name) throws DAOException;
     List<Product> getAllProducts() throws DAOException;
 }
+
+//TODO: review DB later

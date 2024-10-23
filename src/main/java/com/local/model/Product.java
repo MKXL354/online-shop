@@ -5,7 +5,7 @@ import com.local.util.objectvalidator.NotNull;
 import java.util.Objects;
 
 public class Product {
-    private int id;
+    private final int id;
 
     @NotNull(message = "name can't be null")
     private String name;
@@ -35,6 +35,18 @@ public class Product {
 
     public int getCount() {
         return count;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     @Override

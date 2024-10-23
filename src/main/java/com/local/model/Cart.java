@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public class Cart {
-    private int id;
-    private User user;
+    private final int id;
+    private final User user;
     private Set<Product> products;
     private LocalDateTime processTime;
 
@@ -32,7 +32,11 @@ public class Cart {
         return processTime;
     }
 
-    public void setProcessTime(){
-        this.processTime = LocalDateTime.now();
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
+    public void setProcessTime(LocalDateTime processTime) {
+        this.processTime = processTime;
     }
 }
