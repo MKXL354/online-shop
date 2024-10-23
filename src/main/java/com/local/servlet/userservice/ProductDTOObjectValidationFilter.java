@@ -1,4 +1,4 @@
-package com.local.servlet.cartmanagement;
+package com.local.servlet.userservice;
 
 import com.local.dto.ProductDTO;
 import com.local.servlet.ObjectValidationFilter;

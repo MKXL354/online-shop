@@ -3,6 +3,7 @@ create table users(
     username varchar(256) unique not null,
     password varchar(512) not null,
     type varchar(64) not null,
+    balance decimal(15, 3) not null,
     check (type in ('WEB_USER', 'ADMIN'))
 );
 
@@ -18,7 +19,7 @@ create table products(
      name varchar(256) unique,
      price decimal(15, 3) not null,
      count int not null,
-     check (price >= 0),
+     check (price > 0),
      check (count >= 0)
 );
 

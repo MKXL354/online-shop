@@ -26,8 +26,28 @@ public class ProductDAODBImpl implements ProductDAO {
             PreparedStatement statement = conn.prepareStatement(query)){
 
             statement.setString(1, product.getName());
-            statement.setFloat(2, product.getPrice());
+            statement.setDouble(2, product.getPrice());
             statement.setInt(3, product.getCount());
+            statement.executeUpdate();
+        }
+        catch(DataBaseConnectionException e){
+            throw new DAOException(e.getMessage(), e);
+        }
+        catch(SQLException e){
+            throw new DAOException("unexpected exception", e);
+        }
+    }
+
+    @Override
+    public void updateProduct(Product product) throws DAOException {
+        String query = "update PRODUCTS set NAME = ?, PRICE = ?, COUNT = ? where ID = ?";
+        try(Connection conn = connectionPool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(query)){
+
+            statement.setString(1, product.getName());
+            statement.setDouble(2, product.getPrice());
+            statement.setInt(3, product.getCount());
+            statement.setInt(4, product.getId());
             statement.executeUpdate();
         }
         catch(DataBaseConnectionException e){
@@ -110,7 +130,7 @@ public class ProductDAODBImpl implements ProductDAO {
         try{
             int id = resultSet.getInt("ID");
             String name = resultSet.getString("NAME");
-            float price = resultSet.getFloat("PRICE");
+            double price = resultSet.getDouble("PRICE");
             int count = resultSet.getInt("COUNT");
             return new Product(id, name, price, count);
         }

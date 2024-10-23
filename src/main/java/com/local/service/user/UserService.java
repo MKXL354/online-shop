@@ -45,8 +45,8 @@ public class UserService {
         return cart;
     }
 
-    public void orderCart(User user){
-
+    public void purchaseCart(Cart cart) throws DAOException {
+        cartDAO.rollbackCart(cart);
     }
 }
 //TODO: maybe use other services instead of DAO (leads to service dependency but concentration of logic)?

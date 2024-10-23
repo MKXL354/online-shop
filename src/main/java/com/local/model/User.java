@@ -37,4 +37,3 @@ public class User {
         return type;
     }
 }
-//TODO: user dto and json_parser/object_validation for better validation instead of int id as req param?

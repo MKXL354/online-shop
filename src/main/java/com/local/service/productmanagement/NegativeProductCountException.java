@@ -5,4 +5,4 @@ public class NegativeProductCountException extends ProductManagementServiceExcep
         super(message, cause);
     }
 }
-//TODO: messages inside the exception itself? concentration of logic?
+//TODO: changed condition for price and count in both cart and product dao

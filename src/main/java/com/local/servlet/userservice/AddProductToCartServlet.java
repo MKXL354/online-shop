@@ -1,4 +1,4 @@
-package com.local.servlet.cartmanagement;
+package com.local.servlet.userservice;
 
 import com.local.commonexceptions.ApplicationException;
 import com.local.dto.ProductDTO;
@@ -42,5 +42,4 @@ public class AddProductToCartServlet extends HttpServlet {
         }
     }
 }
-//TODO: userId int validation or pass as object in dto?
-//TODO: maybe make the services bigger not so separated
+//TODO: userId int validation

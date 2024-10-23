@@ -7,10 +7,8 @@ import com.local.model.Cart;
 import com.local.model.Product;
 import com.local.model.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +32,7 @@ public class CartDAODBImpl implements CartDAO{
             try(ResultSet resultSet = statement.executeQuery()){
                 if(resultSet.next()){
                     String name = resultSet.getString("NAME");
-                    float price = resultSet.getFloat("PRICE");
+                    double price = resultSet.getDouble("PRICE");
                     int count = resultSet.getInt("COUNT");
                     return new Product(productId, name, price, count);
                 }
@@ -47,7 +45,6 @@ public class CartDAODBImpl implements CartDAO{
             throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
             throw new DAOException("unexpected exception", e);
         }
     }
@@ -66,7 +63,6 @@ public class CartDAODBImpl implements CartDAO{
             throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
             throw new DAOException("unexpected exception", e);
         }
     }
@@ -86,7 +82,6 @@ public class CartDAODBImpl implements CartDAO{
             throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
             throw new DAOException("unexpected exception", e);
         }
     }
@@ -105,7 +100,6 @@ public class CartDAODBImpl implements CartDAO{
             throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
             throw new DAOException("unexpected exception", e);
         }
     }
@@ -131,7 +125,6 @@ public class CartDAODBImpl implements CartDAO{
             throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
             throw new DAOException("unexpected exception", e);
         }
     }
@@ -156,7 +149,6 @@ public class CartDAODBImpl implements CartDAO{
             throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
             throw new DAOException("unexpected exception", e);
         }
     }
@@ -175,7 +167,7 @@ public class CartDAODBImpl implements CartDAO{
                 while(resultSet.next()){
                     int id = resultSet.getInt("ID");
                     String name = resultSet.getString("NAME");
-                    float price = resultSet.getFloat("PRICE");
+                    double price = resultSet.getDouble("PRICE");
                     int count = resultSet.getInt("COUNT");
                     products.add(new Product(id, name, price, count));
                 }
@@ -186,8 +178,56 @@ public class CartDAODBImpl implements CartDAO{
             throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
             throw new DAOException("unexpected exception", e);
         }
     }
+
+    @Override
+    public void purchaseCart(Cart cart) throws DAOException {
+        processCart(cart, "-", LocalDateTime.now().toString());
+    }
+
+    @Override
+    public void rollbackCart(Cart cart) throws DAOException {
+        processCart(cart, "+", null);
+    }
+
+    private void processCart(Cart cart, String operand, String processTime) throws DAOException {
+        String query = "update PRODUCTS p " +
+                "set p.COUNT = p.COUNT " + operand + " (select cp.count " +
+                "from CARTS_PRODUCTS cp " +
+                "where cp.PRODUCT_ID = p.ID and cp.CART_ID = ?);" +
+                "update CARTS set PROCESS_TIME = ? where ID = ?";
+        try(Connection conn = connectionPool.getConnection();
+            PreparedStatement statement = conn.prepareStatement(query)){
+
+            boolean autoCommit = conn.getAutoCommit();
+            conn.setAutoCommit(false);
+            statement.setInt(1, 1);
+            if(processTime == null){
+                statement.setNull(2, Types.TIMESTAMP);
+            }
+            else{
+                statement.setString(2, processTime);
+            }
+            statement.setString(2, processTime);
+            statement.setInt(3, 1);
+            statement.executeUpdate();
+            conn.commit();
+            conn.setAutoCommit(autoCommit);
+        }
+        catch(DataBaseConnectionException e){
+            throw new DAOException(e.getMessage(), e);
+        }
+        catch(SQLException e){
+//            TODO: a better handling of the exception (maybe caused by count going negative)
+//            TODO: rollback logic also
+            e.printStackTrace();
+        }
+    }
 }
+//TODO: 0 count in CARTS_PRODUCTS (inserted or updated)
+//TODO: business processing of processCart (problem with transactional rollback)?
+//TODO: cart should not be empty in processCart or use WHERE EXISTS
+//TODO: test processCart and rollbackCart
+//TODO: extra null in database

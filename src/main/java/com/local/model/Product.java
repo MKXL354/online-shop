@@ -10,11 +10,11 @@ public class Product {
     @NotNull(message = "name can't be null")
     private String name;
 
-    private float price;
+    private double price;
 
     private int count;
 
-    public Product(int id, String name, float price, int count) {
+    public Product(int id, String name, double price, int count) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -29,7 +29,7 @@ public class Product {
         return name;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -41,7 +41,7 @@ public class Product {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Product product)) return false;
-        return id == product.id && Float.compare(price, product.price) == 0 && count == product.count && Objects.equals(name, product.name);
+        return id == product.id && Double.compare(price, product.price) == 0 && count == product.count && Objects.equals(name, product.name);
     }
 
     @Override

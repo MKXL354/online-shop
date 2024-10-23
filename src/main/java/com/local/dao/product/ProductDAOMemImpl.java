@@ -23,6 +23,11 @@ public class ProductDAOMemImpl implements ProductDAO {
     }
 
     @Override
+    public void updateProduct(Product product) {
+        products.put(product.getId(), product);
+    }
+
+    @Override
     public Product getProductById(int id) {
         return products.get(id);
     }

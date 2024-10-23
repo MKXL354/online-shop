@@ -15,4 +15,25 @@ public interface CartDAO {
     Cart getActiveCart(User user) throws DAOException;
     Cart addCartToUser(User user) throws DAOException;
     Set<Product> getProductsInCart(int cartId) throws DAOException;
+    void purchaseCart(Cart cart) throws DAOException;
+    void rollbackCart(Cart cart) throws DAOException;
 }
+//TODO: use atomic dao methods not the straight complex query (transaction problem)?
+//TODO: use ConcurrentHashMap methods like compute or merge for thread-safe updates
+//TODO: you might wrap objects in AtomicReference to safely swap them out
+//TODO: is immutability worth it? no -> immutable core(like id) - mutable properties that change(like name)
+//TODO: catastrophic TransactionException not caught and logged for admin
+//TODO: services as interfaces
+//TODO: userService depending on a paymentService
+
+//TODO: solution for order concurrency: lock map inside service
+//TODO: wallet payment inside payment service
+
+//TODO: IoC container, config file and relative path
+
+//TODO: common service for constraint check
+//TODO: abstract services
+
+//TODO: cartDAO: addCart, getActive, addPr, RemPr, upPrCount
+
+//TODO: initialize dao inside memory classes?
