@@ -15,8 +15,9 @@ public class ProductDAOFactory {
                 return productDAOMem;
             }
             case DB -> {
-                productDAODB = new ProductDAODBImpl(connectionPool);
-                return productDAODB;
+                throw new ApplicationRuntimeException("ProductDAODB not implemented", null);
+//                productDAODB = new ProductDAODBImpl(connectionPool);
+//                return productDAODB;
             }
             default -> throw new ApplicationRuntimeException("unsupported ProductDAO type", null);
         }

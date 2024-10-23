@@ -19,7 +19,7 @@ public class UserManagementService {
         this.userLocks = new ConcurrentHashMap<>();
     }
 
-    public void addUser(User user) throws DuplicateUsernameException, DAOException {
+    public User addUser(User user) throws DuplicateUsernameException, DAOException {
         String username = user.getUsername();
         ReentrantLock lock = userLocks.computeIfAbsent(username, (u) -> new ReentrantLock());
         lock.lock();
@@ -29,7 +29,7 @@ public class UserManagementService {
             }
             String hashedPassword = passwordEncryptor.hashPassword(user.getPassword());
             user.setPassword(hashedPassword);
-            userDAO.addUser(user);
+            return userDAO.addUser(user);
         }
         finally {
             lock.unlock();

@@ -42,12 +42,12 @@ public class BootstrapListener implements ServletContextListener {
         batchLogManager.start();
         sce.getServletContext().setAttribute("batchLogManager", batchLogManager);
 
-        UserDAO userDAODBImpl = UserDAOFactory.getUserDAO(DAOType.DB, connectionPool);
+        UserDAO userDAODBImpl = UserDAOFactory.getUserDAO(DAOType.MEM, connectionPool);
         PasswordEncryptor passwordEncryptorImpl = new PasswordEncryptorImpl(1000, 32, 256);
         UserManagementService userManagementService = new UserManagementService(userDAODBImpl, passwordEncryptorImpl);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
 
-        ProductDAO productDAOMemImpl = ProductDAOFactory.getProductDAO(DAOType.DB, connectionPool);
+        ProductDAO productDAOMemImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, connectionPool);
         ProductManagementService productManagementService = new ProductManagementService(productDAOMemImpl);
         sce.getServletContext().setAttribute("productManagementService", productManagementService);
 
@@ -70,7 +70,7 @@ public class BootstrapListener implements ServletContextListener {
         ProductDTOMapper productDTOMapper= new ProductDTOMapper(productManagementService);
         sce.getServletContext().setAttribute("productDTOMapper", productDTOMapper);
 
-        CartDAO cartDAODBImpl = CartDAOFactory.getCartDAO(DAOType.DB, connectionPool);
+        CartDAO cartDAODBImpl = CartDAOFactory.getCartDAO(DAOType.MEM, connectionPool);
         UserService userService = new UserService(cartDAODBImpl, productDAOMemImpl);
         sce.getServletContext().setAttribute("userService", userService);
     }
@@ -81,4 +81,13 @@ public class BootstrapListener implements ServletContextListener {
         batchLogManager.shutDown();
     }
 }
-//TODO: config dependencies using file and maybe look for a better DAOFactory design later
+//TODO: services as interface to get supplied from outside
+//TODO: userService depending on a paymentService
+//TODO: solution for service concurrency: identity lock map inside service
+//TODO: wallet payment inside payment service
+//TODO: persistent payment entity
+
+//TODO: initialize dao inside memory classes? separate class for saving state between runs
+
+//TODO: IoC container, config file and relative path
+//TODO: rewrite DB later

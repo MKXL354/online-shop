@@ -6,38 +6,24 @@ import com.local.dao.product.ProductDAO;
 import com.local.model.Cart;
 import com.local.model.Product;
 import com.local.model.User;
-import com.local.service.productmanagement.NegativeProductCountException;
+import com.local.service.productmanagement.InvalidProductCountException;
 import com.local.service.productmanagement.ProductNotFoundException;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class UserService {
     private CartDAO cartDAO;
     private ProductDAO productDAO;
+    private ConcurrentHashMap<Integer, ReentrantLock> cartLocks;
 
     public UserService(CartDAO cartDAO, ProductDAO productDAO) {
         this.cartDAO = cartDAO;
         this.productDAO = productDAO;
+        this.cartLocks = new ConcurrentHashMap<>();
     }
 
-    private void constraintCheck(Product product) throws NegativeProductCountException, ProductNotFoundException, DAOException {
-        if(productDAO.getProductById(product.getId()) == null){
-            throw new ProductNotFoundException("product not found", null);
-        }
-        if(product.getCount() < 0){
-            throw new NegativeProductCountException("product count can't be negative", null);
-        }
-    }
-
-    public void addProductToCart(Cart cart, Product product) throws NegativeProductCountException, ProductNotFoundException, DAOException {
-        constraintCheck(product);
-        if(cartDAO.getProductInCartById(cart.getId(), product.getId()) == null){
-            cartDAO.addProductToCart(cart, product);
-        }
-        else{
-            cartDAO.updateProductInCart(cart, product);
-        }
-    }
-
-    public Cart getActiveCart(User user) throws DAOException{
+    public Cart getCart(User user) throws DAOException{
         Cart cart;
         if((cart = cartDAO.getActiveCart(user)) == null){
             return cartDAO.addCartToUser(user);
@@ -45,9 +31,37 @@ public class UserService {
         return cart;
     }
 
-    public void purchaseCart(Cart cart) throws DAOException {
-        cartDAO.rollbackCart(cart);
+    public void addProductToCart(Cart cart, Product product) throws InvalidProductCountException, ProductNotFoundException, DAOException {
+        if(productDAO.getProductById(product.getId()) == null){
+            throw new ProductNotFoundException("product not found", null);
+        }
+        ReentrantLock lock = cartLocks.computeIfAbsent(cart.getId(), (c) -> new ReentrantLock());
+        lock.lock();
+        try{
+            Product productInCart = cartDAO.getProductInCartById(cart.getId(), product.getId());
+            if(productInCart == null){
+                if(product.getCount() <= 0){
+                    throw new InvalidProductCountException("product count can't be non positive", null);
+                }
+                cartDAO.addProductToCart(cart, product);
+            }
+            else{
+                if(product.getCount() < 0){
+                    throw new InvalidProductCountException("product count can't be non negative", null);
+                }
+                if(product.getCount() == 0){
+                    cartDAO.removeProductFromCart(cart, product);
+                }
+                cartDAO.updateProductInCart(cart, product);
+            }
+        }
+        finally {
+            lock.unlock();
+        }
     }
+
+//    public void purchaseCart(Cart cart) throws DAOException {
+//        cartDAO.rollbackCart(cart);
+//    }
 }
-//TODO: maybe use other services instead of DAO (leads to service dependency but concentration of logic)?
-//TODO: repetitive constraint checks? concentrate them in a parent or separate class?
+//TODO: catastrophic TransactionException not caught and logged for admin

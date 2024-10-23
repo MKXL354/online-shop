@@ -5,10 +5,10 @@ import com.local.util.objectvalidator.NotNull;
 public class User {
     private int id;
 
-    @NotNull(message = "username cant be null")
+    @NotNull(message = "username can't be null")
     private String username;
 
-    @NotNull(message = "password cant be null")
+    @NotNull(message = "password can't be null")
     private String password;
 
     @NotNull(message = "wrong or null user type")

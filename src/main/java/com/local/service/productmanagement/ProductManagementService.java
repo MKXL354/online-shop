@@ -17,16 +17,16 @@ public class ProductManagementService {
         this.productLocks = new ConcurrentHashMap<>();
     }
 
-    private void constraintCheck(Product product) throws NegativeProductCountException, NonPositiveProductPriceException {
+    private void constraintCheck(Product product) throws InvalidProductCountException, InvalidProductPriceException {
         if(product.getCount() < 0){
-            throw new NegativeProductCountException("product count cant be negative", null);
+            throw new InvalidProductCountException("product count can't be negative", null);
         }
         if(product.getPrice() <= 0){
-            throw new NonPositiveProductPriceException("product price cant be non positive", null);
+            throw new InvalidProductPriceException("product price can't be non positive", null);
         }
     }
 
-    public void addProduct(Product product) throws NegativeProductCountException, NonPositiveProductPriceException, DuplicateProductNameException, DAOException {
+    public Product addProduct(Product product) throws InvalidProductCountException, InvalidProductPriceException, DuplicateProductNameException, DAOException {
         constraintCheck(product);
         String name = product.getName();
         ReentrantLock lock = productLocks.computeIfAbsent(name, (n) -> new ReentrantLock());
@@ -35,7 +35,7 @@ public class ProductManagementService {
             if(productDAO.getProductByName(product.getName()) != null){
                 throw new DuplicateProductNameException("duplicate product name not allowed", null);
             }
-            productDAO.addProduct(product);
+            return productDAO.addProduct(product);
         }
         finally {
             lock.unlock();

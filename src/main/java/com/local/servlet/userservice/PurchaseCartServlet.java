@@ -28,8 +28,9 @@ public class PurchaseCartServlet extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("userId"));
         try{
             User user = userManagementService.getUserById(userId);
-            Cart cart = userService.getActiveCart(user);
-            userService.purchaseCart(cart);
+            Cart cart = userService.getCart(user);
+//            TODO: purchaseCart
+//            userService.purchaseCart(cart);
         }
         catch(UserNotFoundException | DAOException e){
             throw new ServletException(e);

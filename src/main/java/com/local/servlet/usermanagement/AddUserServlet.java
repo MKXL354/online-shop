@@ -28,8 +28,8 @@ public class AddUserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         User user = (User)request.getAttribute("user");
         try {
-            userManagementService.addUser(user);
-            commonWebComponentService.writeResponse(response, "success");
+            user = userManagementService.addUser(user);
+            commonWebComponentService.writeResponse(response, user);
         } catch (DuplicateUsernameException | DAOException e) {
             throw new ServletException(e);
         }

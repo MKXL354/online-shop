@@ -27,9 +27,9 @@ public class AddProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Product product = (Product)request.getAttribute("product");
         try {
-            productManagementService.addProduct(product);
-            commonWebComponentService.writeResponse(response, "success");
-        } catch (NegativeProductCountException | NonPositiveProductPriceException | DuplicateProductNameException | DAOException e) {
+            product = productManagementService.addProduct(product);
+            commonWebComponentService.writeResponse(response, product);
+        } catch (InvalidProductCountException | InvalidProductPriceException | DuplicateProductNameException | DAOException e) {
             throw new ServletException(e);
         }
     }

@@ -35,7 +35,7 @@ public class AddProductToCartServlet extends HttpServlet {
         try {
             Product product = productDTOMapper.map(productDTO);
             User user = userManagementService.getUserById(userId);
-            Cart cart = userService.getActiveCart(user);
+            Cart cart = userService.getCart(user);
             userService.addProductToCart(cart, product);
         } catch (ApplicationException e) {
             throw new ServletException(e);

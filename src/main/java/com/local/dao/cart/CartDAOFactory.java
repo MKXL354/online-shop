@@ -6,14 +6,19 @@ import com.local.db.ConnectionPool;
 
 public class CartDAOFactory {
     private static CartDAO cartDAODB;
+    private static CartDAO cartDAOMem;
 
     public static CartDAO getCartDAO(DAOType daoType, ConnectionPool connectionPool) {
         switch (daoType) {
             case DB -> {
-                cartDAODB = new CartDAODBImpl(connectionPool);
-                return cartDAODB;
+                throw new ApplicationRuntimeException("cartDAODB not implemented", null);
+//                cartDAODB = new CartDAODBImpl(connectionPool);
+//                return cartDAODB;
             }
-            case MEM -> throw new ApplicationRuntimeException("cartDAOMem not implemented", null);
+            case MEM -> {
+                cartDAOMem = new CartDAOMemImpl();
+                return cartDAOMem;
+            }
             default -> throw new ApplicationRuntimeException("unsupported cartDAO type", null);
         }
     }
