@@ -1,4 +1,4 @@
-package com.local.servlet.userservice;
+package com.local.servlet.user;
 
 import com.local.dto.ProductDTO;
 import com.local.servlet.ObjectValidationFilter;

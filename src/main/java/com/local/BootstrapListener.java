@@ -6,6 +6,7 @@ import com.local.dao.cart.CartDAOFactory;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.product.ProductDAOFactory;
 import com.local.dao.user.UserDAOFactory;
+import com.local.service.payment.PaymentService;
 import com.local.service.productmanagement.ProductManagementService;
 import com.local.service.user.UserService;
 import com.local.servlet.mapper.ProductDTOMapper;
@@ -42,13 +43,13 @@ public class BootstrapListener implements ServletContextListener {
         batchLogManager.start();
         sce.getServletContext().setAttribute("batchLogManager", batchLogManager);
 
-        UserDAO userDAODBImpl = UserDAOFactory.getUserDAO(DAOType.MEM, connectionPool);
+        UserDAO userDAOImpl = UserDAOFactory.getUserDAO(DAOType.MEM, connectionPool);
         PasswordEncryptor passwordEncryptorImpl = new PasswordEncryptorImpl(1000, 32, 256);
-        UserManagementService userManagementService = new UserManagementService(userDAODBImpl, passwordEncryptorImpl);
+        UserManagementService userManagementService = new UserManagementService(userDAOImpl, passwordEncryptorImpl);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
 
-        ProductDAO productDAOMemImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, connectionPool);
-        ProductManagementService productManagementService = new ProductManagementService(productDAOMemImpl);
+        ProductDAO productDAOImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, connectionPool);
+        ProductManagementService productManagementService = new ProductManagementService(productDAOImpl);
         sce.getServletContext().setAttribute("productManagementService", productManagementService);
 
         String relativeTokenManagerConfigFileLocation = sce.getServletContext().getInitParameter("relativeTokenManagerConfigFileLocation");
@@ -70,26 +71,32 @@ public class BootstrapListener implements ServletContextListener {
         ProductDTOMapper productDTOMapper= new ProductDTOMapper(productManagementService);
         sce.getServletContext().setAttribute("productDTOMapper", productDTOMapper);
 
-        CartDAO cartDAODBImpl = CartDAOFactory.getCartDAO(DAOType.MEM, connectionPool);
-        UserService userService = new UserService(cartDAODBImpl, productDAOMemImpl);
+        CartDAO cartDAODImpl = CartDAOFactory.getCartDAO(DAOType.MEM, connectionPool);
+        UserService userService = new UserService(cartDAODImpl, productDAOImpl, userDAOImpl);
         sce.getServletContext().setAttribute("userService", userService);
+
+        PaymentService paymentService = new PaymentService(userDAOImpl);
+        sce.getServletContext().setAttribute("paymentService", paymentService);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
+        System.out.println("Shutting Down the Server");
         connectionPool.closePool();
         batchLogManager.shutDown();
     }
 }
-//TODO: services as interface to get supplied from outside
-//TODO: userService depending on a paymentService
+//TODO: services as interface to get supplied from outside?
 //TODO: solution for service concurrency: identity lock map inside service
-//TODO: wallet payment inside payment service
+//TODO: wallet service for pay and withdraw
 //TODO: persistent payment entity
 
-//
+//TODO: maybe implement thread-safety for MemDAOs too according to the (reference book)
 
-//TODO: separate class for adding dao mem objects to memory and initialize the server using them each time
+//TODO: Reflective Object Validation, remove the need for new validation helper classes each time
+
+//TODO: write MemDAOs to file and initialize using them each time to keep the data between restarts
 
 //TODO: IoC container, config file and relative path
+
 //TODO: rewrite DB later

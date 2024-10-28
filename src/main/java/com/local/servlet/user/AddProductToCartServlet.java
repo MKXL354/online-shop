@@ -1,13 +1,17 @@
-package com.local.servlet.userservice;
+package com.local.servlet.user;
 
 import com.local.commonexceptions.ApplicationException;
+import com.local.dao.DAOException;
 import com.local.dto.ProductDTO;
-import com.local.model.Cart;
 import com.local.model.Product;
 import com.local.model.User;
+import com.local.service.productmanagement.InvalidProductCountException;
+import com.local.service.productmanagement.ProductNotFoundException;
 import com.local.service.user.UserService;
 import com.local.service.usermanagement.UserManagementService;
+import com.local.service.usermanagement.UserNotFoundException;
 import com.local.servlet.mapper.DTOMapper;
+import com.local.servlet.mapper.DTOMapperException;
 import com.local.servlet.mapper.ProductDTOMapper;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -31,15 +35,19 @@ public class AddProductToCartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         ProductDTO productDTO = (ProductDTO)request.getAttribute("productDTO");
-        int userId = Integer.parseInt(request.getParameter("userId"));
         try {
+            int userId = Integer.parseInt(request.getParameter("userId"));
             Product product = productDTOMapper.map(productDTO);
             User user = userManagementService.getUserById(userId);
-            Cart cart = userService.getCart(user);
-            userService.addProductToCart(cart, product);
-        } catch (ApplicationException e) {
+            userService.addProductToCart(user, product);
+        }
+        catch (DTOMapperException e) {
+            throw new ServletException(e.getCause());
+        }
+        catch (NumberFormatException | UserNotFoundException | InvalidProductCountException | ProductNotFoundException |
+               DAOException e) {
             throw new ServletException(e);
         }
     }
 }
-//TODO: userId int validation and exception?
+//TODO: everything as a request parameter? not ProductDTO and Mapper here

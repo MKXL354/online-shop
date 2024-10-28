@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 public class GetAllProductsServlet extends HttpServlet {
     private ProductManagementService productManagementService;
@@ -26,7 +26,7 @@ public class GetAllProductsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try{
-            List<Product> products = productManagementService.getAllProducts();
+            Set<Product> products = productManagementService.getAllProducts();
             commonWebComponentService.writeResponse(response, products);
         }
         catch (DAOException e) {

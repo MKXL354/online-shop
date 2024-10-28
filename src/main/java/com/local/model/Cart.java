@@ -48,3 +48,4 @@ public class Cart {
         this.processTime = processTime;
     }
 }
+//TODO: Set of Product thread-safety? maybe change the type or synchronize?

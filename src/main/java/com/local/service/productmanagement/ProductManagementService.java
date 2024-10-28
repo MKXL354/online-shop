@@ -4,7 +4,7 @@ import com.local.dao.DAOException;
 import com.local.dao.product.ProductDAO;
 import com.local.model.Product;
 
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -50,7 +50,7 @@ public class ProductManagementService {
         return product;
     }
 
-    public List<Product> getAllProducts() throws DAOException{
+    public Set<Product> getAllProducts() throws DAOException{
         return productDAO.getAllProducts();
     }
 }

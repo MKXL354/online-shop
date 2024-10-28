@@ -25,6 +25,11 @@ public class UserDAOMemImpl implements UserDAO {
     }
 
     @Override
+    public void updateUser(User user) {
+        users.put(user.getId(), user);
+    }
+
+    @Override
     public User getUserById(int id) {
         return users.get(id);
     }

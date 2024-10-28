@@ -48,7 +48,7 @@
   </filter>
   <filter>
     <filter-name>ProductDTOObjectValidationFilter</filter-name>
-    <filter-class>com.local.servlet.userservice.ProductDTOObjectValidationFilter</filter-class>
+    <filter-class>com.local.servlet.user.ProductDTOObjectValidationFilter</filter-class>
   </filter>
 
   <filter-mapping>
@@ -106,11 +106,15 @@
   </servlet>
   <servlet>
     <servlet-name>AddProductToCartServlet</servlet-name>
-    <servlet-class>com.local.servlet.userservice.AddProductToCartServlet</servlet-class>
+    <servlet-class>com.local.servlet.user.AddProductToCartServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>PurchaseCartServlet</servlet-name>
-    <servlet-class>com.local.servlet.userservice.PurchaseCartServlet</servlet-class>
+    <servlet-name>PurchaseServlet</servlet-name>
+    <servlet-class>com.local.servlet.user.PurchaseServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>AddBalanceServlet</servlet-name>
+    <servlet-class>com.local.servlet.payment.AddBalanceServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -134,7 +138,11 @@
     <url-pattern>/add-product-to-cart</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>PurchaseCartServlet</servlet-name>
-    <url-pattern>/purchase-cart</url-pattern>
+    <servlet-name>PurchaseServlet</servlet-name>
+    <url-pattern>/purchase</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AddBalanceServlet</servlet-name>
+    <url-pattern>/add-balance</url-pattern>
   </servlet-mapping>
 </web-app>

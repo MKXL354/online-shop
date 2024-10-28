@@ -2,8 +2,8 @@ package com.local.dao.product;
 
 import com.local.model.Product;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,7 +40,7 @@ public class ProductDAOMemImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return new ArrayList<>(products.values());
+    public HashSet<Product> getAllProducts() {
+        return new HashSet<>(products.values());
     }
 }
