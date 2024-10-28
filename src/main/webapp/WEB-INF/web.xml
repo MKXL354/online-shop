@@ -116,6 +116,10 @@
     <servlet-name>AddBalanceServlet</servlet-name>
     <servlet-class>com.local.servlet.payment.AddBalanceServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>GetAllPaymentsServlet</servlet-name>
+    <servlet-class>com.local.servlet.payment.GetAllPaymentsServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>AddUserServlet</servlet-name>
@@ -144,5 +148,9 @@
   <servlet-mapping>
     <servlet-name>AddBalanceServlet</servlet-name>
     <url-pattern>/add-balance</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetAllPaymentsServlet</servlet-name>
+    <url-pattern>/get-all-payments</url-pattern>
   </servlet-mapping>
 </web-app>

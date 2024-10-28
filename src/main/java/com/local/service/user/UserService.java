@@ -2,9 +2,11 @@ package com.local.service.user;
 
 import com.local.dao.DAOException;
 import com.local.dao.cart.CartDAO;
+import com.local.dao.payment.PaymentDAO;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.user.UserDAO;
 import com.local.model.Cart;
+import com.local.model.Payment;
 import com.local.model.Product;
 import com.local.model.User;
 import com.local.service.TransactionException;
@@ -19,12 +21,14 @@ public class UserService {
     private CartDAO cartDAO;
     private ProductDAO productDAO;
     private UserDAO userDAO;
+    private PaymentDAO paymentDAO;
     private ConcurrentHashMap<Integer, ReentrantLock> cartLocks;
 
-    public UserService(CartDAO cartDAO, ProductDAO productDAO, UserDAO userDAO) {
+    public UserService(CartDAO cartDAO, ProductDAO productDAO, UserDAO userDAO, PaymentDAO paymentDAO) {
         this.cartDAO = cartDAO;
         this.productDAO = productDAO;
         this.userDAO = userDAO;
+        this.paymentDAO = paymentDAO;
         this.cartLocks = new ConcurrentHashMap<>();
     }
 
@@ -82,6 +86,7 @@ public class UserService {
             throw new InsufficientBalanceException("insufficient account balance", null);
         }
         user.setBalance(user.getBalance() - totalPrice);
+        Payment payment = new Payment(0, user, totalPrice);
 
         Product mainProduct;
         for(Product orderedProduct : cartProducts){
@@ -94,11 +99,13 @@ public class UserService {
 
         try{
             userDAO.updateUser(user);
+            paymentDAO.addPayment(payment);
             for(Product product: cartProducts){
                 productDAO.updateProduct(product);
             }
         }
         catch(DAOException e){
+//            TODO: note the catastrophic transaction exception that can leave the system in incorrect state
             throw new TransactionException("catastrophic transaction exception occurred", null);
         }
     }

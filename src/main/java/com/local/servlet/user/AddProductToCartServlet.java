@@ -1,6 +1,5 @@
 package com.local.servlet.user;
 
-import com.local.commonexceptions.ApplicationException;
 import com.local.dao.DAOException;
 import com.local.dto.ProductDTO;
 import com.local.model.Product;

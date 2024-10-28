@@ -18,4 +18,4 @@ public interface CartDAO {
     void removeProductFromCart(Cart cart, Product product) throws DAOException;
 }
 
-//TODO: updateCart() usage? product already has specialized updating methods
+//TODO: updateCart() usage? cart already has specialized updating methods for products
