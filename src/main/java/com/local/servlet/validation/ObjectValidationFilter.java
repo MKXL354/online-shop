@@ -11,23 +11,27 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ObjectValidationFilter implements Filter {
     protected CommonWebComponentService commonWebComponentService;
     protected ObjectValidator objectValidator;
+    private ConcurrentHashMap<String, ValidationDataHolder> validationData;
 
     @Override
     public void init(FilterConfig filterConfig) {
         commonWebComponentService = (CommonWebComponentService)filterConfig.getServletContext().getAttribute("commonWebComponentService");
         objectValidator = (ObjectValidator)filterConfig.getServletContext().getAttribute("objectValidator");
+        validationData = new ConcurrentHashMap<>();
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         Object obj;
+        String servletName = ((HttpServletRequest)servletRequest).getHttpServletMapping().getServletName();
+        ValidationDataHolder holder = validationData.computeIfAbsent(servletName, (key) -> getAnnotationValues(servletName, servletRequest));
         try{
-            Class<?> objectClass = getObjectClass(servletRequest);
+            Class<?> objectClass = holder.getObjectClass();
             obj = commonWebComponentService.getObjectFromJsonRequest(servletRequest, objectClass);
         }
         catch(JsonFormatException e){
@@ -35,7 +39,7 @@ public class ObjectValidationFilter implements Filter {
         }
         String violationMessages = objectValidator.validate(obj);
         if(violationMessages.isEmpty()){
-            String objectName = getObjectName(servletRequest);
+            String objectName = holder.getObjectName();
             servletRequest.setAttribute(objectName, obj);
             filterChain.doFilter(servletRequest, servletResponse);
         }
@@ -44,27 +48,20 @@ public class ObjectValidationFilter implements Filter {
         }
     }
 
-    private Class<?> getObjectClass(ServletRequest servletRequest) {
-        return (Class<?>)getAnnotationValues(servletRequest, "objectClass");
-    }
-
-    private String getObjectName(ServletRequest servletRequest) {
-        return (String)getAnnotationValues(servletRequest, "objectName");
-    }
-
-    private Object getAnnotationValues(ServletRequest servletRequest, String valueName) {
-        String servletName = ((HttpServletRequest)servletRequest).getHttpServletMapping().getServletName();
+    private ValidationDataHolder getAnnotationValues(String servletName, ServletRequest servletRequest) {
         try {
             Class<?> servletClass = Class.forName(servletRequest.getServletContext().getServletRegistration(servletName).getClassName());
             Annotation annotation = servletClass.getDeclaredAnnotation(RequiresValidation.class);
             if(annotation == null){
                 throw new ApplicationRuntimeException(servletName + " is not annotated for validation", null);
             }
-            Method method = RequiresValidation.class.getDeclaredMethod(valueName);
-            return method.invoke(annotation);
+            Class<?> objectClass = (Class<?>)RequiresValidation.class.getDeclaredMethod("objectClass").invoke(annotation);
+            String objectName = (String)RequiresValidation.class.getDeclaredMethod("objectName").invoke(annotation);
+            return new ValidationDataHolder(objectClass, objectName);
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new ApplicationRuntimeException(e.getMessage(), e);
         }
     }
 }
-//TODO: maybe cache the results and configure these at startup?
+
+//TODO: maybe a similar mechanism for request parameters?
