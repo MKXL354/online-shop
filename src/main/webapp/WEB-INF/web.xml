@@ -39,16 +39,8 @@
     <filter-class>com.local.servlet.usermanagement.WebUserAuthorizationFilter</filter-class>
   </filter>
   <filter>
-    <filter-name>UserObjectValidationFilter</filter-name>
-    <filter-class>com.local.servlet.usermanagement.UserObjectValidationFilter</filter-class>
-  </filter>
-  <filter>
-    <filter-name>ProductObjectValidationFilter</filter-name>
-    <filter-class>com.local.servlet.productmanagement.ProductObjectValidationFilter</filter-class>
-  </filter>
-  <filter>
-    <filter-name>ProductDTOObjectValidationFilter</filter-name>
-    <filter-class>com.local.servlet.user.ProductDTOObjectValidationFilter</filter-class>
+    <filter-name>ObjectValidationFilter</filter-name>
+    <filter-class>com.local.servlet.validation.ObjectValidationFilter</filter-class>
   </filter>
 
   <filter-mapping>
@@ -72,15 +64,15 @@
     <url-pattern>/get-products</url-pattern>
   </filter-mapping>
   <filter-mapping>
-    <filter-name>UserObjectValidationFilter</filter-name>
+    <filter-name>ObjectValidationFilter</filter-name>
     <url-pattern>/add-user</url-pattern>
   </filter-mapping>
   <filter-mapping>
-    <filter-name>ProductObjectValidationFilter</filter-name>
+    <filter-name>ObjectValidationFilter</filter-name>
     <url-pattern>/add-product</url-pattern>
   </filter-mapping>
   <filter-mapping>
-    <filter-name>ProductDTOObjectValidationFilter</filter-name>
+    <filter-name>ObjectValidationFilter</filter-name>
     <url-pattern>/add-product-to-cart</url-pattern>
   </filter-mapping>
 

@@ -5,6 +5,7 @@ import com.local.model.User;
 import com.local.service.usermanagement.DuplicateUsernameException;
 import com.local.service.usermanagement.UserManagementService;
 import com.local.servlet.CommonWebComponentService;
+import com.local.servlet.validation.RequiresValidation;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+@RequiresValidation(objectClass = User.class, objectName = "user")
 public class AddUserServlet extends HttpServlet {
     private UserManagementService userManagementService;
     private CommonWebComponentService commonWebComponentService;

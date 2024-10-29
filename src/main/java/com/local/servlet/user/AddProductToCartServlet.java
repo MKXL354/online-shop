@@ -12,12 +12,14 @@ import com.local.service.usermanagement.UserNotFoundException;
 import com.local.servlet.mapper.DTOMapper;
 import com.local.servlet.mapper.DTOMapperException;
 import com.local.servlet.mapper.ProductDTOMapper;
+import com.local.servlet.validation.RequiresValidation;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@RequiresValidation(objectClass = ProductDTO.class, objectName = "productDTO")
 public class AddProductToCartServlet extends HttpServlet {
     private DTOMapper<ProductDTO, Product> productDTOMapper;
     private UserManagementService userManagementService;
@@ -49,4 +51,4 @@ public class AddProductToCartServlet extends HttpServlet {
         }
     }
 }
-//TODO: everything as a request parameter? not ProductDTO and Mapper here
+//TODO: everything as a request parameter? not ProductDTO and Mapper like it currently is

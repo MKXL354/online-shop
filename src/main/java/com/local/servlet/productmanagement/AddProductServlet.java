@@ -4,6 +4,7 @@ import com.local.dao.DAOException;
 import com.local.model.Product;
 import com.local.service.productmanagement.*;
 import com.local.servlet.CommonWebComponentService;
+import com.local.servlet.validation.RequiresValidation;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+@RequiresValidation(objectClass = Product.class, objectName = "product")
 public class AddProductServlet extends HttpServlet {
     private ProductManagementService productManagementService;
     private CommonWebComponentService commonWebComponentService;
