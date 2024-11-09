@@ -2,26 +2,26 @@ package com.local.service.usermanagement;
 
 import com.local.dao.DAOException;
 import com.local.dao.user.UserDAO;
+import com.local.util.lock.LockManager;
 import com.local.util.password.PasswordEncryptor;
 import com.local.model.User;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class UserManagementService {
     private UserDAO userDAO;
     private PasswordEncryptor passwordEncryptor;
-    private ConcurrentHashMap<String, ReentrantLock> userLocks;
+    private LockManager lockManager;
 
-    public UserManagementService(UserDAO userDAO, PasswordEncryptor passwordEncryptor) {
+    public UserManagementService(UserDAO userDAO, PasswordEncryptor passwordEncryptor, LockManager lockManager) {
         this.userDAO = userDAO;
         this.passwordEncryptor = passwordEncryptor;
-        this.userLocks = new ConcurrentHashMap<>();
+        this.lockManager = lockManager;
     }
 
     public User addUser(User user) throws DuplicateUsernameException, DAOException {
         String username = user.getUsername();
-        ReentrantLock lock = userLocks.computeIfAbsent(username, (u) -> new ReentrantLock());
+        ReentrantLock lock = lockManager.getLock(username);
         lock.lock();
         try{
             if(userDAO.getUserByUsername(user.getUsername()) != null) {

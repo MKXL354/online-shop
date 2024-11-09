@@ -12,6 +12,7 @@ import com.local.service.payment.PaymentService;
 import com.local.service.productmanagement.ProductManagementService;
 import com.local.service.user.UserService;
 import com.local.servlet.mapper.ProductDTOMapper;
+import com.local.util.lock.LockManager;
 import com.local.util.objectvalidator.ObjectValidator;
 import com.local.util.password.PasswordEncryptor;
 import com.local.util.password.PasswordEncryptorImpl;
@@ -50,11 +51,13 @@ public class BootstrapListener implements ServletContextListener {
         CartDAO cartDAODImpl = CartDAOFactory.getCartDAO(DAOType.MEM, null);
         PaymentDAO paymentDAOImpl = PaymentDAOFactory.getPaymentDAO(DAOType.MEM, null);
 
+        LockManager lockManager = new LockManager();
+
         PasswordEncryptor passwordEncryptorImpl = new PasswordEncryptorImpl(1000, 32, 256);
-        UserManagementService userManagementService = new UserManagementService(userDAOImpl, passwordEncryptorImpl);
+        UserManagementService userManagementService = new UserManagementService(userDAOImpl, passwordEncryptorImpl, lockManager);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
 
-        ProductManagementService productManagementService = new ProductManagementService(productDAOImpl);
+        ProductManagementService productManagementService = new ProductManagementService(productDAOImpl, lockManager);
         sce.getServletContext().setAttribute("productManagementService", productManagementService);
 
         String relativeTokenManagerConfigFileLocation = sce.getServletContext().getInitParameter("relativeTokenManagerConfigFileLocation");
@@ -76,10 +79,10 @@ public class BootstrapListener implements ServletContextListener {
         ProductDTOMapper productDTOMapper= new ProductDTOMapper(productManagementService);
         sce.getServletContext().setAttribute("productDTOMapper", productDTOMapper);
 
-        UserService userService = new UserService(cartDAODImpl, productDAOImpl, userDAOImpl, paymentDAOImpl);
+        UserService userService = new UserService(cartDAODImpl, productDAOImpl, userDAOImpl, paymentDAOImpl, lockManager);
         sce.getServletContext().setAttribute("userService", userService);
 
-        PaymentService paymentService = new PaymentService(userDAOImpl, paymentDAOImpl);
+        PaymentService paymentService = new PaymentService(userDAOImpl, paymentDAOImpl, lockManager);
         sce.getServletContext().setAttribute("paymentService", paymentService);
     }
 
@@ -91,9 +94,12 @@ public class BootstrapListener implements ServletContextListener {
     }
 }
 //TODO: services as interface to get supplied from outside?
-//TODO: maybe implement thread-safety for MemDAOs too according to the (reference book)
-//TODO: Reflective Object Validation, remove the need for new validation helper classes each time
-//TODO: go through the filters in web.xml and update them for the new features
-//TODO: a proposed filter design: have admin/ and web-user/ endpoints to control their accessible actions
+
+//TODO: reconfigure the filters in web.xml
+//TODO: a better filter design: have admin/ and web-user/ endpoints to control their accessible actions
+
 //TODO: IoC container, config file and relative path
+
 //TODO: rewrite DB later
+
+//TODO: maybe use response objects for methods to avoid excessive exceptions and dispersed response logic

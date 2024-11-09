@@ -226,8 +226,3 @@
 //        }
 //    }
 //}
-////TODO: 0 count in CARTS_PRODUCTS (inserted or updated)
-////TODO: business processing of processCart (problem with transactional rollback)?
-////TODO: cart should not be empty in processCart or use WHERE EXISTS
-////TODO: test processCart and rollbackCart
-////TODO: extra null in database

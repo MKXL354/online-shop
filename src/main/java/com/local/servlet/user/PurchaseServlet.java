@@ -31,7 +31,7 @@ public class PurchaseServlet extends HttpServlet {
         try{
             int userId = Integer.parseInt(request.getParameter("userId"));
             User user = userManagementService.getUserById(userId);
-            userService.purchase(user);
+            userService.balancePurchase(user);
         }
         catch(NumberFormatException | UserNotFoundException | EmptyCartException | InsufficientBalanceException |
               InsufficientProductCountException | TransactionException | DAOException e){

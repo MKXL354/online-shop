@@ -3,18 +3,18 @@ package com.local.service.productmanagement;
 import com.local.dao.DAOException;
 import com.local.dao.product.ProductDAO;
 import com.local.model.Product;
+import com.local.util.lock.LockManager;
 
 import java.util.HashSet;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ProductManagementService {
     private ProductDAO productDAO;
-    private ConcurrentHashMap<String, ReentrantLock> productLocks;
+    private LockManager lockManager;
 
-    public ProductManagementService(ProductDAO productDAO) {
+    public ProductManagementService(ProductDAO productDAO, LockManager lockManager) {
         this.productDAO = productDAO;
-        this.productLocks = new ConcurrentHashMap<>();
+        this.lockManager = lockManager;
     }
 
     private void constraintCheck(Product product) throws InvalidProductCountException, InvalidProductPriceException {
@@ -29,7 +29,7 @@ public class ProductManagementService {
     public Product addProduct(Product product) throws InvalidProductCountException, InvalidProductPriceException, DuplicateProductNameException, DAOException {
         constraintCheck(product);
         String name = product.getName();
-        ReentrantLock lock = productLocks.computeIfAbsent(name, (n) -> new ReentrantLock());
+        ReentrantLock lock = lockManager.getLock(name);
         lock.lock();
         try{
             if(productDAO.getProductByName(product.getName()) != null){

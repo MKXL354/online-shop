@@ -63,5 +63,3 @@ public class ObjectValidationFilter implements Filter {
         }
     }
 }
-
-//TODO: maybe a similar mechanism for request parameters?
