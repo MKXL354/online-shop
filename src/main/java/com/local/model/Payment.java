@@ -5,12 +5,16 @@ public class Payment {
     private User user;
     private Cart cart;
     private double amount;
+    private String lastUpdate;
+    private PaymentStatus status;
 
-    public Payment(int id, User user, Cart cart, double amount) {
+    public Payment(int id, User user, Cart cart, double amount, String lastUpdate, PaymentStatus status) {
         this.id = id;
         this.user = user;
         this.cart = cart;
         this.amount = amount;
+        this.lastUpdate = lastUpdate;
+        this.status = status;
     }
 
     public int getId() {
@@ -43,5 +47,21 @@ public class Payment {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getLatUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLatUpdate(String latUpdate) {
+        this.lastUpdate = latUpdate;
+    }
+
+    public PaymentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
     }
 }

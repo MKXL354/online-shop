@@ -1,6 +1,8 @@
 package com.local.dao.payment;
 
 import com.local.model.Payment;
+import com.local.model.PaymentStatus;
+import com.local.model.User;
 
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +26,17 @@ public class PaymentDAOMemImpl implements PaymentDAO {
     }
 
     @Override
+    public Payment getActivePayment(User user) {
+        return payments.searchValues(16, (payment) -> payment.getUser().getId() == user.getId() && payment.getStatus() == PaymentStatus.PENDING ? payment : null);
+    }
+
+    @Override
     public HashSet<Payment> getAllPayments() {
         return new HashSet<>(payments.values());
+    }
+
+    @Override
+    public void updatePayment(Payment payment) {
+        payments.put(payment.getId(), payment);
     }
 }

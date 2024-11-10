@@ -5,15 +5,13 @@ import com.local.dao.cart.CartDAO;
 import com.local.dao.payment.PaymentDAO;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.user.UserDAO;
-import com.local.model.Cart;
-import com.local.model.Payment;
-import com.local.model.Product;
-import com.local.model.User;
+import com.local.model.*;
 import com.local.service.TransactionException;
 import com.local.service.productmanagement.InvalidProductCountException;
 import com.local.service.productmanagement.ProductNotFoundException;
 import com.local.util.lock.LockManager;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -72,13 +70,11 @@ public class UserService {
         }
     }
 
-    public void balancePurchase(User user) throws EmptyCartException, InsufficientBalanceException, InsufficientProductCountException, TransactionException, DAOException {
-//        TODO: remove the copies (used for controlling the update) or fix it later. immutability?
+    public Payment finalizePurchase(User user) throws PreviousPaymentPendingException, EmptyCartException, InsufficientProductCountException, TransactionException, DAOException {
+//        TODO: fix the copies (used for controlling the update) later. maybe through immutability?
         Cart cart = getCart(user);
         ReentrantLock cartLock = lockManager.getLock(Cart.class, cart.getId());
-        ReentrantLock userLock = lockManager.getLock(User.class, user.getUsername());
         cartLock.lock();
-        userLock.lock();
         LinkedList<ReentrantLock> productLocks = new LinkedList<>();
         for(Product product : cart.getProducts()){
             ReentrantLock productLock = lockManager.getLock(Product.class, product.getId());
@@ -86,6 +82,9 @@ public class UserService {
             productLocks.add(productLock);
         }
         try{
+            if(paymentDAO.getActivePayment(user) == null){
+                throw new PreviousPaymentPendingException("a previous payment is pending", null);
+            }
             Set<Product> cartProducts = cart.getProducts();
             if(cartProducts.isEmpty()){
                 throw new EmptyCartException("user cart is empty", null);
@@ -95,27 +94,24 @@ public class UserService {
             for(Product product : cartProducts){
                 totalPrice += product.getPrice() * product.getCount();
             }
-            if(user.getBalance() < totalPrice){
-                throw new InsufficientBalanceException("insufficient account balance", null);
-            }
-            User userCopy = new User(user.getId(), user.getUsername(), user.getPassword(), user.getType(), user.getBalance());
-            userCopy.setBalance(user.getBalance() - totalPrice);
-            Payment payment = new Payment(0, userCopy, cart, totalPrice);
+            Payment payment = new Payment(0, user, cart, totalPrice, LocalDateTime.now().toString(), PaymentStatus.PENDING);
 
             Set<Product> updatedProducts = new HashSet<>();
             Product mainProduct;
             for(Product orderedProduct : cartProducts){
                 mainProduct = productDAO.getProductById(orderedProduct.getId());
                 if(mainProduct.getCount() < orderedProduct.getCount()){
-                    throw new InsufficientProductCountException("ordered count is higher than available count", null);
+                    throw new InsufficientProductCountException(orderedProduct.getName() + " ordered count is higher than available count", null);
                 }
                 Product productCopy = new Product(orderedProduct.getId(), orderedProduct.getName(), orderedProduct.getPrice(), orderedProduct.getCount());
                 productCopy.setCount(mainProduct.getCount() - orderedProduct.getCount());
                 updatedProducts.add(productCopy);
             }
+            Cart cartCopy = new Cart(cart.getId(), cart.getUser(), cart.getProducts(), LocalDateTime.now());
 
+//            TODO: add a rollback mechanism and time limit for pay
             try{
-                userDAO.updateUser(userCopy);
+                cartDAO.updateCart(cartCopy);
                 paymentDAO.addPayment(payment);
                 for(Product product: updatedProducts){
                     productDAO.updateProduct(product);
@@ -125,10 +121,11 @@ public class UserService {
 //            TODO: note the catastrophic transaction exception that can leave the system in incorrect state
                 throw new TransactionException("catastrophic transaction exception occurred", null);
             }
+
+            return payment;
         }
         finally{
             cartLock.unlock();
-            userLock.unlock();
             for(ReentrantLock productLock : productLocks){
                 productLock.unlock();
             }
