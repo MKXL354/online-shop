@@ -29,7 +29,7 @@ public class ProductManagementService {
     public Product addProduct(Product product) throws InvalidProductCountException, InvalidProductPriceException, DuplicateProductNameException, DAOException {
         constraintCheck(product);
         String name = product.getName();
-        ReentrantLock lock = lockManager.getLock(name);
+        ReentrantLock lock = lockManager.getLock(Product.class, name);
         lock.lock();
         try{
             if(productDAO.getProductByName(product.getName()) != null){

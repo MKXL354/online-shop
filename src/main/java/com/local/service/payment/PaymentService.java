@@ -22,7 +22,7 @@ public class PaymentService {
     }
 
     public void addBalance(User user, double amount) throws DAOException {
-        ReentrantLock lock = lockManager.getLock(user.getUsername());
+        ReentrantLock lock = lockManager.getLock(User.class, user.getUsername());
         try{
             lock.lock();
             user.setBalance(user.getBalance() + amount);

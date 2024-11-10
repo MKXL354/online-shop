@@ -21,7 +21,7 @@ public class UserManagementService {
 
     public User addUser(User user) throws DuplicateUsernameException, DAOException {
         String username = user.getUsername();
-        ReentrantLock lock = lockManager.getLock(username);
+        ReentrantLock lock = lockManager.getLock(User.class, username);
         lock.lock();
         try{
             if(userDAO.getUserByUsername(user.getUsername()) != null) {

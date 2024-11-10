@@ -47,7 +47,7 @@ public class UserService {
         if(productDAO.getProductById(product.getId()) == null){
             throw new ProductNotFoundException("product not found", null);
         }
-        ReentrantLock lock = lockManager.getLock(cart.getId());
+        ReentrantLock lock = lockManager.getLock(Cart.class, cart.getId());
         lock.lock();
         try{
             Product productInCart = cartDAO.getProductInCartById(cart.getId(), product.getId());
@@ -75,13 +75,13 @@ public class UserService {
     public void balancePurchase(User user) throws EmptyCartException, InsufficientBalanceException, InsufficientProductCountException, TransactionException, DAOException {
 //        TODO: remove the copies (used for controlling the update) or fix it later. immutability?
         Cart cart = getCart(user);
-        ReentrantLock cartLock = lockManager.getLock(cart.getId());
-        ReentrantLock userLock = lockManager.getLock(user.getUsername());
+        ReentrantLock cartLock = lockManager.getLock(Cart.class, cart.getId());
+        ReentrantLock userLock = lockManager.getLock(User.class, user.getUsername());
         cartLock.lock();
         userLock.lock();
         LinkedList<ReentrantLock> productLocks = new LinkedList<>();
         for(Product product : cart.getProducts()){
-            ReentrantLock productLock = lockManager.getLock(product.getId());
+            ReentrantLock productLock = lockManager.getLock(Product.class, product.getId());
             productLock.lock();
             productLocks.add(productLock);
         }

@@ -8,9 +8,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * This helps coordination of locking between different services.
  */
 public class LockManager {
-    private ConcurrentHashMap<Object, ReentrantLock> locks = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<LockId, ReentrantLock> locks = new ConcurrentHashMap<>();
 
-    public ReentrantLock getLock(Object obj) {
-        return locks.computeIfAbsent(obj, k -> new ReentrantLock());
+    public ReentrantLock getLock(Class<?> objectClass, Object obj) {
+        LockId lockId = new LockId(objectClass, obj);
+        return locks.computeIfAbsent(lockId, k -> new ReentrantLock());
     }
 }
