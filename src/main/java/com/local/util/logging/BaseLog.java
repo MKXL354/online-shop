@@ -29,4 +29,14 @@ public abstract class BaseLog {
         String displayMessage = message == null ? "" : " -" + message;
         return String.format("[startTime: %s][endTime: %s][%s]%s", requestTime.toString(), responseTime.toString(), level.toString(), displayMessage);
     }
+
+    public void logException(Exception exception) {
+        level = LogLevel.ERROR;
+        StringBuilder stackTrace = new StringBuilder();
+        stackTrace.append(exception).append("\n");
+        for(StackTraceElement stackTraceElement : exception.getStackTrace()){
+            stackTrace.append("\tat ").append(stackTraceElement.toString()).append("\n");
+        }
+        message = stackTrace.toString();
+    }
 }

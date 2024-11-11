@@ -24,8 +24,8 @@ public class PaymentService {
         this.lockManager = lockManager;
     }
 
-    public Payment getActivePayment(User user) throws DAOException {
-        return paymentDAO.getActivePayment(user);
+    public Payment getPendingPayment(User user) throws DAOException {
+        return paymentDAO.getPendingPayment(user);
     }
 
     public HashSet<Payment> getAllPayments() throws DAOException {
@@ -45,7 +45,7 @@ public class PaymentService {
     }
 
     public void balancePay(User user) throws ActivePaymentNotFoundException, PaymentAlreadySucceededException, InsufficientBalanceException, TransactionException, DAOException {
-        Payment payment = getActivePayment(user);
+        Payment payment = getPendingPayment(user);
         if(payment == null){
             throw new ActivePaymentNotFoundException("no active payment found", null);
         }

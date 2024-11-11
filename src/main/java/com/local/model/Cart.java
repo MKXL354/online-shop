@@ -16,6 +16,12 @@ public class Cart {
         this.processTime = processTime;
     }
 
+    public Cart(Cart cart){
+        this(cart.getId(), null, cart.getProducts(), cart.getProcessTime());
+        User user = new User(cart.getUser());
+        this.setUser(user);
+    }
+
     public int getId() {
         return id;
     }
@@ -48,4 +54,3 @@ public class Cart {
         this.processTime = processTime;
     }
 }
-//TODO: Set of Product thread-safety? maybe change the type or synchronize?

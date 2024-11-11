@@ -8,8 +8,9 @@ import java.util.HashSet;
 
 public interface PaymentDAO {
     Payment addPayment(Payment payment) throws DAOException;
-    Payment getActivePayment(User user) throws DAOException;
+    Payment getPendingPayment(User user) throws DAOException;
     HashSet<Payment> getAllPayments() throws DAOException;
+    HashSet<Payment> getAllPendingPayments() throws DAOException;
     void updatePayment(Payment payment) throws DAOException;
 }
 

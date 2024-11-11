@@ -4,7 +4,7 @@ import com.local.util.objectvalidator.NotNull;
 
 import java.util.Objects;
 
-public class Product {
+public class Product implements Comparable<Product>{
     private int id;
 
     @NotNull(message = "name can't be null")
@@ -19,6 +19,10 @@ public class Product {
         this.name = name;
         this.price = price;
         this.count = count;
+    }
+
+    public Product(Product product) {
+        this(product.getId(), product.getName(), product.getPrice(), product.getCount());
     }
 
     public int getId() {
@@ -63,5 +67,10 @@ public class Product {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, price, count);
+    }
+
+    @Override
+    public int compareTo(Product product) {
+        return Integer.compare(this.id, product.id);
     }
 }

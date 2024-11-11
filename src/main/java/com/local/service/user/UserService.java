@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class UserService {
@@ -91,15 +92,15 @@ public class UserService {
         cartLock.lock();
 
         LinkedList<ReentrantLock> productLocks = new LinkedList<>();
-        Set<Product> cartProducts = cartDAO.getProductsInCart(cart.getId());
+        TreeSet<Product> cartProducts = new TreeSet<>(cartDAO.getProductsInCart(cart.getId()));
         for(Product product : cartProducts){
-            ReentrantLock productLock = lockManager.getLock(Product.class, product.getId());
+            ReentrantLock productLock = lockManager.getLock(Product.class, product.getName());
             productLock.lock();
             productLocks.add(productLock);
         }
 
         try{
-            if(paymentDAO.getActivePayment(user) != null){
+            if(paymentDAO.getPendingPayment(user) != null){
                 throw new PreviousPaymentPendingException("a previous payment is pending", null);
             }
             if(cartProducts.isEmpty()){
@@ -113,7 +114,6 @@ public class UserService {
             Payment payment = new Payment(0, user, cart, totalPrice, LocalDateTime.now(), PaymentStatus.PENDING);
             Set<Product> updatedProducts = getUpdatedProducts(cartProducts, false);
             cart.setProcessTime(LocalDateTime.now());
-
 
             try{
                 cartDAO.updateCart(cart);
@@ -136,7 +136,7 @@ public class UserService {
         }
     }
 
-//    TODO: send paymentId in web request
+    //    TODO: send paymentId in web request
     public void rollbackPurchase(Payment payment) throws PaymentNotPendingException, InsufficientProductCountException, TransactionException, DAOException {
         if(payment.getStatus() != PaymentStatus.PENDING){
             throw new PaymentNotPendingException("payment is not pending", null);
@@ -148,9 +148,9 @@ public class UserService {
         paymentLock.lock();
 
         LinkedList<ReentrantLock> oldProductsLocks = new LinkedList<>();
-        Set<Product> oldCartProducts = payment.getCart().getProducts();
+        TreeSet<Product> oldCartProducts = new TreeSet<>(cartDAO.getProductsInCart(payment.getCart().getId()));
         for(Product product : oldCartProducts){
-            ReentrantLock productLock = lockManager.getLock(Product.class, product.getId());
+            ReentrantLock productLock = lockManager.getLock(Product.class, product.getName());
             productLock.lock();
             oldProductsLocks.add(productLock);
         }
@@ -158,6 +158,7 @@ public class UserService {
         try{
             Set<Product> updatedProducts = getUpdatedProducts(oldCartProducts, true);
             payment.setStatus(PaymentStatus.FAILED);
+            payment.setLastUpdate(LocalDateTime.now());
             for(Product product : oldCartProducts){
                 cartDAO.addProductToCart(activeCart, product);
             }

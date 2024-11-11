@@ -2,7 +2,7 @@ package com.local.model;
 
 import java.time.LocalDateTime;
 
-public class Payment {
+public class Payment implements Comparable<Payment>{
     private int id;
     private User user;
     private Cart cart;
@@ -17,6 +17,14 @@ public class Payment {
         this.amount = amount;
         this.lastUpdate = lastUpdate;
         this.status = status;
+    }
+
+    public Payment(Payment payment){
+        this(payment.getId(), null, null, payment.getAmount(), payment.getLastUpdate(), payment.getStatus());
+        User newUser = new User(payment.getUser());
+        Cart cart = new Cart(payment.getCart());
+        this.setUser(newUser);
+        this.setCart(cart);
     }
 
     public int getId() {
@@ -65,5 +73,10 @@ public class Payment {
 
     public void setStatus(PaymentStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public int compareTo(Payment payment) {
+        return Integer.compare(this.id, payment.id);
     }
 }

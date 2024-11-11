@@ -5,6 +5,7 @@ public class ActivityLog extends BaseLog {
     private String url;
 
     public ActivityLog(String clientIp, String url) {
+        super();
         this.clientIp = clientIp;
         this.url = url;
     }

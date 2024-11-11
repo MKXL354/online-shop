@@ -24,6 +24,10 @@ public class User {
         this.balance = balance;
     }
 
+    public User(User user){
+        this(user.getId(), user.getUsername(), user.getPassword(), user.getType(), user.getBalance());
+    }
+
     public int getId() {
         return id;
     }
