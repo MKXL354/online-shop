@@ -6,11 +6,13 @@ import com.local.dao.user.UserDAO;
 import com.local.model.Payment;
 import com.local.model.PaymentStatus;
 import com.local.model.User;
+import com.local.service.ServiceException;
 import com.local.service.TransactionException;
 import com.local.util.lock.LockManager;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PaymentService {
@@ -44,17 +46,17 @@ public class PaymentService {
         }
     }
 
-    public void balancePay(User user) throws ActivePaymentNotFoundException, PaymentAlreadySucceededException, InsufficientBalanceException, TransactionException, DAOException {
+    public void balancePay(User user) throws PendingPaymentNotFoundException, InsufficientBalanceException, TransactionException, DAOException {
         Payment payment = getPendingPayment(user);
         if(payment == null){
-            throw new ActivePaymentNotFoundException("no active payment found", null);
+            throw new PendingPaymentNotFoundException("no pending payment found", null);
         }
         ReentrantLock userLock = lockManager.getLock(User.class, user.getUsername());
+        ReentrantLock paymentLock = lockManager.getLock(Payment.class, payment.getId());
+        userLock.lock();
+        paymentLock.lock();
 
         try{
-            if(payment.getStatus().equals(PaymentStatus.SUCCESSFUL)){
-                throw new PaymentAlreadySucceededException("payment is already succeeded", null);
-            }
             if(user.getBalance() < payment.getAmount()){
                 throw new InsufficientBalanceException("insufficient account balance", null);
             }
@@ -72,12 +74,36 @@ public class PaymentService {
         }
         finally{
             userLock.unlock();
+            paymentLock.unlock();
         }
     }
 
-    public void cardPay(User user){
-//        TODO: card entity and chance-based validation?
+    public void cardPay(User user) throws ServiceException, DAOException {
+        Payment payment = paymentDAO.getPendingPayment(user);
+        if(payment == null){
+            throw new PendingPaymentNotFoundException("no active payment found", null);
+        }
+        ReentrantLock paymentLock = lockManager.getLock(Payment.class, payment.getId());
+        paymentLock.lock();
+        try{
+            double randomValue = ThreadLocalRandom.current().nextDouble(0, 1);
+            //Simulated connection to foreign API (like a payment portal)
+            if(randomValue < 0.7){
+                payment.setLastUpdate(LocalDateTime.now());
+                payment.setStatus(PaymentStatus.SUCCESSFUL);
+                paymentDAO.updatePayment(payment);
+            }
+            else if(randomValue < 0.9){
+                throw new ServiceException("invalid credentials", null);
+            }
+            else{
+                throw new ServiceException("not enough credit", null);
+            }
+        }
+        finally {
+            paymentLock.unlock();
+        }
     }
 }
-//TODO: add balance and card pay endpoints
-//TODO: add order cancelling? because only one active payment is possible at any time
+//TODO: add balance and card pay servlets
+//TODO: add order cancelling? because only one pending payment is possible at any time

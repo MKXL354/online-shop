@@ -1,6 +1,5 @@
 package com.local.dao.payment;
 
-import com.local.model.Cart;
 import com.local.model.Payment;
 import com.local.model.PaymentStatus;
 import com.local.model.User;
