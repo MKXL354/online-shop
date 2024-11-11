@@ -50,6 +50,7 @@ public class PaymentService {
             throw new ActivePaymentNotFoundException("no active payment found", null);
         }
         ReentrantLock userLock = lockManager.getLock(User.class, user.getUsername());
+
         try{
             if(payment.getStatus().equals(PaymentStatus.SUCCESSFUL)){
                 throw new PaymentAlreadySucceededException("payment is already succeeded", null);
