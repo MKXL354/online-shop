@@ -136,7 +136,7 @@ public class UserService {
         }
     }
 
-    //    TODO: send paymentId in web request
+    //    TODO: use userId to cancel payments
     public void rollbackPurchase(Payment payment) throws PaymentNotPendingException, InsufficientProductCountException, TransactionException, DAOException {
         if(payment.getStatus() != PaymentStatus.PENDING){
             throw new PaymentNotPendingException("payment is not pending", null);
