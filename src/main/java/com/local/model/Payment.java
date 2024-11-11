@@ -1,14 +1,16 @@
 package com.local.model;
 
+import java.time.LocalDateTime;
+
 public class Payment {
     private int id;
     private User user;
     private Cart cart;
     private double amount;
-    private String lastUpdate;
+    private LocalDateTime lastUpdate;
     private PaymentStatus status;
 
-    public Payment(int id, User user, Cart cart, double amount, String lastUpdate, PaymentStatus status) {
+    public Payment(int id, User user, Cart cart, double amount, LocalDateTime lastUpdate, PaymentStatus status) {
         this.id = id;
         this.user = user;
         this.cart = cart;
@@ -49,12 +51,12 @@ public class Payment {
         this.amount = amount;
     }
 
-    public String getLatUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLatUpdate(String latUpdate) {
-        this.lastUpdate = latUpdate;
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public PaymentStatus getStatus() {

@@ -57,12 +57,13 @@ public class PaymentService {
             if(user.getBalance() < payment.getAmount()){
                 throw new InsufficientBalanceException("insufficient account balance", null);
             }
-            User userCopy = new User(user.getId(), user.getUsername(), user.getPassword(), user.getType(), user.getBalance() - payment.getAmount());
-            Payment paymentCopy = new Payment(payment.getId(), payment.getUser(), payment.getCart(), payment.getAmount(), LocalDateTime.now().toString(), PaymentStatus.SUCCESSFUL);
+            user.setBalance(user.getBalance() - payment.getAmount());
+            payment.setLastUpdate(LocalDateTime.now());
+            payment.setStatus(PaymentStatus.SUCCESSFUL);
 
             try{
-                userDAO.updateUser(userCopy);
-                paymentDAO.updatePayment(paymentCopy);
+                userDAO.updateUser(user);
+                paymentDAO.updatePayment(payment);
             }
             catch(DAOException e){
                 throw new TransactionException("catastrophic transaction exception occurred", null);

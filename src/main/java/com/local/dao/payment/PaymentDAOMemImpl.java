@@ -27,7 +27,11 @@ public class PaymentDAOMemImpl implements PaymentDAO {
 
     @Override
     public Payment getActivePayment(User user) {
-        return payments.searchValues(16, (payment) -> payment.getUser().getId() == user.getId() && payment.getStatus() == PaymentStatus.PENDING ? payment : null);
+        Payment payment = payments.searchValues(16, (p) -> p.getUser().getId() == user.getId() && p.getStatus() == PaymentStatus.PENDING ? p : null);
+        if(payment != null) {
+            return new Payment(payment.getId(), payment.getUser(), payment.getCart(), payment.getAmount(), payment.getLastUpdate(), payment.getStatus());
+        }
+        return null;
     }
 
     @Override

@@ -70,22 +70,21 @@ public class UserService {
         }
     }
 
-    public Payment finalizePurchase(User user) throws PreviousPaymentPendingException, EmptyCartException, InsufficientProductCountException, TransactionException, DAOException {
-//        TODO: fix the copies (used for controlling the update) later. maybe through immutability?
+    public int finalizePurchase(User user) throws PreviousPaymentPendingException, EmptyCartException, InsufficientProductCountException, TransactionException, DAOException {
         Cart cart = getCart(user);
         ReentrantLock cartLock = lockManager.getLock(Cart.class, cart.getId());
         cartLock.lock();
         LinkedList<ReentrantLock> productLocks = new LinkedList<>();
-        for(Product product : cart.getProducts()){
+        Set<Product> cartProducts = cartDAO.getProductsInCart(cart.getId());
+        for(Product product : cartProducts){
             ReentrantLock productLock = lockManager.getLock(Product.class, product.getId());
             productLock.lock();
             productLocks.add(productLock);
         }
         try{
-            if(paymentDAO.getActivePayment(user) == null){
+            if(paymentDAO.getActivePayment(user) != null){
                 throw new PreviousPaymentPendingException("a previous payment is pending", null);
             }
-            Set<Product> cartProducts = cart.getProducts();
             if(cartProducts.isEmpty()){
                 throw new EmptyCartException("user cart is empty", null);
             }
@@ -94,7 +93,7 @@ public class UserService {
             for(Product product : cartProducts){
                 totalPrice += product.getPrice() * product.getCount();
             }
-            Payment payment = new Payment(0, user, cart, totalPrice, LocalDateTime.now().toString(), PaymentStatus.PENDING);
+            Payment payment = new Payment(0, user, cart, totalPrice, LocalDateTime.now(), PaymentStatus.PENDING);
 
             Set<Product> updatedProducts = new HashSet<>();
             Product mainProduct;
@@ -103,15 +102,14 @@ public class UserService {
                 if(mainProduct.getCount() < orderedProduct.getCount()){
                     throw new InsufficientProductCountException(orderedProduct.getName() + " ordered count is higher than available count", null);
                 }
-                Product productCopy = new Product(orderedProduct.getId(), orderedProduct.getName(), orderedProduct.getPrice(), orderedProduct.getCount());
-                productCopy.setCount(mainProduct.getCount() - orderedProduct.getCount());
-                updatedProducts.add(productCopy);
+                mainProduct.setCount(mainProduct.getCount() - orderedProduct.getCount());
+                updatedProducts.add(orderedProduct);
             }
-            Cart cartCopy = new Cart(cart.getId(), cart.getUser(), cart.getProducts(), LocalDateTime.now());
+            cart.setProcessTime(LocalDateTime.now());
 
 //            TODO: add a rollback mechanism and time limit for pay
             try{
-                cartDAO.updateCart(cartCopy);
+                cartDAO.updateCart(cart);
                 paymentDAO.addPayment(payment);
                 for(Product product: updatedProducts){
                     productDAO.updateProduct(product);
@@ -122,7 +120,7 @@ public class UserService {
                 throw new TransactionException("catastrophic transaction exception occurred", null);
             }
 
-            return payment;
+            return payment.getId();
         }
         finally{
             cartLock.unlock();

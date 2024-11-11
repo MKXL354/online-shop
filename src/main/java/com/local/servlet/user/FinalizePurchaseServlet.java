@@ -1,7 +1,6 @@
 package com.local.servlet.user;
 
 import com.local.dao.DAOException;
-import com.local.model.Payment;
 import com.local.model.User;
 import com.local.service.TransactionException;
 import com.local.service.user.EmptyCartException;
@@ -19,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-public class PurchaseServlet extends HttpServlet {
+public class FinalizePurchaseServlet extends HttpServlet {
     private CommonWebComponentService commonWebComponentService;
     private UserManagementService userManagementService;
     private UserService userService;
@@ -37,8 +36,8 @@ public class PurchaseServlet extends HttpServlet {
         try{
             int userId = Integer.parseInt(request.getParameter("userId"));
             User user = userManagementService.getUserById(userId);
-            Payment payment = userService.finalizePurchase(user);
-            commonWebComponentService.writeResponse(response, payment);
+            int paymentId = userService.finalizePurchase(user);
+            commonWebComponentService.writeResponse(response, paymentId);
         }
         catch(NumberFormatException | UserNotFoundException | PreviousPaymentPendingException | EmptyCartException |
               InsufficientProductCountException | TransactionException | DAOException e){

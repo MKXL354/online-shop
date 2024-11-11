@@ -101,8 +101,8 @@
     <servlet-class>com.local.servlet.user.AddProductToCartServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>PurchaseServlet</servlet-name>
-    <servlet-class>com.local.servlet.user.PurchaseServlet</servlet-class>
+    <servlet-name>FinalizePurchaseServlet</servlet-name>
+    <servlet-class>com.local.servlet.user.FinalizePurchaseServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>AddBalanceServlet</servlet-name>
@@ -134,8 +134,8 @@
     <url-pattern>/add-product-to-cart</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>PurchaseServlet</servlet-name>
-    <url-pattern>/purchase</url-pattern>
+    <servlet-name>FinalizePurchaseServlet</servlet-name>
+    <url-pattern>/finalize-purchase</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AddBalanceServlet</servlet-name>
