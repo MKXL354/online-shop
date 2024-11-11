@@ -112,6 +112,14 @@
     <servlet-name>GetAllPaymentsServlet</servlet-name>
     <servlet-class>com.local.servlet.payment.GetAllPaymentsServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>BalancePayServlet</servlet-name>
+    <servlet-class>com.local.servlet.payment.BalancePayServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>CardPayServlet</servlet-name>
+    <servlet-class>com.local.servlet.payment.CardPayServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>AddUserServlet</servlet-name>
@@ -144,5 +152,13 @@
   <servlet-mapping>
     <servlet-name>GetAllPaymentsServlet</servlet-name>
     <url-pattern>/get-all-payments</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>BalancePayServlet</servlet-name>
+    <url-pattern>/balance-pay</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CardPayServlet</servlet-name>
+    <url-pattern>/card-pay</url-pattern>
   </servlet-mapping>
 </web-app>

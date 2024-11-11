@@ -10,7 +10,6 @@ import com.local.dao.product.ProductDAOFactory;
 import com.local.dao.user.UserDAOFactory;
 import com.local.service.payment.PaymentService;
 import com.local.service.productmanagement.ProductManagementService;
-import com.local.service.user.PaymentRollbackService;
 import com.local.service.user.UserService;
 import com.local.servlet.mapper.ProductDTOMapper;
 import com.local.util.lock.LockManager;
@@ -32,7 +31,6 @@ import jakarta.servlet.ServletContextListener;
 public class BootstrapListener implements ServletContextListener {
     private ConnectionPool connectionPool;
     private BatchLogManager batchLogManager;
-    private PaymentRollbackService paymentRollbackService;
 
     @Override
     public void contextInitialized(ServletContextEvent sce){
@@ -86,9 +84,6 @@ public class BootstrapListener implements ServletContextListener {
 
         PaymentService paymentService = new PaymentService(userDAOImpl, paymentDAOImpl, lockManager);
         sce.getServletContext().setAttribute("paymentService", paymentService);
-
-        paymentRollbackService = new PaymentRollbackService(paymentDAOImpl, lockManager, batchLogManager, 10*60*1000, 30*1000);
-        paymentRollbackService.start(null);
     }
 
     @Override
@@ -96,7 +91,6 @@ public class BootstrapListener implements ServletContextListener {
         System.out.println("Shutting down ...");
         connectionPool.closePool();
         batchLogManager.shutDown();
-        paymentRollbackService.shutdown();
     }
 }
 //TODO: services as interface to get supplied from outside?

@@ -6,7 +6,6 @@ import com.local.dao.user.UserDAO;
 import com.local.model.Payment;
 import com.local.model.PaymentStatus;
 import com.local.model.User;
-import com.local.service.ServiceException;
 import com.local.service.TransactionException;
 import com.local.util.lock.LockManager;
 
@@ -78,7 +77,7 @@ public class PaymentService {
         }
     }
 
-    public void cardPay(User user) throws ServiceException, DAOException {
+    public void cardPay(User user) throws PendingPaymentNotFoundException, WebPaymentException, DAOException {
         Payment payment = paymentDAO.getPendingPayment(user);
         if(payment == null){
             throw new PendingPaymentNotFoundException("no active payment found", null);
@@ -94,10 +93,10 @@ public class PaymentService {
                 paymentDAO.updatePayment(payment);
             }
             else if(randomValue < 0.9){
-                throw new ServiceException("invalid credentials", null);
+                throw new WebPaymentException("invalid credentials", null);
             }
             else{
-                throw new ServiceException("not enough credit", null);
+                throw new WebPaymentException("not enough credit", null);
             }
         }
         finally {
@@ -105,5 +104,4 @@ public class PaymentService {
         }
     }
 }
-//TODO: add balance and card pay servlets
 //TODO: add order cancelling? because only one pending payment is possible at any time
