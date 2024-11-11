@@ -123,7 +123,6 @@ public class UserService {
                 }
             }
             catch(DAOException e){
-//            TODO: note the catastrophic transaction exception that can leave the system in incorrect state
                 throw new TransactionException("catastrophic transaction exception occurred", null);
             }
 
@@ -170,7 +169,6 @@ public class UserService {
                 }
             }
             catch(DAOException e){
-//            TODO: note the catastrophic transaction exception that can leave the system in incorrect state
                 throw new TransactionException("catastrophic transaction exception occurred", null);
             }
         }
