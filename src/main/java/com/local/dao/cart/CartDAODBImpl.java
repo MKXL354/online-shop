@@ -1,8 +1,8 @@
 //package com.local.dao.cart;
 //
 //import com.local.dao.DAOException;
-//import com.local.db.ConnectionPool;
-//import com.local.db.DataBaseConnectionException;
+//import com.local.dbconnector.ConnectionPool;
+//import com.local.dbconnector.DataBaseConnectionException;
 //import com.local.model.Cart;
 //import com.local.model.Product;
 //import com.local.model.User;

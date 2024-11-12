@@ -1,8 +1,8 @@
 //package com.local.dao.product;
 //
 //import com.local.dao.DAOException;
-//import com.local.db.ConnectionPool;
-//import com.local.db.DataBaseConnectionException;
+//import com.local.dbconnector.ConnectionPool;
+//import com.local.dbconnector.DataBaseConnectionException;
 //import com.local.model.Product;
 //
 //import java.sql.Connection;

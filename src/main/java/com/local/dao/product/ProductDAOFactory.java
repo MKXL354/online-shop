@@ -2,7 +2,7 @@ package com.local.dao.product;
 
 import com.local.exception.common.ApplicationRuntimeException;
 import com.local.dao.DAOType;
-import com.local.db.ConnectionPool;
+import com.local.dbconnector.ConnectionPool;
 
 public class ProductDAOFactory {
     private static ProductDAO productDAOMem;

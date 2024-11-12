@@ -2,7 +2,7 @@ package com.local.dao.payment;
 
 import com.local.exception.common.ApplicationRuntimeException;
 import com.local.dao.DAOType;
-import com.local.db.ConnectionPool;
+import com.local.dbconnector.ConnectionPool;
 
 public class PaymentDAOFactory {
     private static PaymentDAO paymentDAOMemImpl;

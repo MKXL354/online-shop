@@ -5,6 +5,7 @@ import com.local.dao.cart.CartDAO;
 import com.local.dao.payment.PaymentDAO;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.user.UserDAO;
+import com.local.exception.common.ApplicationRuntimeException;
 import com.local.exception.service.user.EmptyCartException;
 import com.local.exception.service.user.InsufficientProductCountException;
 import com.local.exception.service.user.PaymentNotPendingException;
@@ -38,8 +39,8 @@ public class UserService {
     private BatchLogManager batchLogManager;
     private int waitBetweenRollbacksMillis;
     private int waitBeforeRollbackMillis;
-    private ScheduledExecutorService scheduler;
     private HashSet<Payment> pendingPayments;
+    private ScheduledExecutorService scheduler;
 
     public UserService(CartDAO cartDAO, ProductDAO productDAO, UserDAO userDAO, PaymentDAO paymentDAO, LockManager lockManager, BatchLogManager batchLogManager, int waitBetweenRollbacksMillis, int waitBeforeRollbackMillis) {
         this.cartDAO = cartDAO;
@@ -50,9 +51,10 @@ public class UserService {
         this.batchLogManager = batchLogManager;
         this.waitBetweenRollbacksMillis = waitBetweenRollbacksMillis;
         this.waitBeforeRollbackMillis = waitBeforeRollbackMillis;
+        this.pendingPayments = new HashSet<>();
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
         this.scheduler.scheduleWithFixedDelay(this::automaticPaymentRollBack, 0, waitBetweenRollbacksMillis, TimeUnit.MILLISECONDS);
-        this.pendingPayments = new HashSet<>();
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownScheduler));
     }
 
     public Cart getCart(User user) throws DAOException{
@@ -210,14 +212,16 @@ public class UserService {
         try {
             pendingPayments = paymentDAO.getAllPendingPayments();
         } catch (DAOException e) {
-            throw new RuntimeException(e);
+            throw new ApplicationRuntimeException(e.getMessage(), e);
         }
         for(Payment payment : pendingPayments){
             if(Duration.between(payment.getLastUpdate(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
                 try {
                     rollbackPurchase(payment);
                 }
-                catch (PaymentNotPendingException e) {}
+                catch (PaymentNotPendingException e) {
+                    throw new ApplicationRuntimeException(e.getMessage(), e);
+                }
                 catch (TransactionException | DAOException e) {
                     ActivityLog log = new ActivityLog("local", "local");
                     log.createExceptionLog(e);
@@ -227,5 +231,9 @@ public class UserService {
         }
     }
 
-
+    private void shutdownScheduler(){
+        scheduler.shutdownNow();
+        automaticPaymentRollBack();
+    }
 }
+//TODO: shutDown not happening
