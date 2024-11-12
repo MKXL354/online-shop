@@ -1,6 +1,9 @@
 package com.local.servlet.productmanagement;
 
 import com.local.dao.DAOException;
+import com.local.exception.service.productmanagement.DuplicateProductNameException;
+import com.local.exception.service.productmanagement.InvalidProductCountException;
+import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.model.Product;
 import com.local.service.productmanagement.*;
 import com.local.servlet.CommonWebComponentService;

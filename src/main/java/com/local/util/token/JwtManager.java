@@ -1,6 +1,6 @@
 package com.local.util.token;
 
-import com.local.commonexceptions.ApplicationRuntimeException;
+import com.local.exception.common.ApplicationRuntimeException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 

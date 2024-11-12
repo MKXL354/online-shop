@@ -1,4 +1,4 @@
-package com.local.commonexceptions;
+package com.local.exception.common;
 
 public class ApplicationException extends Exception{
     public ApplicationException(String message, Throwable cause){

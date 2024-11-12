@@ -5,17 +5,28 @@ import com.local.dao.cart.CartDAO;
 import com.local.dao.payment.PaymentDAO;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.user.UserDAO;
+import com.local.exception.service.user.EmptyCartException;
+import com.local.exception.service.user.InsufficientProductCountException;
+import com.local.exception.service.user.PaymentNotPendingException;
+import com.local.exception.service.user.PreviousPaymentPendingException;
 import com.local.model.*;
-import com.local.service.TransactionException;
-import com.local.service.productmanagement.InvalidProductCountException;
-import com.local.service.productmanagement.ProductNotFoundException;
+import com.local.exception.service.TransactionException;
+import com.local.exception.service.productmanagement.InvalidProductCountException;
+import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.util.lock.LockManager;
+import com.local.util.logging.ActivityLog;
+import com.local.util.logging.BatchLogManager;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class UserService {
@@ -24,13 +35,24 @@ public class UserService {
     private UserDAO userDAO;
     private PaymentDAO paymentDAO;
     private LockManager lockManager;
+    private BatchLogManager batchLogManager;
+    private int waitBetweenRollbacksMillis;
+    private int waitBeforeRollbackMillis;
+    private ScheduledExecutorService scheduler;
+    private HashSet<Payment> pendingPayments;
 
-    public UserService(CartDAO cartDAO, ProductDAO productDAO, UserDAO userDAO, PaymentDAO paymentDAO, LockManager lockManager) {
+    public UserService(CartDAO cartDAO, ProductDAO productDAO, UserDAO userDAO, PaymentDAO paymentDAO, LockManager lockManager, BatchLogManager batchLogManager, int waitBetweenRollbacksMillis, int waitBeforeRollbackMillis) {
         this.cartDAO = cartDAO;
         this.productDAO = productDAO;
         this.userDAO = userDAO;
         this.paymentDAO = paymentDAO;
         this.lockManager = lockManager;
+        this.batchLogManager = batchLogManager;
+        this.waitBetweenRollbacksMillis = waitBetweenRollbacksMillis;
+        this.waitBeforeRollbackMillis = waitBeforeRollbackMillis;
+        this.scheduler = Executors.newSingleThreadScheduledExecutor();
+        this.scheduler.scheduleWithFixedDelay(this::automaticPaymentRollBack, 0, waitBetweenRollbacksMillis, TimeUnit.MILLISECONDS);
+        this.pendingPayments = new HashSet<>();
     }
 
     public Cart getCart(User user) throws DAOException{
@@ -107,9 +129,9 @@ public class UserService {
                 throw new EmptyCartException("user cart is empty", null);
             }
 
-            double totalPrice = 0;
+            BigDecimal totalPrice = new BigDecimal(0);
             for(Product product : cartProducts){
-                totalPrice += product.getPrice() * product.getCount();
+                totalPrice = totalPrice.add(product.getPrice().multiply(new BigDecimal(product.getCount())));
             }
             Payment payment = new Payment(0, user, cart, totalPrice, LocalDateTime.now(), PaymentStatus.PENDING);
             Set<Product> updatedProducts = getUpdatedProducts(cartProducts, false);
@@ -137,7 +159,7 @@ public class UserService {
     }
 
     //    TODO: use userId to cancel payments
-    public void rollbackPurchase(Payment payment) throws PaymentNotPendingException, InsufficientProductCountException, TransactionException, DAOException {
+    public void rollbackPurchase(Payment payment) throws PaymentNotPendingException, TransactionException, DAOException {
         if(payment.getStatus() != PaymentStatus.PENDING){
             throw new PaymentNotPendingException("payment is not pending", null);
         }
@@ -173,6 +195,7 @@ public class UserService {
                 throw new TransactionException("catastrophic transaction exception occurred", null);
             }
         }
+        catch (InsufficientProductCountException e) {}
         finally {
             activeCartLock.unlock();
             paymentLock.unlock();
@@ -181,4 +204,28 @@ public class UserService {
             }
         }
     }
+
+    private void automaticPaymentRollBack(){
+        HashSet<Payment> pendingPayments;
+        try {
+            pendingPayments = paymentDAO.getAllPendingPayments();
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+        for(Payment payment : pendingPayments){
+            if(Duration.between(payment.getLastUpdate(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
+                try {
+                    rollbackPurchase(payment);
+                }
+                catch (PaymentNotPendingException e) {}
+                catch (TransactionException | DAOException e) {
+                    ActivityLog log = new ActivityLog("local", "local");
+                    log.createExceptionLog(e);
+                    batchLogManager.addLog(log);
+                }
+            }
+        }
+    }
+
+
 }

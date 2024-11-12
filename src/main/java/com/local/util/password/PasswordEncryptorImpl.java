@@ -1,6 +1,6 @@
 package com.local.util.password;
 
-import com.local.commonexceptions.ApplicationRuntimeException;
+import com.local.exception.common.ApplicationRuntimeException;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;

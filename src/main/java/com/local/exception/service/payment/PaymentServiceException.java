@@ -1,6 +1,6 @@
-package com.local.service.payment;
+package com.local.exception.service.payment;
 
-import com.local.service.ServiceException;
+import com.local.exception.service.ServiceException;
 
 public class PaymentServiceException extends ServiceException {
     public PaymentServiceException(String message, Throwable cause) {

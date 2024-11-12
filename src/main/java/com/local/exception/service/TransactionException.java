@@ -1,6 +1,6 @@
-package com.local.service;
+package com.local.exception.service;
 
-import com.local.commonexceptions.ApplicationException;
+import com.local.exception.common.ApplicationException;
 
 public class TransactionException extends ApplicationException {
     public TransactionException(String message, Throwable cause) {

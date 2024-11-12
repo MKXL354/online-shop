@@ -1,10 +1,10 @@
 package com.local.service.user;
 
-import com.local.commonexceptions.ApplicationRuntimeException;
+import com.local.exception.common.ApplicationRuntimeException;
 import com.local.dao.DAOException;
 import com.local.dao.payment.PaymentDAO;
 import com.local.model.Payment;
-import com.local.service.TransactionException;
+import com.local.exception.service.TransactionException;
 import com.local.util.lock.LockManager;
 import com.local.util.logging.ActivityLog;
 import com.local.util.logging.BatchLogManager;
@@ -41,7 +41,7 @@ public class PaymentRollbackService {
             sortedPayments = new TreeSet<>(paymentDAO.getAllPendingPayments());
         } catch (DAOException e) {
             ActivityLog log = new ActivityLog("local", "local");
-            log.logException(e);
+            log.createExceptionLog(e);
             batchLogManager.addLog(log);
             throw new ApplicationRuntimeException("skipped task", e);
         }
@@ -69,7 +69,7 @@ public class PaymentRollbackService {
             }
             catch(DAOException e){
                 ActivityLog transactionLog = new ActivityLog("local", "local");
-                transactionLog.logException(new TransactionException("catastrophic transaction exception occurred", e));
+                transactionLog.createExceptionLog(new TransactionException("catastrophic transaction exception occurred", e));
                 batchLogManager.addLog(transactionLog);
             }
         }

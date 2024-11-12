@@ -2,6 +2,9 @@ package com.local.service.usermanagement;
 
 import com.local.dao.DAOException;
 import com.local.dao.user.UserDAO;
+import com.local.exception.service.usermanagement.DuplicateUsernameException;
+import com.local.exception.service.usermanagement.UserNotFoundException;
+import com.local.exception.service.usermanagement.WrongPasswordException;
 import com.local.util.lock.LockManager;
 import com.local.util.password.PasswordEncryptor;
 import com.local.model.User;

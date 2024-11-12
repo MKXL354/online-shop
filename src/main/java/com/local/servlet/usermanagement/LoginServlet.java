@@ -2,8 +2,8 @@ package com.local.servlet.usermanagement;
 
 import com.local.dao.DAOException;
 import com.local.model.User;
-import com.local.service.usermanagement.UserNotFoundException;
-import com.local.service.usermanagement.WrongPasswordException;
+import com.local.exception.service.usermanagement.UserNotFoundException;
+import com.local.exception.service.usermanagement.WrongPasswordException;
 import com.local.util.token.TokenManager;
 import com.local.service.usermanagement.UserManagementService;
 import com.local.servlet.CommonWebComponentService;

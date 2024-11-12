@@ -4,7 +4,7 @@ import com.local.dao.DAOException;
 import com.local.dto.ProductDTO;
 import com.local.model.Product;
 import com.local.service.productmanagement.ProductManagementService;
-import com.local.service.productmanagement.ProductNotFoundException;
+import com.local.exception.service.productmanagement.ProductNotFoundException;
 
 public class ProductDTOMapper implements DTOMapper<ProductDTO, Product> {
     private ProductManagementService productManagementService;

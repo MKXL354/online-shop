@@ -1,6 +1,6 @@
 package com.local.servlet.validation;
 
-import com.local.commonexceptions.ApplicationRuntimeException;
+import com.local.exception.common.ApplicationRuntimeException;
 import com.local.servlet.CommonWebComponentService;
 import com.local.servlet.InvalidRequestObjectException;
 import com.local.servlet.JsonFormatException;

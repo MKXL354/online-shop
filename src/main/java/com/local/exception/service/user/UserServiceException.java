@@ -1,6 +1,6 @@
-package com.local.service.user;
+package com.local.exception.service.user;
 
-import com.local.service.ServiceException;
+import com.local.exception.service.ServiceException;
 
 public class UserServiceException extends ServiceException {
     public UserServiceException(String message, Throwable cause) {

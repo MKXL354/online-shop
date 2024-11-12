@@ -30,7 +30,7 @@ public abstract class BaseLog {
         return String.format("[startTime: %s][endTime: %s][%s]%s", requestTime.toString(), responseTime.toString(), level.toString(), displayMessage);
     }
 
-    public void logException(Exception exception) {
+    public void createExceptionLog(Exception exception) {
         level = LogLevel.ERROR;
         StringBuilder stackTrace = new StringBuilder();
         stackTrace.append(exception).append("\n");

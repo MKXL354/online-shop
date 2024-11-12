@@ -1,6 +1,6 @@
 package com.local.dao.payment;
 
-import com.local.commonexceptions.ApplicationRuntimeException;
+import com.local.exception.common.ApplicationRuntimeException;
 import com.local.dao.DAOType;
 import com.local.db.ConnectionPool;
 

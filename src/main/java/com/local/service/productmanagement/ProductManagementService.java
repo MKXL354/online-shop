@@ -2,9 +2,14 @@ package com.local.service.productmanagement;
 
 import com.local.dao.DAOException;
 import com.local.dao.product.ProductDAO;
+import com.local.exception.service.productmanagement.DuplicateProductNameException;
+import com.local.exception.service.productmanagement.InvalidProductCountException;
+import com.local.exception.service.productmanagement.InvalidProductPriceException;
+import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.model.Product;
 import com.local.util.lock.LockManager;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -21,7 +26,7 @@ public class ProductManagementService {
         if(product.getCount() < 0){
             throw new InvalidProductCountException("product count can't be negative", null);
         }
-        if(product.getPrice() <= 0){
+        if(product.getPrice().compareTo(new BigDecimal(0)) <= 0){
             throw new InvalidProductPriceException("product price can't be non positive", null);
         }
     }

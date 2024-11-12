@@ -120,6 +120,10 @@
     <servlet-name>CardPayServlet</servlet-name>
     <servlet-class>com.local.servlet.payment.CardPayServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>CancelPaymentServlet</servlet-name>
+    <servlet-class>com.local.servlet.payment.CancelPaymentServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>AddUserServlet</servlet-name>
@@ -160,5 +164,9 @@
   <servlet-mapping>
     <servlet-name>CardPayServlet</servlet-name>
     <url-pattern>/card-pay</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CancelPaymentServlet</servlet-name>
+    <url-pattern>/cancel-payment</url-pattern>
   </servlet-mapping>
 </web-app>

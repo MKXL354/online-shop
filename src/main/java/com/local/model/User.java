@@ -2,6 +2,8 @@ package com.local.model;
 
 import com.local.util.objectvalidator.NotNull;
 
+import java.math.BigDecimal;
+
 public class User {
     private int id;
 
@@ -14,9 +16,9 @@ public class User {
     @NotNull(message = "wrong or null user type")
     private UserType type;
 
-    private double balance;
+    private BigDecimal balance;
 
-    public User(int id, String username, String password, UserType type, double balance) {
+    public User(int id, String username, String password, UserType type, BigDecimal balance) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -44,7 +46,7 @@ public class User {
         return type;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
@@ -64,7 +66,7 @@ public class User {
         this.type = type;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 }

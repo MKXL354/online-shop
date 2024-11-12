@@ -79,7 +79,7 @@ public class BootstrapListener implements ServletContextListener {
         ProductDTOMapper productDTOMapper= new ProductDTOMapper(productManagementService);
         sce.getServletContext().setAttribute("productDTOMapper", productDTOMapper);
 
-        UserService userService = new UserService(cartDAODImpl, productDAOImpl, userDAOImpl, paymentDAOImpl, lockManager);
+        UserService userService = new UserService(cartDAODImpl, productDAOImpl, userDAOImpl, paymentDAOImpl, lockManager, batchLogManager, 60*1000, 10*60*1000);
         sce.getServletContext().setAttribute("userService", userService);
 
         PaymentService paymentService = new PaymentService(userDAOImpl, paymentDAOImpl, lockManager);

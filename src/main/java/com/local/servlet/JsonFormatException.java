@@ -1,6 +1,6 @@
 package com.local.servlet;
 
-import com.local.commonexceptions.ApplicationException;
+import com.local.exception.common.ApplicationException;
 
 public class JsonFormatException extends ApplicationException {
     public JsonFormatException(String message, Throwable cause) {

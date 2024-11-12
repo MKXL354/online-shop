@@ -40,7 +40,7 @@ public class LoggingFilter implements Filter {
         catch(Exception e){
             httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             httpServletResponse.getWriter().print("Internal Server Error");
-            log.logException(e);
+            log.createExceptionLog(e);
         }
         finally{
             log.setResponseTime();

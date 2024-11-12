@@ -1,4 +1,4 @@
-package com.local.service.productmanagement;
+package com.local.exception.service.productmanagement;
 
 public class InvalidProductPriceException extends ProductManagementServiceException{
     public InvalidProductPriceException(String message, Throwable cause) {

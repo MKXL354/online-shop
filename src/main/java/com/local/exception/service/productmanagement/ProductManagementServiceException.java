@@ -1,6 +1,6 @@
-package com.local.service.productmanagement;
+package com.local.exception.service.productmanagement;
 
-import com.local.service.ServiceException;
+import com.local.exception.service.ServiceException;
 
 public class ProductManagementServiceException extends ServiceException {
     public ProductManagementServiceException(String message, Throwable cause) {

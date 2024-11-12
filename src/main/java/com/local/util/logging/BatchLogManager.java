@@ -1,6 +1,6 @@
 package com.local.util.logging;
 
-import com.local.commonexceptions.ApplicationRuntimeException;
+import com.local.exception.common.ApplicationRuntimeException;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
