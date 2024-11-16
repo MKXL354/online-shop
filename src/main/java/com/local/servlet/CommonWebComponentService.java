@@ -1,16 +1,41 @@
 package com.local.servlet;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
+import com.local.model.*;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 
 public class CommonWebComponentService {
-    private Gson gson;
+    private class ProductDeserializer implements JsonDeserializer<Product> {
+        @Override
+        public Product deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+            String type = jsonObject.get("type").getAsString();
+
+            switch (ProductType.valueOf(type)) {
+                case PRODUCT -> {
+                    return context.deserialize(json, Product.class);
+                }
+                case DESKTOP -> {
+                    return context.deserialize(json, DesktopProduct.class);
+                }
+                case LAPTOP -> {
+                    return context.deserialize(json, LaptopProduct.class);
+                }
+                case MOBILE -> {
+                    return context.deserialize(json, MobileProduct.class);
+                }
+                default -> throw new JsonParseException("unknown type: " + type);
+            }
+        }
+    }
+
+    private Gson gson = new GsonBuilder().registerTypeAdapter(Product.class, new ProductDeserializer()).create();
 
     public CommonWebComponentService() {
         gson = new Gson();

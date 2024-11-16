@@ -22,17 +22,13 @@ public class ProductManagementService {
         this.lockManager = lockManager;
     }
 
-    private void constraintCheck(Product product) throws InvalidProductCountException, InvalidProductPriceException {
+    public Product addProduct(Product product) throws InvalidProductCountException, InvalidProductPriceException, DuplicateProductNameException, DAOException {
         if(product.getCount() < 0){
             throw new InvalidProductCountException("product count can't be negative", null);
         }
         if(product.getPrice().compareTo(new BigDecimal(0)) <= 0){
             throw new InvalidProductPriceException("product price can't be non positive", null);
         }
-    }
-
-    public Product addProduct(Product product) throws InvalidProductCountException, InvalidProductPriceException, DuplicateProductNameException, DAOException {
-        constraintCheck(product);
         String name = product.getName();
         ReentrantLock lock = lockManager.getLock(Product.class, name);
         lock.lock();

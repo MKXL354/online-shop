@@ -6,24 +6,28 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Product implements Comparable<Product>{
-    private int id;
+    protected int id;
 
     @NotNull(message = "name can't be null")
-    private String name;
+    protected String name;
 
-    private BigDecimal price;
+    protected BigDecimal price;
 
-    private int count;
+    protected int count;
 
-    public Product(int id, String name, BigDecimal price, int count) {
+    @NotNull(message = "wrong or null product type")
+    protected ProductType type;
+
+    public Product(int id, String name, BigDecimal price, int count, ProductType type) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.count = count;
+        this.type = type;
     }
 
     public Product(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getCount());
+        this(product.getId(), product.getName(), product.getPrice(), product.getCount(), product.getType());
     }
 
     public int getId() {
@@ -42,6 +46,10 @@ public class Product implements Comparable<Product>{
         return count;
     }
 
+    public ProductType getType() {
+        return type;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -56,6 +64,10 @@ public class Product implements Comparable<Product>{
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public void setType(ProductType type) {
+        this.type = type;
     }
 
     @Override
