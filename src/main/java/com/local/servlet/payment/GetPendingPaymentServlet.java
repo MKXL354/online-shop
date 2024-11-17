@@ -16,14 +16,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class GetPendingPaymentServlet extends HttpServlet {
-    private UserManagementService userManagementService;
     private PaymentService paymentService;
     private CommonWebComponentService commonWebComponentService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        userManagementService = (UserManagementService)getServletContext().getAttribute("userManagementService");
         paymentService = (PaymentService)getServletContext().getAttribute("paymentService");
         commonWebComponentService = (CommonWebComponentService)getServletContext().getAttribute("commonWebComponentService");
     }
@@ -32,8 +30,7 @@ public class GetPendingPaymentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             int userId = Integer.parseInt(request.getParameter("userId"));
-            User user = userManagementService.getUserById(userId);
-            Payment payment = paymentService.getPendingPayment(user);
+            Payment payment = paymentService.getPendingPayment(userId);
             commonWebComponentService.writeResponse(response, payment);
         }
         catch(NumberFormatException | UserNotFoundException | DAOException e){

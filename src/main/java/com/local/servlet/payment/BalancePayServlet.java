@@ -15,13 +15,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class BalancePayServlet extends HttpServlet {
-    private UserManagementService userManagementService;
     private PaymentService paymentService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        userManagementService = (UserManagementService)getServletContext().getAttribute("userManagementService");
         paymentService = (PaymentService)getServletContext().getAttribute("paymentService");
     }
 
@@ -29,8 +27,7 @@ public class BalancePayServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
             int userId = Integer.parseInt(request.getParameter("userId"));
-            User user = userManagementService.getUserById(userId);
-            paymentService.balancePay(user);
+            paymentService.balancePay(userId);
         }
         catch(NumberFormatException | UserNotFoundException | PendingPaymentNotFoundException |
               InsufficientBalanceException | TransactionException | DAOException e){

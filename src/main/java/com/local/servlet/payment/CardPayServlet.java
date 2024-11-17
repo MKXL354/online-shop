@@ -14,13 +14,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class CardPayServlet extends HttpServlet {
-    private UserManagementService userManagementService;
     private PaymentService paymentService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        userManagementService = (UserManagementService)getServletContext().getAttribute("userManagementService");
         paymentService = (PaymentService)getServletContext().getAttribute("paymentService");
     }
 
@@ -28,8 +26,7 @@ public class CardPayServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
             int userId = Integer.parseInt(request.getParameter("userId"));
-            User user = userManagementService.getUserById(userId);
-            paymentService.cardPay(user);
+            paymentService.cardPay(userId);
         }
         catch(NumberFormatException | UserNotFoundException | PendingPaymentNotFoundException | WebPaymentException | DAOException e){
             throw new ServletException(e);

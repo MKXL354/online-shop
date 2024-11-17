@@ -10,10 +10,12 @@ import com.local.exception.service.user.EmptyCartException;
 import com.local.exception.service.user.InsufficientProductCountException;
 import com.local.exception.service.user.PaymentNotPendingException;
 import com.local.exception.service.user.PreviousPaymentPendingException;
+import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.*;
 import com.local.exception.service.TransactionException;
 import com.local.exception.service.productmanagement.InvalidProductCountException;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
+import com.local.service.UtilityService;
 import com.local.util.lock.LockManager;
 import com.local.util.logging.ActivityLog;
 import com.local.util.logging.BatchLogManager;
@@ -31,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class UserService {
+    private UtilityService utilityService;
     private CartDAO cartDAO;
     private ProductDAO productDAO;
     private UserDAO userDAO;
@@ -42,7 +45,8 @@ public class UserService {
     private HashSet<Payment> pendingPayments;
     private ScheduledExecutorService scheduler;
 
-    public UserService(CartDAO cartDAO, ProductDAO productDAO, UserDAO userDAO, PaymentDAO paymentDAO, LockManager lockManager, BatchLogManager batchLogManager, int waitBetweenRollbacksMillis, int waitBeforeRollbackMillis) {
+    public UserService(UtilityService utilityService, CartDAO cartDAO, ProductDAO productDAO, UserDAO userDAO, PaymentDAO paymentDAO, LockManager lockManager, BatchLogManager batchLogManager, int waitBetweenRollbacksMillis, int waitBeforeRollbackMillis) {
+        this.utilityService = utilityService;
         this.cartDAO = cartDAO;
         this.productDAO = productDAO;
         this.userDAO = userDAO;
@@ -67,7 +71,8 @@ public class UserService {
         return cart;
     }
 
-    public void addProductToCart(User user, Product product) throws InvalidProductCountException, ProductNotFoundException, DAOException {
+    public void addProductToCart(int userId, Product product) throws UserNotFoundException, InvalidProductCountException, ProductNotFoundException, DAOException {
+        User user = utilityService.getUserById(userId);
         Cart cart = getCart(user);
         if(productDAO.getProductById(product.getId()) == null){
             throw new ProductNotFoundException("product not found", null);
@@ -113,7 +118,8 @@ public class UserService {
         return updatedProducts;
     }
 
-    public void finalizePurchase(User user) throws PreviousPaymentPendingException, EmptyCartException, InsufficientProductCountException, TransactionException, DAOException {
+    public void finalizePurchase(int userId) throws UserNotFoundException, PreviousPaymentPendingException, EmptyCartException, InsufficientProductCountException, TransactionException, DAOException {
+        User user = utilityService.getUserById(userId);
         Cart cart = getCart(user);
         ReentrantLock cartLock = lockManager.getLock(Cart.class, cart.getId());
         cartLock.lock();
@@ -161,7 +167,8 @@ public class UserService {
         }
     }
 
-    public void rollbackPurchase(Payment payment) throws PaymentNotPendingException, TransactionException, DAOException {
+    public void rollbackPurchase(int userId) throws UserNotFoundException, PaymentNotPendingException, TransactionException, DAOException {
+        Payment payment = utilityService.getPendingPayment(userId);
         if(payment.getStatus() != PaymentStatus.PENDING){
             throw new PaymentNotPendingException("payment is not pending", null);
         }
@@ -217,9 +224,9 @@ public class UserService {
         for(Payment payment : pendingPayments){
             if(Duration.between(payment.getLastUpdate(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
                 try {
-                    rollbackPurchase(payment);
+                    rollbackPurchase(payment.getUser().getId());
                 }
-                catch (PaymentNotPendingException e) {
+                catch (UserNotFoundException | PaymentNotPendingException e) {
                     throw new ApplicationRuntimeException(e.getMessage(), e);
                 }
                 catch (TransactionException | DAOException e) {

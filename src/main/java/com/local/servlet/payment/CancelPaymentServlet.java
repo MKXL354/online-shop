@@ -16,25 +16,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class CancelPaymentServlet extends HttpServlet {
-    private UserManagementService userManagementService;
     private UserService userService;
-    private PaymentService paymentService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        userManagementService = (UserManagementService)getServletContext().getAttribute("userManagementService");
         userService = (UserService)getServletContext().getAttribute("userService");
-        paymentService = (PaymentService)getServletContext().getAttribute("paymentService");
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException{
         try{
             int userId = Integer.parseInt(request.getParameter("userId"));
-            User user = userManagementService.getUserById(userId);
-            Payment payment = paymentService.getPendingPayment(user);
-            userService.rollbackPurchase(payment);
+            userService.rollbackPurchase(userId);
         }
         catch(NumberFormatException | UserNotFoundException | PaymentNotPendingException | TransactionException | DAOException e){
             throw new ServletException(e);

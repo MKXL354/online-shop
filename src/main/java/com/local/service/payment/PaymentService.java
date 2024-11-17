@@ -6,10 +6,12 @@ import com.local.dao.user.UserDAO;
 import com.local.exception.service.payment.InsufficientBalanceException;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
 import com.local.exception.service.payment.WebPaymentException;
+import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.Payment;
 import com.local.model.PaymentStatus;
 import com.local.model.User;
 import com.local.exception.service.TransactionException;
+import com.local.service.UtilityService;
 import com.local.util.lock.LockManager;
 
 import java.math.BigDecimal;
@@ -19,17 +21,20 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PaymentService {
+    private UtilityService utilityService;
     private UserDAO userDAO;
     private PaymentDAO paymentDAO;
     private LockManager lockManager;
 
-    public PaymentService(UserDAO userDAO, PaymentDAO paymentDAO, LockManager lockManager) {
+    public PaymentService(UtilityService utilityService, UserDAO userDAO, PaymentDAO paymentDAO, LockManager lockManager) {
+        this.utilityService = utilityService;
         this.userDAO = userDAO;
         this.paymentDAO = paymentDAO;
         this.lockManager = lockManager;
     }
 
-    public Payment getPendingPayment(User user) throws DAOException {
+    public Payment getPendingPayment(int userId) throws UserNotFoundException, DAOException {
+        User user = utilityService.getUserById(userId);
         return paymentDAO.getPendingPayment(user);
     }
 
@@ -37,7 +42,8 @@ public class PaymentService {
         return paymentDAO.getAllPayments();
     }
 
-    public void addBalance(User user, BigDecimal amount) throws DAOException {
+    public void addBalance(int userId, BigDecimal amount) throws UserNotFoundException, DAOException {
+        User user = utilityService.getUserById(userId);
         ReentrantLock userLock = lockManager.getLock(User.class, user.getUsername());
         try{
             userLock.lock();
@@ -49,8 +55,9 @@ public class PaymentService {
         }
     }
 
-    public void balancePay(User user) throws PendingPaymentNotFoundException, InsufficientBalanceException, TransactionException, DAOException {
-        Payment payment = getPendingPayment(user);
+    public void balancePay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, InsufficientBalanceException, TransactionException, DAOException {
+        User user = utilityService.getUserById(userId);
+        Payment payment = getPendingPayment(userId);
         if(payment == null){
             throw new PendingPaymentNotFoundException("no pending payment found", null);
         }
@@ -81,7 +88,8 @@ public class PaymentService {
         }
     }
 
-    public void cardPay(User user) throws PendingPaymentNotFoundException, WebPaymentException, DAOException {
+    public void cardPay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, WebPaymentException, DAOException {
+        User user = utilityService.getUserById(userId);
         Payment payment = paymentDAO.getPendingPayment(user);
         if(payment == null){
             throw new PendingPaymentNotFoundException("no active payment found", null);

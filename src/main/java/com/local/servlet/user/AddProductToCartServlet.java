@@ -22,14 +22,12 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequiresValidation(objectClass = ProductDTO.class, objectName = "productDTO")
 public class AddProductToCartServlet extends HttpServlet {
     private DTOMapper<ProductDTO, Product> productDTOMapper;
-    private UserManagementService userManagementService;
     private UserService userService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productDTOMapper = (ProductDTOMapper)getServletContext().getAttribute("productDTOMapper");
-        userManagementService = (UserManagementService)getServletContext().getAttribute("userManagementService");
         userService = (UserService)getServletContext().getAttribute("userService");
     }
 
@@ -39,8 +37,7 @@ public class AddProductToCartServlet extends HttpServlet {
         try {
             int userId = Integer.parseInt(request.getParameter("userId"));
             Product product = productDTOMapper.map(productDTO);
-            User user = userManagementService.getUserById(userId);
-            userService.addProductToCart(user, product);
+            userService.addProductToCart(userId, product);
         }
         catch (DTOMapperException e) {
             throw new ServletException(e.getCause());

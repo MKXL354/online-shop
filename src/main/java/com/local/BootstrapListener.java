@@ -9,6 +9,7 @@ import com.local.dao.payment.PaymentDAOFactory;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.product.ProductDAOFactory;
 import com.local.dao.user.UserDAOFactory;
+import com.local.service.UtilityService;
 import com.local.service.payment.PaymentService;
 import com.local.service.productmanagement.ProductManagementService;
 import com.local.service.user.UserService;
@@ -59,6 +60,9 @@ public class BootstrapListener implements ServletContextListener {
 
         LockManager lockManager = new LockManager();
 
+        UtilityService utilityService = new UtilityService(userDAOImpl, paymentDAOImpl);
+        sce.getServletContext().setAttribute("utilityService", utilityService);
+
         PasswordEncryptor passwordEncryptorImpl = new PasswordEncryptorImpl(1000, 32, 256);
         UserManagementService userManagementService = new UserManagementService(userDAOImpl, passwordEncryptorImpl, lockManager);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
@@ -85,11 +89,11 @@ public class BootstrapListener implements ServletContextListener {
         ProductDTOMapper productDTOMapper= new ProductDTOMapper(productManagementService);
         sce.getServletContext().setAttribute("productDTOMapper", productDTOMapper);
 
-        UserService userService = new UserService(cartDAODImpl, productDAOImpl, userDAOImpl, paymentDAOImpl, lockManager, batchLogManager, 6*1000, 10*60*1000);
+        UserService userService = new UserService(utilityService, cartDAODImpl, productDAOImpl, userDAOImpl, paymentDAOImpl, lockManager, batchLogManager, 6*1000, 10*60*1000);
         sce.getServletContext().setAttribute("userService", userService);
         userService.startRollbackScheduler();
 
-        PaymentService paymentService = new PaymentService(userDAOImpl, paymentDAOImpl, lockManager);
+        PaymentService paymentService = new PaymentService(utilityService, userDAOImpl, paymentDAOImpl, lockManager);
         sce.getServletContext().setAttribute("paymentService", paymentService);
     }
 
