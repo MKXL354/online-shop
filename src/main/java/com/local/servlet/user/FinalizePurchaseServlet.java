@@ -15,8 +15,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
-
 public class FinalizePurchaseServlet extends HttpServlet {
     private UserManagementService userManagementService;
     private UserService userService;
@@ -29,7 +27,7 @@ public class FinalizePurchaseServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
             int userId = Integer.parseInt(request.getParameter("userId"));
             User user = userManagementService.getUserById(userId);
