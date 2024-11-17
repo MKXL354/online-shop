@@ -1,6 +1,7 @@
 package com.local;
 
 import com.local.dao.DAOType;
+import com.local.dao.Persistable;
 import com.local.dao.cart.CartDAO;
 import com.local.dao.cart.CartDAOFactory;
 import com.local.dao.payment.PaymentDAO;
@@ -32,6 +33,11 @@ public class BootstrapListener implements ServletContextListener {
     private ConnectionPool connectionPool;
     private BatchLogManager batchLogManager;
 
+    private UserDAO userDAOImpl = UserDAOFactory.getUserDAO(DAOType.MEM, null);
+    private ProductDAO productDAOImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, null);
+    private CartDAO cartDAODImpl = CartDAOFactory.getCartDAO(DAOType.MEM, null);
+    private PaymentDAO paymentDAOImpl = PaymentDAOFactory.getPaymentDAO(DAOType.MEM, null);
+
     @Override
     public void contextInitialized(ServletContextEvent sce){
         String relativeDatabaseConfigFileLocation = sce.getServletContext().getInitParameter("relativeDatabaseConfigFileLocation");
@@ -46,10 +52,10 @@ public class BootstrapListener implements ServletContextListener {
         batchLogManager.start();
         sce.getServletContext().setAttribute("batchLogManager", batchLogManager);
 
-        UserDAO userDAOImpl = UserDAOFactory.getUserDAO(DAOType.MEM, null);
-        ProductDAO productDAOImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, null);
-        CartDAO cartDAODImpl = CartDAOFactory.getCartDAO(DAOType.MEM, null);
-        PaymentDAO paymentDAOImpl = PaymentDAOFactory.getPaymentDAO(DAOType.MEM, null);
+        ((Persistable)userDAOImpl).loadData();
+        ((Persistable)productDAOImpl).loadData();
+//        ((Persistable)cartDAODImpl).loadData();
+//        ((Persistable)paymentDAOImpl).loadData();
 
         LockManager lockManager = new LockManager();
 
@@ -79,8 +85,9 @@ public class BootstrapListener implements ServletContextListener {
         ProductDTOMapper productDTOMapper= new ProductDTOMapper(productManagementService);
         sce.getServletContext().setAttribute("productDTOMapper", productDTOMapper);
 
-        UserService userService = new UserService(cartDAODImpl, productDAOImpl, userDAOImpl, paymentDAOImpl, lockManager, batchLogManager, 60*1000, 10*60*1000);
+        UserService userService = new UserService(cartDAODImpl, productDAOImpl, userDAOImpl, paymentDAOImpl, lockManager, batchLogManager, 6*1000, 10*60*1000);
         sce.getServletContext().setAttribute("userService", userService);
+        userService.startRollbackScheduler();
 
         PaymentService paymentService = new PaymentService(userDAOImpl, paymentDAOImpl, lockManager);
         sce.getServletContext().setAttribute("paymentService", paymentService);
@@ -91,6 +98,12 @@ public class BootstrapListener implements ServletContextListener {
         System.out.println("Shutting down ...");
         connectionPool.closePool();
         batchLogManager.shutDown();
+        ((UserService)sce.getServletContext().getAttribute("userService")).shutdownRollbackScheduler();
+
+        ((Persistable)userDAOImpl).persistData();
+        ((Persistable)productDAOImpl).persistData();
+//        ((Persistable)cartDAODImpl).persistData();
+//        ((Persistable)paymentDAOImpl).persistData();
     }
 }
 //TODO: services as interface to get supplied from outside?

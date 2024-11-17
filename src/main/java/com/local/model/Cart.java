@@ -1,6 +1,7 @@
 package com.local.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Cart {
@@ -17,9 +18,14 @@ public class Cart {
     }
 
     public Cart(Cart cart){
-        this(cart.getId(), null, cart.getProducts(), cart.getProcessTime());
+        this(cart.getId(), null, null, cart.getProcessTime());
         User user = new User(cart.getUser());
         this.setUser(user);
+        Set<Product> products = new HashSet<>();
+        for (Product product : cart.getProducts()) {
+            products.add(new Product(product));
+        }
+        this.setProducts(products);
     }
 
     public int getId() {
