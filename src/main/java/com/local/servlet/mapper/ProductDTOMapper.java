@@ -17,7 +17,8 @@ public class ProductDTOMapper implements DTOMapper<ProductDTO, Product> {
     public Product map(ProductDTO productDTO) throws DTOMapperException {
         try{
             Product product = productManagementService.getProductById(productDTO.getId());
-            return new Product(product.getId(), product.getName(), product.getPrice(), productDTO.getCount(), product.getType());
+            product.setCount(productDTO.getCount());
+            return product;
         }
         catch(ProductNotFoundException | DAOException e){
             throw new DTOMapperException(e.getMessage(), e);

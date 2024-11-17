@@ -15,19 +15,22 @@ public class Product implements Comparable<Product>{
 
     protected int count;
 
+    protected int sold;
+
     @NotNull(message = "wrong or null product type")
     protected ProductType type;
 
-    public Product(int id, String name, BigDecimal price, int count, ProductType type) {
+    public Product(int id, String name, BigDecimal price, int count, int sold, ProductType type) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.count = count;
+        this.sold = sold;
         this.type = type;
     }
 
     public Product(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getCount(), product.getType());
+        this(product.getId(), product.getName(), product.getPrice(), product.getCount(), product.getSold(), product.getType());
     }
 
     public int getId() {
@@ -44,6 +47,10 @@ public class Product implements Comparable<Product>{
 
     public int getCount() {
         return count;
+    }
+
+    public int getSold() {
+        return sold;
     }
 
     public ProductType getType() {
@@ -64,6 +71,10 @@ public class Product implements Comparable<Product>{
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public void setSold(int sold) {
+        this.sold = sold;
     }
 
     public void setType(ProductType type) {

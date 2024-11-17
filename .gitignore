@@ -3,6 +3,7 @@ src/main/resources/db.properties
 src/main/resources/tokenManager.properties
 TODO.txt
 concurrent_curl.bat
+db/mem/
 db/online-shop.mv.db
 db/online-shop.trace.db
 

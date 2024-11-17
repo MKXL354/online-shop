@@ -52,9 +52,11 @@ public class UserService {
         this.waitBetweenRollbacksMillis = waitBetweenRollbacksMillis;
         this.waitBeforeRollbackMillis = waitBeforeRollbackMillis;
         this.pendingPayments = new HashSet<>();
+    }
+
+    public void startRollbackScheduler(){
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
         this.scheduler.scheduleWithFixedDelay(this::automaticPaymentRollBack, 0, waitBetweenRollbacksMillis, TimeUnit.MILLISECONDS);
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownScheduler));
     }
 
     public Cart getCart(User user) throws DAOException{
@@ -82,7 +84,7 @@ public class UserService {
             }
             else{
                 if(product.getCount() < 0){
-                    throw new InvalidProductCountException("product count can't be non positive", null);
+                    throw new InvalidProductCountException("product count can't be negative", null);
                 }
                 if(product.getCount() == 0){
                     cartDAO.removeProductFromCart(cart, product);
@@ -105,12 +107,13 @@ public class UserService {
                 throw new InsufficientProductCountException(orderedProduct.getName() + " ordered count is higher than available count", null);
             }
             mainProduct.setCount(mainProduct.getCount() + sign * orderedProduct.getCount());
+            mainProduct.setSold(mainProduct.getSold() - sign * orderedProduct.getCount());
             updatedProducts.add(mainProduct);
         }
         return updatedProducts;
     }
 
-    public int finalizePurchase(User user) throws PreviousPaymentPendingException, EmptyCartException, InsufficientProductCountException, TransactionException, DAOException {
+    public void finalizePurchase(User user) throws PreviousPaymentPendingException, EmptyCartException, InsufficientProductCountException, TransactionException, DAOException {
         Cart cart = getCart(user);
         ReentrantLock cartLock = lockManager.getLock(Cart.class, cart.getId());
         cartLock.lock();
@@ -135,7 +138,7 @@ public class UserService {
             for(Product product : cartProducts){
                 totalPrice = totalPrice.add(product.getPrice().multiply(new BigDecimal(product.getCount())));
             }
-            Payment payment = new Payment(0, user, cart, totalPrice, LocalDateTime.now(), PaymentStatus.PENDING);
+            Payment payment = new Payment(0, user, cart, totalPrice, LocalDateTime.now().toString(), PaymentStatus.PENDING);
             Set<Product> updatedProducts = getUpdatedProducts(cartProducts, false);
             cart.setProcessTime(LocalDateTime.now());
 
@@ -149,8 +152,6 @@ public class UserService {
             catch(DAOException e){
                 throw new TransactionException("catastrophic transaction exception occurred", null);
             }
-
-            return payment.getId();
         }
         finally{
             cartLock.unlock();
@@ -160,7 +161,6 @@ public class UserService {
         }
     }
 
-    //    TODO: use userId to cancel payments
     public void rollbackPurchase(Payment payment) throws PaymentNotPendingException, TransactionException, DAOException {
         if(payment.getStatus() != PaymentStatus.PENDING){
             throw new PaymentNotPendingException("payment is not pending", null);
@@ -182,7 +182,7 @@ public class UserService {
         try{
             Set<Product> updatedProducts = getUpdatedProducts(oldCartProducts, true);
             payment.setStatus(PaymentStatus.FAILED);
-            payment.setLastUpdate(LocalDateTime.now());
+            payment.setLastUpdate(LocalDateTime.now().toString());
             for(Product product : oldCartProducts){
                 cartDAO.addProductToCart(activeCart, product);
             }
@@ -215,7 +215,7 @@ public class UserService {
             throw new ApplicationRuntimeException(e.getMessage(), e);
         }
         for(Payment payment : pendingPayments){
-            if(Duration.between(payment.getLastUpdate(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
+            if(Duration.between(LocalDateTime.parse(payment.getLastUpdate()), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
                 try {
                     rollbackPurchase(payment);
                 }
@@ -231,9 +231,8 @@ public class UserService {
         }
     }
 
-    private void shutdownScheduler(){
+    public void shutdownRollbackScheduler(){
         scheduler.shutdownNow();
         automaticPaymentRollBack();
     }
 }
-//TODO: shutDown not happening

@@ -34,12 +34,7 @@ public class CommonWebComponentService {
             }
         }
     }
-
     private Gson gson = new GsonBuilder().registerTypeAdapter(Product.class, new ProductDeserializer()).create();
-
-    public CommonWebComponentService() {
-        gson = new Gson();
-    }
 
     public <T> T getObjectFromJsonRequest(ServletRequest request, Class<T> objectType) throws IOException, JsonFormatException {
         BufferedReader reader = request.getReader();

@@ -13,5 +13,3 @@ public interface PaymentDAO {
     HashSet<Payment> getAllPendingPayments() throws DAOException;
     void updatePayment(Payment payment) throws DAOException;
 }
-
-//TODO: rewrite DB later

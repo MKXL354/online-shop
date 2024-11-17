@@ -9,5 +9,3 @@ public interface UserDAO {
     User getUserById(int id) throws DAOException;
     User getUserByUsername(String username) throws DAOException;
 }
-
-//TODO: rewrite DB later

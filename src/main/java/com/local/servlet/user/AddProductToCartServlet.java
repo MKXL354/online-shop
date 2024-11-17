@@ -51,4 +51,3 @@ public class AddProductToCartServlet extends HttpServlet {
         }
     }
 }
-//TODO: everything as a request parameter? not ProductDTO and Mapper like it currently is

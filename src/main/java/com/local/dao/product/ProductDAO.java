@@ -3,6 +3,7 @@ package com.local.dao.product;
 import com.local.dao.DAOException;
 import com.local.model.Product;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public interface ProductDAO {
@@ -11,6 +12,6 @@ public interface ProductDAO {
     Product getProductById(int id) throws DAOException;
     Product getProductByName(String name) throws DAOException;
     HashSet<Product> getAllProducts() throws DAOException;
+    ArrayList<Product> getProductsSortedBySells() throws DAOException;
+    ArrayList<Product> getProductsSortedByCount() throws DAOException;
 }
-
-//TODO: rewrite DB later

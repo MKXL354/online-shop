@@ -1,17 +1,16 @@
 package com.local.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public class Payment implements Comparable<Payment>{
     private int id;
     private User user;
     private Cart cart;
     private BigDecimal amount;
-    private LocalDateTime lastUpdate;
+    private String lastUpdate;
     private PaymentStatus status;
 
-    public Payment(int id, User user, Cart cart, BigDecimal amount, LocalDateTime lastUpdate, PaymentStatus status) {
+    public Payment(int id, User user, Cart cart, BigDecimal amount, String lastUpdate, PaymentStatus status) {
         this.id = id;
         this.user = user;
         this.cart = cart;
@@ -60,11 +59,11 @@ public class Payment implements Comparable<Payment>{
         this.amount = amount;
     }
 
-    public LocalDateTime getLastUpdate() {
+    public String getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
+    public void setLastUpdate(String lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

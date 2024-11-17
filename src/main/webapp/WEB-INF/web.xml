@@ -124,6 +124,18 @@
     <servlet-name>CancelPaymentServlet</servlet-name>
     <servlet-class>com.local.servlet.payment.CancelPaymentServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>GetPendingPaymentServlet</servlet-name>
+    <servlet-class>com.local.servlet.payment.GetPendingPaymentServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetProductsSortedBySellsServlet</servlet-name>
+    <servlet-class>com.local.servlet.productmanagement.GetProductsSortedBySellsServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetProductsSortedByCountServlet</servlet-name>
+    <servlet-class>com.local.servlet.productmanagement.GetProductsSortedByCountServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>AddUserServlet</servlet-name>
@@ -168,5 +180,17 @@
   <servlet-mapping>
     <servlet-name>CancelPaymentServlet</servlet-name>
     <url-pattern>/cancel-payment</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetPendingPaymentServlet</servlet-name>
+    <url-pattern>/get-pending-payment</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetProductsSortedBySellsServlet</servlet-name>
+    <url-pattern>/get-products-sorted-by-sells</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetProductsSortedByCountServlet</servlet-name>
+    <url-pattern>/get-products-sorted-by-count</url-pattern>
   </servlet-mapping>
 </web-app>

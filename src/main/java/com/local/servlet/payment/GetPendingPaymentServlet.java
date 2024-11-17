@@ -1,12 +1,9 @@
-package com.local.servlet.user;
+package com.local.servlet.payment;
 
 import com.local.dao.DAOException;
+import com.local.model.Payment;
 import com.local.model.User;
-import com.local.exception.service.TransactionException;
-import com.local.exception.service.user.EmptyCartException;
-import com.local.exception.service.user.InsufficientProductCountException;
-import com.local.exception.service.user.PreviousPaymentPendingException;
-import com.local.service.user.UserService;
+import com.local.service.payment.PaymentService;
 import com.local.service.usermanagement.UserManagementService;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.servlet.CommonWebComponentService;
@@ -17,28 +14,32 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
-public class FinalizePurchaseServlet extends HttpServlet {
+public class GetPendingPaymentServlet extends HttpServlet {
     private UserManagementService userManagementService;
-    private UserService userService;
+    private PaymentService paymentService;
+    private CommonWebComponentService commonWebComponentService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         userManagementService = (UserManagementService)getServletContext().getAttribute("userManagementService");
-        userService = (UserService)getServletContext().getAttribute("userService");
+        paymentService = (PaymentService)getServletContext().getAttribute("paymentService");
+        commonWebComponentService = (CommonWebComponentService)getServletContext().getAttribute("commonWebComponentService");
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             int userId = Integer.parseInt(request.getParameter("userId"));
             User user = userManagementService.getUserById(userId);
-            userService.finalizePurchase(user);
+            Payment payment = paymentService.getPendingPayment(user);
+            commonWebComponentService.writeResponse(response, payment);
         }
-        catch(NumberFormatException | UserNotFoundException | PreviousPaymentPendingException | EmptyCartException |
-              InsufficientProductCountException | TransactionException | DAOException e){
+        catch(NumberFormatException | UserNotFoundException | DAOException e){
             throw new ServletException(e);
         }
     }
 }
+//FIXME: gson throwing exception
