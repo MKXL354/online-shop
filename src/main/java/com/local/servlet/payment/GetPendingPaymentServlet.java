@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 
 public class GetPendingPaymentServlet extends HttpServlet {
     private UserManagementService userManagementService;
@@ -42,4 +41,3 @@ public class GetPendingPaymentServlet extends HttpServlet {
         }
     }
 }
-//FIXME: gson throwing exception

@@ -138,7 +138,7 @@ public class UserService {
             for(Product product : cartProducts){
                 totalPrice = totalPrice.add(product.getPrice().multiply(new BigDecimal(product.getCount())));
             }
-            Payment payment = new Payment(0, user, cart, totalPrice, LocalDateTime.now().toString(), PaymentStatus.PENDING);
+            Payment payment = new Payment(0, user, cart, totalPrice, LocalDateTime.now(), PaymentStatus.PENDING);
             Set<Product> updatedProducts = getUpdatedProducts(cartProducts, false);
             cart.setProcessTime(LocalDateTime.now());
 
@@ -182,7 +182,7 @@ public class UserService {
         try{
             Set<Product> updatedProducts = getUpdatedProducts(oldCartProducts, true);
             payment.setStatus(PaymentStatus.FAILED);
-            payment.setLastUpdate(LocalDateTime.now().toString());
+            payment.setLastUpdate(LocalDateTime.now());
             for(Product product : oldCartProducts){
                 cartDAO.addProductToCart(activeCart, product);
             }
@@ -215,7 +215,7 @@ public class UserService {
             throw new ApplicationRuntimeException(e.getMessage(), e);
         }
         for(Payment payment : pendingPayments){
-            if(Duration.between(LocalDateTime.parse(payment.getLastUpdate()), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
+            if(Duration.between(payment.getLastUpdate(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
                 try {
                     rollbackPurchase(payment);
                 }

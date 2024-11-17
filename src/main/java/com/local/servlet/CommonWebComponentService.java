@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 
 public class CommonWebComponentService {
     private class ProductDeserializer implements JsonDeserializer<Product> {
@@ -34,7 +35,22 @@ public class CommonWebComponentService {
             }
         }
     }
-    private Gson gson = new GsonBuilder().registerTypeAdapter(Product.class, new ProductDeserializer()).create();
+
+    private class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
+        @Override
+        public JsonElement serialize(LocalDateTime localDateTime, Type type, JsonSerializationContext context) {
+            return new JsonPrimitive(localDateTime.toString());
+        }
+
+        @Override
+        public LocalDateTime deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+            return LocalDateTime.parse(json.getAsString());
+        }
+    }
+
+    private Gson gson = new GsonBuilder().registerTypeAdapter(Product.class, new ProductDeserializer())
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .create();
 
     public <T> T getObjectFromJsonRequest(ServletRequest request, Class<T> objectType) throws IOException, JsonFormatException {
         BufferedReader reader = request.getReader();

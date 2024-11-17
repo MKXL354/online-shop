@@ -64,7 +64,7 @@ public class PaymentService {
                 throw new InsufficientBalanceException("insufficient account balance", null);
             }
             user.setBalance(user.getBalance().subtract(payment.getAmount()));
-            payment.setLastUpdate(LocalDateTime.now().toString());
+            payment.setLastUpdate(LocalDateTime.now());
             payment.setStatus(PaymentStatus.SUCCESSFUL);
 
             try{
@@ -93,7 +93,7 @@ public class PaymentService {
             //Simulated connection to foreign API (like a payment portal)
             Thread.sleep(2*60*1000);
             if(randomValue < 0.7){
-                payment.setLastUpdate(LocalDateTime.now().toString());
+                payment.setLastUpdate(LocalDateTime.now());
                 payment.setStatus(PaymentStatus.SUCCESSFUL);
                 paymentDAO.updatePayment(payment);
             }

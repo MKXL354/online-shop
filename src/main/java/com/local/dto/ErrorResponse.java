@@ -3,19 +3,19 @@ package com.local.dto;
 import java.time.LocalDateTime;
 
 public class ErrorResponse {
-    private String timestamp;
-    private int statusCode;
-    private String errorResponseType;
-    private String message;
+    private final LocalDateTime timestamp;
+    private final int statusCode;
+    private final String errorResponseType;
+    private final String message;
 
     public ErrorResponse(int statusCode, String errorResponseType, String message) {
-        this.timestamp = LocalDateTime.now().toString();
+        this.timestamp = LocalDateTime.now();
         this.statusCode = statusCode;
         this.errorResponseType = errorResponseType;
         this.message = message;
     }
 
-    public String getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 

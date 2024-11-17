@@ -1,7 +1,6 @@
 package com.local.service.productmanagement;
 
 import com.local.dao.DAOException;
-import com.local.dao.cart.CartDAO;
 import com.local.dao.product.ProductDAO;
 import com.local.exception.service.productmanagement.DuplicateProductNameException;
 import com.local.exception.service.productmanagement.InvalidProductCountException;

@@ -17,5 +17,3 @@ public interface CartDAO {
     void updateProductInCart(Cart cart, Product product) throws DAOException;
     void removeProductFromCart(Cart cart, Product product) throws DAOException;
 }
-
-//TODO: updateCart() usage? cart already has specialized updating methods for products

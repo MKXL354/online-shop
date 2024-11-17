@@ -9,7 +9,6 @@ import com.local.exception.service.user.PreviousPaymentPendingException;
 import com.local.service.user.UserService;
 import com.local.service.usermanagement.UserManagementService;
 import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.servlet.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
