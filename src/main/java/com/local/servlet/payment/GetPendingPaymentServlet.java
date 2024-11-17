@@ -2,9 +2,7 @@ package com.local.servlet.payment;
 
 import com.local.dao.DAOException;
 import com.local.model.Payment;
-import com.local.model.User;
 import com.local.service.payment.PaymentService;
-import com.local.service.usermanagement.UserManagementService;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.servlet.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;

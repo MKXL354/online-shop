@@ -1,13 +1,11 @@
 package com.local.servlet.user;
 
 import com.local.dao.DAOException;
-import com.local.model.User;
 import com.local.exception.service.TransactionException;
 import com.local.exception.service.user.EmptyCartException;
 import com.local.exception.service.user.InsufficientProductCountException;
 import com.local.exception.service.user.PreviousPaymentPendingException;
 import com.local.service.user.UserService;
-import com.local.service.usermanagement.UserManagementService;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
