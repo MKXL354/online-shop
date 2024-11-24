@@ -5,46 +5,26 @@ import com.local.dao.user.UserDAO;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
-import com.local.util.lock.LockManager;
 import com.local.util.password.PasswordEncryptor;
 import com.local.model.User;
-
-import java.util.concurrent.locks.ReentrantLock;
 
 public class UserManagementService {
     private UserDAO userDAO;
     private PasswordEncryptor passwordEncryptor;
-    private LockManager lockManager;
 
-    public UserManagementService(UserDAO userDAO, PasswordEncryptor passwordEncryptor, LockManager lockManager) {
+    public UserManagementService(UserDAO userDAO, PasswordEncryptor passwordEncryptor) {
         this.userDAO = userDAO;
         this.passwordEncryptor = passwordEncryptor;
-        this.lockManager = lockManager;
     }
 
+//    TODO: TM here
     public User addUser(User user) throws DuplicateUsernameException, DAOException {
-        String username = user.getUsername();
-        ReentrantLock lock = lockManager.getLock(User.class, username);
-        lock.lock();
-        try{
-            if(userDAO.getUserByUsername(user.getUsername()) != null) {
-                throw new DuplicateUsernameException("duplicate username not allowed", null);
-            }
-            String hashedPassword = passwordEncryptor.hashPassword(user.getPassword());
-            user.setPassword(hashedPassword);
-            return userDAO.addUser(user);
+        if(userDAO.getUserByUsername(user.getUsername()) != null) {
+            throw new DuplicateUsernameException("duplicate username not allowed", null);
         }
-        finally {
-            lock.unlock();
-        }
-    }
-
-    public User getUserById(int id) throws UserNotFoundException, DAOException {
-        User user;
-        if((user = userDAO.getUserById(id)) == null) {
-            throw new UserNotFoundException("user not found", null);
-        }
-        return user;
+        String hashedPassword = passwordEncryptor.hashPassword(user.getPassword());
+        user.setPassword(hashedPassword);
+        return userDAO.addUser(user);
     }
 
     public User login(String username, String password) throws UserNotFoundException, WrongPasswordException, DAOException {

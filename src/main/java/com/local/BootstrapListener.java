@@ -12,7 +12,6 @@ import com.local.service.UtilityService;
 import com.local.service.payment.PaymentService;
 import com.local.service.productmanagement.ProductManagementService;
 import com.local.service.user.UserService;
-import com.local.servlet.mapper.ProductDTOMapper;
 import com.local.util.lock.LockManager;
 import com.local.util.objectvalidator.ObjectValidator;
 import com.local.util.password.PasswordEncryptor;
@@ -38,7 +37,7 @@ public class BootstrapListener implements ServletContextListener {
 
     private UserDAO userDAOImpl;
     private ProductDAO productDAOImpl;
-    private CartDAO cartDAODImpl;
+    private CartDAO cartDAOImpl;
     private PaymentDAO paymentDAOImpl;
 
     @Override
@@ -59,7 +58,7 @@ public class BootstrapListener implements ServletContextListener {
 
         userDAOImpl = UserDAOFactory.getUserDAO(DAOType.MEM, connectionPool, serializedPersistenceManager);
         productDAOImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, connectionPool, serializedPersistenceManager);
-        cartDAODImpl = CartDAOFactory.getCartDAO(DAOType.MEM, connectionPool);
+        cartDAOImpl = CartDAOFactory.getCartDAO(DAOType.MEM, connectionPool);
         paymentDAOImpl = PaymentDAOFactory.getPaymentDAO(DAOType.MEM, connectionPool);
 
         LockManager lockManager = new LockManager();
@@ -68,10 +67,10 @@ public class BootstrapListener implements ServletContextListener {
         sce.getServletContext().setAttribute("utilityService", utilityService);
 
         PasswordEncryptor passwordEncryptorImpl = new PasswordEncryptorImpl(1000, 32, 256);
-        UserManagementService userManagementService = new UserManagementService(userDAOImpl, passwordEncryptorImpl, lockManager);
+        UserManagementService userManagementService = new UserManagementService(userDAOImpl, passwordEncryptorImpl);
         sce.getServletContext().setAttribute("userManagementService", userManagementService);
 
-        ProductManagementService productManagementService = new ProductManagementService(productDAOImpl, lockManager);
+        ProductManagementService productManagementService = new ProductManagementService(productDAOImpl);
         sce.getServletContext().setAttribute("productManagementService", productManagementService);
 
         String relativeTokenManagerConfigFileLocation = sce.getServletContext().getInitParameter("relativeTokenManagerConfigFileLocation");
@@ -90,10 +89,7 @@ public class BootstrapListener implements ServletContextListener {
         PropertyManager errorResponsePropertyManager = new PropertyManager(absoluteErrorResponseConfigLocation);
         sce.getServletContext().setAttribute("errorResponsePropertyManager", errorResponsePropertyManager);
 
-        ProductDTOMapper productDTOMapper= new ProductDTOMapper(productManagementService);
-        sce.getServletContext().setAttribute("productDTOMapper", productDTOMapper);
-
-        UserService userService = new UserService(utilityService, cartDAODImpl, productDAOImpl, userDAOImpl, paymentDAOImpl, lockManager, batchLogManager, 6*1000, 10*60*1000);
+        UserService userService = new UserService(utilityService, cartDAOImpl, productDAOImpl, userDAOImpl, paymentDAOImpl, lockManager, batchLogManager, 6*1000, 10*60*1000);
         sce.getServletContext().setAttribute("userService", userService);
         userService.startRollbackScheduler();
 
@@ -112,6 +108,8 @@ public class BootstrapListener implements ServletContextListener {
         serializedPersistenceManager.persistData(productDAOImpl);
     }
 }
+//TODO: use the brand new transaction manager instead of locks everywhere
+
 //TODO: services as interface to get supplied from outside?
 
 //TODO: reconfigure the filters in web.xml

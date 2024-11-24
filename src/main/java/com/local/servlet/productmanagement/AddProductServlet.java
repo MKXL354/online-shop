@@ -1,8 +1,6 @@
 package com.local.servlet.productmanagement;
 
 import com.local.dao.DAOException;
-import com.local.exception.service.productmanagement.DuplicateProductNameException;
-import com.local.exception.service.productmanagement.InvalidProductCountException;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.model.Product;
 import com.local.service.productmanagement.*;
@@ -34,7 +32,7 @@ public class AddProductServlet extends HttpServlet {
         try {
             product = productManagementService.addProduct(product);
             commonWebComponentService.writeResponse(response, product);
-        } catch (InvalidProductCountException | InvalidProductPriceException | DuplicateProductNameException | DAOException e) {
+        } catch (InvalidProductPriceException | DAOException e) {
             throw new ServletException(e);
         }
     }

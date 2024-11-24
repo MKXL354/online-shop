@@ -2,46 +2,26 @@ package com.local.service.productmanagement;
 
 import com.local.dao.DAOException;
 import com.local.dao.product.ProductDAO;
-import com.local.exception.service.productmanagement.DuplicateProductNameException;
-import com.local.exception.service.productmanagement.InvalidProductCountException;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.model.Product;
-import com.local.util.lock.LockManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class ProductManagementService {
     private ProductDAO productDAO;
-    private LockManager lockManager;
 
-    public ProductManagementService(ProductDAO productDAO, LockManager lockManager) {
+    public ProductManagementService(ProductDAO productDAO) {
         this.productDAO = productDAO;
-        this.lockManager = lockManager;
     }
 
-    public Product addProduct(Product product) throws InvalidProductCountException, InvalidProductPriceException, DuplicateProductNameException, DAOException {
-        if(product.getCount() < 0){
-            throw new InvalidProductCountException("product count can't be negative", null);
-        }
+    public Product addProduct(Product product) throws InvalidProductPriceException, DAOException {
         if(product.getPrice().compareTo(new BigDecimal(0)) <= 0){
             throw new InvalidProductPriceException("product price can't be non positive", null);
         }
-        String name = product.getName();
-        ReentrantLock lock = lockManager.getLock(Product.class, name);
-        lock.lock();
-        try{
-            if(productDAO.getProductByName(product.getName()) != null){
-                throw new DuplicateProductNameException("duplicate product name not allowed", null);
-            }
-            return productDAO.addProduct(product);
-        }
-        finally {
-            lock.unlock();
-        }
+        return productDAO.addProduct(product);
     }
 
     public Product getProductById(int id) throws ProductNotFoundException, DAOException {
@@ -64,4 +44,3 @@ public class ProductManagementService {
         return productDAO.getProductsSortedByCount();
     }
 }
-//TODO: pass sort comparator

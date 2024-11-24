@@ -14,6 +14,8 @@ create table carts(
     foreign key (user_id) references users(id)
 );
 
+-- apply the changes in how product is handled in DB
+
 create table products(
      id int auto_increment primary key,
      name varchar(256) unique,

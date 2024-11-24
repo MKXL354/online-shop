@@ -71,7 +71,7 @@ public class UserService {
         return cart;
     }
 
-    public void addProductToCart(int userId, Product product) throws UserNotFoundException, InvalidProductCountException, ProductNotFoundException, DAOException {
+    public void addProductToCart(int userId, Product product) throws UserNotFoundException, ProductNotFoundException, DAOException {
         User user = utilityService.getUserById(userId);
         Cart cart = getCart(user);
         if(productDAO.getProductById(product.getId()) == null){

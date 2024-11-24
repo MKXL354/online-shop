@@ -45,15 +45,6 @@ public class ProductDAOMemImpl implements ProductDAO, Serializable {
     }
 
     @Override
-    public Product getProductByName(String name) {
-        Product product = products.searchValues(16, (p) -> p.getName().equals(name) ? p : null);
-        if(product != null) {
-            return new Product(product);
-        }
-        return null;
-    }
-
-    @Override
     public HashSet<Product> getAllProducts() {
         HashSet<Product> newProducts = new HashSet<>();
         for(Product product : products.values()) {
@@ -64,15 +55,17 @@ public class ProductDAOMemImpl implements ProductDAO, Serializable {
 
     @Override
     public ArrayList<Product> getProductsSortedBySells() {
-        ArrayList<Product> sortedProducts = new ArrayList<>(products.values());
-        sortedProducts.sort(Comparator.comparingInt(Product::getSold));
-        return sortedProducts;
+//        ArrayList<Product> sortedProducts = new ArrayList<>(products.values());
+//        sortedProducts.sort(Comparator.comparingInt(Product::getSold));
+//        return sortedProducts;
+        return null;
     }
 
     @Override
     public ArrayList<Product> getProductsSortedByCount() {
-        ArrayList<Product> sortedProducts = new ArrayList<>(products.values());
-        sortedProducts.sort(Comparator.comparingInt(Product::getCount));
-        return sortedProducts;
+//        ArrayList<Product> sortedProducts = new ArrayList<>(products.values());
+//        sortedProducts.sort(Comparator.comparingInt(Product::getCount));
+//        return sortedProducts;
+        return null;
     }
 }
