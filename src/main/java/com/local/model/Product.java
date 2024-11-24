@@ -2,10 +2,15 @@ package com.local.model;
 
 import com.local.util.objectvalidator.NotNull;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Product implements Comparable<Product>{
+public class Product implements Comparable<Product>, Serializable {
+    @Serial
+    private static final long serialVersionUID = -4599586234479562592L;
+
     protected int id;
 
     @NotNull(message = "name can't be null")

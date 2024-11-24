@@ -60,3 +60,4 @@ public class Cart {
         this.processTime = processTime;
     }
 }
+//TODO: ConcurrentHashMap for keeping the products?

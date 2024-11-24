@@ -1,6 +1,6 @@
 package com.local.dao;
 
-public interface Persistable {
+public interface Persistent {
     void loadData();
     void persistData();
 }

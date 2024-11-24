@@ -1,4 +1,4 @@
-package com.local.util;
+package com.local.util.persistence;
 
 import com.google.gson.Gson;
 import com.local.exception.common.ApplicationRuntimeException;
@@ -9,22 +9,18 @@ import java.util.Map;
 
 public class DiskPersistenceManager<K, V> {
     private static Cleaner cleaner = Cleaner.create();
-    private Cleaner.Cleanable cleanable;
-    private final static String SAVE_DIRECTORY = "E:\\IDEA Codes\\online-shop\\db\\mem";
+    private final static String SAVE_DIRECTORY = "E:\\IDEA Codes\\online-shop\\db\\mem\\test";
     private String saveFileLocation;
-    private Object resource;
     private Map<K, V> data;
     private Class<K> keyClass;
     private Class<V> valueClass;
     private Gson gson;
 
-    public DiskPersistenceManager(Object resource, Map<K, V> data, Class<K> keyClass, Class<V> valueClass) {
-        this.resource = resource;
+    public DiskPersistenceManager(String className, Map<K, V> data, Class<K> keyClass, Class<V> valueClass) {
         this.data = data;
         this.keyClass = keyClass;
         this.valueClass = valueClass;
-        this.cleanable = cleaner.register(resource, this::persistData);
-        this.saveFileLocation = SAVE_DIRECTORY + File.separator + resource.getClass().getSimpleName() + ".txt";
+        this.saveFileLocation = SAVE_DIRECTORY + File.separator + className + ".txt";
         this.gson = new Gson();
     }
 

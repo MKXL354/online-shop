@@ -2,9 +2,14 @@ package com.local.model;
 
 import com.local.util.objectvalidator.NotNull;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class User {
+public class User implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -6766227676937315014L;
+
     private int id;
 
     @NotNull(message = "username can't be null")

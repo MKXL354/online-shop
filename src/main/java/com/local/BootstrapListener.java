@@ -1,7 +1,6 @@
 package com.local;
 
 import com.local.dao.DAOType;
-import com.local.dao.Persistable;
 import com.local.dao.cart.CartDAO;
 import com.local.dao.cart.CartDAOFactory;
 import com.local.dao.payment.PaymentDAO;
@@ -23,6 +22,7 @@ import com.local.dbconnector.ConnectionPool;
 import com.local.dbconnector.H2ConnectionPool;
 import com.local.service.usermanagement.UserManagementService;
 import com.local.servlet.CommonWebComponentService;
+import com.local.util.persistence.SerializedPersistenceManager;
 import com.local.util.token.JwtManager;
 import com.local.util.token.TokenManager;
 import com.local.util.PropertyManager;
@@ -32,15 +32,19 @@ import jakarta.servlet.ServletContextListener;
 
 public class BootstrapListener implements ServletContextListener {
     private ConnectionPool connectionPool;
-    private BatchLogManager batchLogManager;
 
-    private UserDAO userDAOImpl = UserDAOFactory.getUserDAO(DAOType.MEM, null);
-    private ProductDAO productDAOImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, null);
-    private CartDAO cartDAODImpl = CartDAOFactory.getCartDAO(DAOType.MEM, null);
-    private PaymentDAO paymentDAOImpl = PaymentDAOFactory.getPaymentDAO(DAOType.MEM, null);
+    private BatchLogManager batchLogManager;
+    private SerializedPersistenceManager serializedPersistenceManager;
+
+    private UserDAO userDAOImpl;
+    private ProductDAO productDAOImpl;
+    private CartDAO cartDAODImpl;
+    private PaymentDAO paymentDAOImpl;
 
     @Override
     public void contextInitialized(ServletContextEvent sce){
+        serializedPersistenceManager = new SerializedPersistenceManager();
+
         String relativeDatabaseConfigFileLocation = sce.getServletContext().getInitParameter("relativeDatabaseConfigFileLocation");
         String absoluteDatabaseConfigFileLocation = sce.getServletContext().getRealPath(relativeDatabaseConfigFileLocation);
         PropertyManager databasePropertyManager = new PropertyManager(absoluteDatabaseConfigFileLocation);
@@ -53,10 +57,10 @@ public class BootstrapListener implements ServletContextListener {
         batchLogManager.start();
         sce.getServletContext().setAttribute("batchLogManager", batchLogManager);
 
-        ((Persistable)userDAOImpl).loadData();
-        ((Persistable)productDAOImpl).loadData();
-//        ((Persistable)cartDAODImpl).loadData();
-//        ((Persistable)paymentDAOImpl).loadData();
+        userDAOImpl = UserDAOFactory.getUserDAO(DAOType.MEM, connectionPool, serializedPersistenceManager);
+        productDAOImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, connectionPool, serializedPersistenceManager);
+        cartDAODImpl = CartDAOFactory.getCartDAO(DAOType.MEM, connectionPool);
+        paymentDAOImpl = PaymentDAOFactory.getPaymentDAO(DAOType.MEM, connectionPool);
 
         LockManager lockManager = new LockManager();
 
@@ -104,10 +108,8 @@ public class BootstrapListener implements ServletContextListener {
         batchLogManager.shutDown();
         ((UserService)sce.getServletContext().getAttribute("userService")).shutdownRollbackScheduler();
 
-        ((Persistable)userDAOImpl).persistData();
-        ((Persistable)productDAOImpl).persistData();
-//        ((Persistable)cartDAODImpl).persistData();
-//        ((Persistable)paymentDAOImpl).persistData();
+        serializedPersistenceManager.persistData(userDAOImpl);
+        serializedPersistenceManager.persistData(productDAOImpl);
     }
 }
 //TODO: services as interface to get supplied from outside?
@@ -115,7 +117,7 @@ public class BootstrapListener implements ServletContextListener {
 //TODO: reconfigure the filters in web.xml
 //TODO: a better filter design: have admin/ and web-user/ endpoints to control their accessible actions
 
-//TODO: IoC container, config file and relative path
+//TODO: DI container, config file and relative path
 
 //TODO: rewrite DB later
 

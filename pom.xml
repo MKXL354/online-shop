@@ -7,9 +7,11 @@
   <version>1.0-SNAPSHOT</version>
   <name>online-shop Maven Webapp</name>
   <url>https://maven.apache.org</url>
+
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -55,10 +57,29 @@
       <version>0.12.6</version>
       <scope>runtime</scope>
     </dependency>
-
-
   </dependencies>
+
   <build>
     <finalName>online-shop</finalName>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.8.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>sources</goal>
+              <goal>resolve</goal>
+            </goals>
+            <configuration>
+              <classifier>javadoc</classifier>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
+
 </project>

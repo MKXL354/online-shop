@@ -64,3 +64,4 @@ public class ProductManagementService {
         return productDAO.getProductsSortedByCount();
     }
 }
+//TODO: pass sort comparator

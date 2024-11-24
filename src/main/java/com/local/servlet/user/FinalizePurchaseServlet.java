@@ -34,3 +34,5 @@ public class FinalizePurchaseServlet extends HttpServlet {
         }
     }
 }
+//TODO: share userId between filter and servlet inside jwt
+//TODO: filter reconfig, api change, all postman requests done with token

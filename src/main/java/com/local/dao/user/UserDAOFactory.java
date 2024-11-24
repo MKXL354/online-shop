@@ -3,15 +3,19 @@ package com.local.dao.user;
 import com.local.exception.common.ApplicationRuntimeException;
 import com.local.dao.DAOType;
 import com.local.dbconnector.ConnectionPool;
+import com.local.util.persistence.PersistenceManager;
 
 public class UserDAOFactory {
     private static UserDAO userDAODB;
     private static UserDAO userDAOMem;
 
-    public static UserDAO getUserDAO(DAOType type, ConnectionPool connectionPool) {
+    public static UserDAO getUserDAO(DAOType type, ConnectionPool connectionPool, PersistenceManager persistenceManager) {
         switch(type){
             case MEM -> {
-                userDAOMem = new UserDAOMemImpl();
+                userDAOMem = persistenceManager.loadData(UserDAOMemImpl.class);
+                if(userDAOMem == null){
+                    userDAOMem = new UserDAOMemImpl();
+                }
                 return userDAOMem;
             }
             case DB -> {
