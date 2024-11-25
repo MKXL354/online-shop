@@ -71,10 +71,6 @@
     <filter-name>ObjectValidationFilter</filter-name>
     <url-pattern>/add-product</url-pattern>
   </filter-mapping>
-  <filter-mapping>
-    <filter-name>ObjectValidationFilter</filter-name>
-    <url-pattern>/add-product-to-cart</url-pattern>
-  </filter-mapping>
 
   <listener>
     <listener-class>com.local.BootstrapListener</listener-class>
@@ -151,7 +147,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>GetAllProductsServlet</servlet-name>
-    <url-pattern>/get-products</url-pattern>
+    <url-pattern>/get-all-products</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AddProductToCartServlet</servlet-name>

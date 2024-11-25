@@ -2,9 +2,9 @@ package com.local.servlet.user;
 
 import com.local.dao.DAOException;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
+import com.local.exception.service.user.PreviousPaymentPendingException;
 import com.local.service.user.UserService;
 import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.servlet.mapper.DTOMapperException;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -27,11 +27,8 @@ public class AddProductToCartServlet extends HttpServlet {
             String productName = request.getParameter("productName");
             userService.addProductToCart(userId, productName);
         }
-        catch (DTOMapperException e) {
-            throw new ServletException(e.getCause());
-        }
         catch (NumberFormatException | UserNotFoundException | ProductNotFoundException |
-               DAOException e) {
+               PreviousPaymentPendingException | DAOException e) {
             throw new ServletException(e);
         }
     }

@@ -8,9 +8,14 @@ import com.local.dao.payment.PaymentDAOFactory;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.product.ProductDAOFactory;
 import com.local.dao.user.UserDAOFactory;
+import com.local.model.Product;
+import com.local.model.ProductStatus;
 import com.local.service.UtilityService;
 import com.local.service.payment.PaymentService;
 import com.local.service.productmanagement.ProductManagementService;
+import com.local.service.scheduler.PurchaseRollbackScheduler;
+import com.local.service.scheduler.ReserveRollbackScheduler;
+import com.local.service.scheduler.RollbackScheduler;
 import com.local.service.user.UserService;
 import com.local.util.lock.LockManager;
 import com.local.util.objectvalidator.ObjectValidator;
@@ -31,9 +36,11 @@ import jakarta.servlet.ServletContextListener;
 
 public class BootstrapListener implements ServletContextListener {
     private ConnectionPool connectionPool;
-
-    private BatchLogManager batchLogManager;
     private SerializedPersistenceManager serializedPersistenceManager;
+    private BatchLogManager batchLogManager;
+
+    private RollbackScheduler purchaseRollbackScheduler;
+    private RollbackScheduler reserveRollbackScheduler;
 
     private UserDAO userDAOImpl;
     private ProductDAO productDAOImpl;
@@ -89,12 +96,17 @@ public class BootstrapListener implements ServletContextListener {
         PropertyManager errorResponsePropertyManager = new PropertyManager(absoluteErrorResponseConfigLocation);
         sce.getServletContext().setAttribute("errorResponsePropertyManager", errorResponsePropertyManager);
 
-        UserService userService = new UserService(utilityService, cartDAOImpl, productDAOImpl, userDAOImpl, paymentDAOImpl, lockManager, batchLogManager, 6*1000, 10*60*1000);
+        UserService userService = new UserService(utilityService, cartDAOImpl, productDAOImpl, userDAOImpl, paymentDAOImpl);
         sce.getServletContext().setAttribute("userService", userService);
-        userService.startRollbackScheduler();
 
         PaymentService paymentService = new PaymentService(utilityService, userDAOImpl, paymentDAOImpl, lockManager);
         sce.getServletContext().setAttribute("paymentService", paymentService);
+
+        purchaseRollbackScheduler = new PurchaseRollbackScheduler(10*1000, 60*1000, paymentDAOImpl, productDAOImpl);
+        purchaseRollbackScheduler.start();
+
+        reserveRollbackScheduler = new ReserveRollbackScheduler(5*1000, 30*1000, cartDAOImpl, productDAOImpl);
+        reserveRollbackScheduler.start();
     }
 
     @Override
@@ -102,15 +114,19 @@ public class BootstrapListener implements ServletContextListener {
         System.out.println("Shutting down ...");
         connectionPool.closePool();
         batchLogManager.shutDown();
-        ((UserService)sce.getServletContext().getAttribute("userService")).shutdownRollbackScheduler();
+
+        purchaseRollbackScheduler.stop();
+        reserveRollbackScheduler.stop();
 
         serializedPersistenceManager.persistData(userDAOImpl);
         serializedPersistenceManager.persistData(productDAOImpl);
     }
 }
-//TODO: use the brand new transaction manager instead of locks everywhere
+//TODO: add persistence to all DAOs
 
-//TODO: services as interface to get supplied from outside?
+//TODO: use the new transaction manager instead of locks everywhere
+//TODO: services as interface? get supplied from outside and use dynamic proxy for transactions
+//TODO: one big DAO containing the smaller ones just like DB? but still work with the smaller ones
 
 //TODO: reconfigure the filters in web.xml
 //TODO: a better filter design: have admin/ and web-user/ endpoints to control their accessible actions

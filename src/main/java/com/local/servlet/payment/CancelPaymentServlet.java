@@ -22,12 +22,13 @@ public class CancelPaymentServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException{
-        try{
-            int userId = Integer.parseInt(request.getParameter("userId"));
-            userService.rollbackPurchase(userId);
-        }
-        catch(NumberFormatException | UserNotFoundException | PaymentNotPendingException | TransactionException | DAOException e){
-            throw new ServletException(e);
-        }
+//        TODO: implementation
+//        try{
+//            int userId = Integer.parseInt(request.getParameter("userId"));
+//            userService.rollbackPurchase(userId);
+//        }
+//        catch(NumberFormatException | UserNotFoundException | PaymentNotPendingException | TransactionException | DAOException e){
+//            throw new ServletException(e);
+//        }
     }
 }

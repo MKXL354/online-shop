@@ -22,15 +22,18 @@ public class Product implements Comparable<Product>, Serializable {
     @NotNull(message = "wrong or null product type")
     protected ProductType type;
 
-    public Product(int id, String name, BigDecimal price, ProductType type) {
+    protected ProductStatus status;
+
+    public Product(int id, String name, BigDecimal price, ProductType type, ProductStatus status) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.type = type;
+        this.status = status;
     }
 
     public Product(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getType());
+        this(product.getId(), product.getName(), product.getPrice(), product.getType(), product.getStatus());
     }
 
     public int getId() {
@@ -49,6 +52,10 @@ public class Product implements Comparable<Product>, Serializable {
         return type;
     }
 
+    public ProductStatus getStatus() {
+        return status;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -63,6 +70,10 @@ public class Product implements Comparable<Product>, Serializable {
 
     public void setType(ProductType type) {
         this.type = type;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 
     @Override

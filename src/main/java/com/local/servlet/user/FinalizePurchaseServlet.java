@@ -28,8 +28,8 @@ public class FinalizePurchaseServlet extends HttpServlet {
             int userId = Integer.parseInt(request.getParameter("userId"));
             userService.finalizePurchase(userId);
         }
-        catch(NumberFormatException | UserNotFoundException | PreviousPaymentPendingException | EmptyCartException |
-              InsufficientProductCountException | TransactionException | DAOException e){
+        catch(NumberFormatException | UserNotFoundException | EmptyCartException |
+              DAOException e){
             throw new ServletException(e);
         }
     }
