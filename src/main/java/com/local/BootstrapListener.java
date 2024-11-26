@@ -8,8 +8,6 @@ import com.local.dao.payment.PaymentDAOFactory;
 import com.local.dao.product.ProductDAO;
 import com.local.dao.product.ProductDAOFactory;
 import com.local.dao.user.UserDAOFactory;
-import com.local.model.Product;
-import com.local.model.ProductStatus;
 import com.local.service.UtilityService;
 import com.local.service.payment.PaymentService;
 import com.local.service.productmanagement.ProductManagementService;
@@ -99,7 +97,7 @@ public class BootstrapListener implements ServletContextListener {
         UserService userService = new UserService(utilityService, cartDAOImpl, productDAOImpl, userDAOImpl, paymentDAOImpl);
         sce.getServletContext().setAttribute("userService", userService);
 
-        PaymentService paymentService = new PaymentService(utilityService, userDAOImpl, paymentDAOImpl, lockManager);
+        PaymentService paymentService = new PaymentService(utilityService, userDAOImpl, paymentDAOImpl);
         sce.getServletContext().setAttribute("paymentService", paymentService);
 
         purchaseRollbackScheduler = new PurchaseRollbackScheduler(10*1000, 60*1000, paymentDAOImpl, productDAOImpl);
