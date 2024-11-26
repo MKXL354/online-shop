@@ -1,7 +1,6 @@
 package com.local.servlet.payment;
 
 import com.local.dao.DAOException;
-import com.local.exception.service.TransactionException;
 import com.local.exception.service.payment.InsufficientBalanceException;
 import com.local.service.payment.PaymentService;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;

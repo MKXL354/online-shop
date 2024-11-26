@@ -17,7 +17,6 @@ public class UserManagementService {
         this.passwordEncryptor = passwordEncryptor;
     }
 
-//    TODO: TM here
     public User addUser(User user) throws DuplicateUsernameException, DAOException {
         if(userDAO.getUserByUsername(user.getUsername()) != null) {
             throw new DuplicateUsernameException("duplicate username not allowed", null);

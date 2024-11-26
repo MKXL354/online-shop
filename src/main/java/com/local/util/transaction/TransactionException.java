@@ -1,4 +1,4 @@
-package com.local.exception.service;
+package com.local.util.transaction;
 
 import com.local.exception.common.ApplicationException;
 

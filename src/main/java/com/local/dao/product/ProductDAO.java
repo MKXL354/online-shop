@@ -3,8 +3,8 @@ package com.local.dao.product;
 import com.local.dao.DAOException;
 import com.local.model.Product;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 public interface ProductDAO {
     Product addProduct(Product product) throws DAOException;
@@ -12,6 +12,6 @@ public interface ProductDAO {
     Product getProductById(int id) throws DAOException;
     Product getProductByName(String name) throws DAOException;
     HashSet<Product> getAllProducts() throws DAOException;
-    ArrayList<Product> getProductsSortedBySells() throws DAOException;
-    ArrayList<Product> getProductsSortedByCount() throws DAOException;
+    LinkedHashMap<String, Integer> getProductsSortedBySells() throws DAOException;
+    LinkedHashMap<String, Integer> getProductsSortedByCount() throws DAOException;
 }

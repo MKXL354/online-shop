@@ -1,17 +1,17 @@
 package com.local.model;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Cart {
     private int id;
     private User user;
-    private Set<Product> products;
+    private Map<Integer, Product> products;
     private LocalDateTime lastUpdateTime;
     private LocalDateTime processTime;
 
-    public Cart(int id, User user, Set<Product> products, LocalDateTime lastUpdateTime, LocalDateTime processTime) {
+    public Cart(int id, User user, Map<Integer, Product> products, LocalDateTime lastUpdateTime, LocalDateTime processTime) {
         this.id = id;
         this.user = user;
         this.products = products;
@@ -23,9 +23,9 @@ public class Cart {
         this(cart.getId(), null, null, cart.getLastUpdateTime(), cart.getProcessTime());
         User user = new User(cart.getUser());
         this.setUser(user);
-        Set<Product> products = new HashSet<>();
-        for (Product product : cart.getProducts()) {
-            products.add(new Product(product));
+        Map<Integer, Product> products = new HashMap<>();
+        for (Product product : cart.getProducts().values()) {
+            products.put(product.getId(), new Product(product));
         }
         this.setProducts(products);
     }
@@ -38,7 +38,7 @@ public class Cart {
         return user;
     }
 
-    public Set<Product> getProducts() {
+    public Map<Integer, Product> getProducts() {
         return products;
     }
 
@@ -58,7 +58,7 @@ public class Cart {
         this.user = user;
     }
 
-    public void setProducts(Set<Product> products) {
+    public void setProducts(Map<Integer, Product> products) {
         this.products = products;
     }
 

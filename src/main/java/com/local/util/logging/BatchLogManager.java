@@ -77,5 +77,3 @@ public class BatchLogManager {
         }
     }
 }
-//TODO: maybe make this abstract (slight problem with polymorphism)
-//TODO: maybe add logAll() & log when the number of logs reach a limit (causes blocking issues in high load)

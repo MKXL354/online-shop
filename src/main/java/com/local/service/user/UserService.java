@@ -13,6 +13,7 @@ import com.local.service.UtilityService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Set;
 
 public class UserService {
@@ -28,7 +29,6 @@ public class UserService {
         this.paymentDAO = paymentDAO;
     }
 
-//    TODO: get products in cart endpoint?
     public Cart getActiveCart(int userId) throws UserNotFoundException, DAOException{
         User user = utilityService.getUserById(userId);
         if(user == null) {
@@ -41,8 +41,6 @@ public class UserService {
         return cart;
     }
 
-//    TODO: TM here
-//    TODO: reservation rollback time (maybe in a separate scheduler)
     /*
     if there is a pending payment, no product can be added to a new cart
      */
@@ -66,7 +64,7 @@ public class UserService {
 
     public void removeProductFromCart(int userId, String productName) throws UserNotFoundException, ProductNotFoundException, DAOException{
         Cart cart = getActiveCart(userId);
-        for(Product product : cart.getProducts()){
+        for(Product product : cart.getProducts().values()){
             if(product.getName().equals(productName)){
                 product.setStatus(ProductStatus.AVAILABLE);
                 productDAO.updateProduct(product);
@@ -79,20 +77,19 @@ public class UserService {
         throw new ProductNotFoundException("product not found in cart", null);
     }
 
-//    TODO: TM here
     /*
     products are considered sold without payment. so in time of rollback the status must change
      */
     public void finalizePurchase(int userId) throws UserNotFoundException, EmptyCartException, DAOException {
         User user = utilityService.getUserById(userId);
         Cart cart = getActiveCart(userId);
-        Set<Product> cartProducts = cart.getProducts();
+        Map<Integer, Product> cartProducts = cart.getProducts();
         if(cartProducts.isEmpty()){
             throw new EmptyCartException("user cart is empty", null);
         }
 
         BigDecimal totalPrice = new BigDecimal(0);
-        for(Product product : cartProducts){
+        for(Product product : cartProducts.values()){
             totalPrice = totalPrice.add(product.getPrice());
             product.setStatus(ProductStatus.SOLD);
             productDAO.updateProduct(product);
@@ -107,4 +104,3 @@ public class UserService {
     }
 }
 //TODO: cache pending payments and drop extra requests
-//TODO: add order cancelling and remove product from cart

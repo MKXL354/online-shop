@@ -5,4 +5,3 @@ public class ApplicationRuntimeException extends RuntimeException {
         super(message, cause);
     }
 }
-//TODO: usage in services and validation?

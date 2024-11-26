@@ -7,7 +7,7 @@ import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.model.Product;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class ProductManagementService {
@@ -36,11 +36,11 @@ public class ProductManagementService {
         return productDAO.getAllProducts();
     }
 
-    public ArrayList<Product> getProductsSortedBySells() throws DAOException{
+    public HashMap<String, Integer> getProductsSortedBySells() throws DAOException{
         return productDAO.getProductsSortedBySells();
     }
 
-    public ArrayList<Product> getProductsSortedByCount() throws DAOException{
+    public HashMap<String, Integer> getProductsSortedByCount() throws DAOException{
         return productDAO.getProductsSortedByCount();
     }
 }

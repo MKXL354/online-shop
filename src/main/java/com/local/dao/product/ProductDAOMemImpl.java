@@ -5,8 +5,7 @@ import com.local.model.ProductStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -68,20 +67,35 @@ public class ProductDAOMemImpl implements ProductDAO, Serializable {
         return newProducts;
     }
 
-//    TODO: rewrite the reporting services
     @Override
-    public ArrayList<Product> getProductsSortedBySells() {
-//        ArrayList<Product> sortedProducts = new ArrayList<>(products.values());
-//        sortedProducts.sort(Comparator.comparingInt(Product::getSold));
-//        return sortedProducts;
-        return null;
+    public LinkedHashMap<String, Integer> getProductsSortedBySells() {
+        return getProductsSortedByStatus(ProductStatus.SOLD);
     }
 
     @Override
-    public ArrayList<Product> getProductsSortedByCount() {
-//        ArrayList<Product> sortedProducts = new ArrayList<>(products.values());
-//        sortedProducts.sort(Comparator.comparingInt(Product::getCount));
-//        return sortedProducts;
-        return null;
+    public LinkedHashMap<String, Integer> getProductsSortedByCount() {
+        return getProductsSortedByStatus(ProductStatus.AVAILABLE);
+    }
+
+    private LinkedHashMap<String, Integer> getProductsSortedByStatus(ProductStatus productStatus) {
+        HashMap<String, Integer> productsSortedByStatus = new HashMap<>();
+        for(Product product : products.values()) {
+            if(!productsSortedByStatus.containsKey(product.getName())) {
+                if(product.getStatus() == productStatus){
+                    productsSortedByStatus.put(product.getName(), 1);
+                }
+                else{
+                    productsSortedByStatus.put(product.getName(), 0);
+                }
+            }
+            else{
+                if(product.getStatus() == productStatus){
+                    productsSortedByStatus.put(product.getName(), productsSortedByStatus.get(product.getName()) + 1);
+                }
+            }
+        }
+        LinkedHashMap<String, Integer> result = new LinkedHashMap<>();
+        productsSortedByStatus.entrySet().stream().sorted((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue())).forEachOrdered(entry -> result.put(entry.getKey(), entry.getValue()));
+        return result;
     }
 }

@@ -1,4 +1,4 @@
-package com.local.util.lock;
+package com.local.util.transaction;
 
 import java.util.Objects;
 

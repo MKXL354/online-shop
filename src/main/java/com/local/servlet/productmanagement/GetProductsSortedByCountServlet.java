@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GetProductsSortedByCountServlet extends HttpServlet {
     private ProductManagementService productManagementService;
@@ -26,7 +27,7 @@ public class GetProductsSortedByCountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try{
-            ArrayList<Product> products = productManagementService.getProductsSortedByCount();
+            HashMap<String, Integer> products = productManagementService.getProductsSortedByCount();
             commonWebComponentService.writeResponse(response, products);
         }
         catch (DAOException e) {

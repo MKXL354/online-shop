@@ -21,13 +21,12 @@ public class ReserveRollbackScheduler extends RollbackScheduler{
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
-    //    TODO: TM here? no reading but updating of products? have update lock too -> List of locks in TM
     protected void rollback() {
         try{
             HashSet<Cart> activeCarts = cartDAO.getAllActiveCarts();
             for(Cart cart : activeCarts){
                 if(Duration.between(cart.getLastUpdateTime(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
-                    for(Product product : cart.getProducts()){
+                    for(Product product : cart.getProducts().values()){
                         cartDAO.removeProductFromCart(cart, product);
                         product.setStatus(ProductStatus.AVAILABLE);
                         productDAO.updateProduct(product);
