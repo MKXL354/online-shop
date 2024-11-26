@@ -1,9 +1,6 @@
 package com.local.util.transaction;
 
-import com.local.exception.common.ApplicationRuntimeException;
-
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class TransactionManager {

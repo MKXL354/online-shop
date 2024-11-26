@@ -22,7 +22,7 @@ public class CancelPaymentServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException{
         try{
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            int userId = (int)request.getAttribute("userId");
             paymentService.cancelPayment(userId);
         }
         catch(UserNotFoundException | PendingPaymentNotFoundException | DAOException e){

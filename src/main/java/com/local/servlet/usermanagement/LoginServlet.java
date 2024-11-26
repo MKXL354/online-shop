@@ -6,7 +6,7 @@ import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
 import com.local.util.token.TokenManager;
 import com.local.service.usermanagement.UserManagementService;
-import com.local.servlet.CommonWebComponentService;
+import com.local.servlet.common.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -39,6 +39,7 @@ public class LoginServlet extends HttpServlet {
 
             Map<String, Object> claims = new HashMap<>();
             claims.put("role", user.getType().toString());
+            claims.put("userId", user.getId());
             String jws = tokenManager.getSignedToken(claims);
 
             response.setHeader("Authorization", jws);

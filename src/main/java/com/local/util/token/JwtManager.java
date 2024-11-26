@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class JwtManager extends TokenManager {
@@ -37,11 +38,11 @@ public class JwtManager extends TokenManager {
         return jwtBuilder.issuedAt(new Date(startTimeMillis)).expiration(new Date(endTimeMillis)).signWith(secretKey).compact();
     }
 
-    public void validateSignedToken(String jws, Map<String, Object> claims) throws InvalidTokenException, TokenExpiredException{
+    public Map<String, Object> validateSignedToken(String jws, Map<String, Object> claims) throws InvalidTokenException, TokenExpiredException{
         try{
             JwtParserBuilder jwtParserBuilder = Jwts.parser();
             claims.forEach(jwtParserBuilder::require);
-            jwtParserBuilder.verifyWith(secretKey).build().parseSignedClaims(jws);
+            return new HashMap<>(jwtParserBuilder.verifyWith(secretKey).build().parseSignedClaims(jws).getPayload());
         }
         catch(IllegalArgumentException e){
             throw new InvalidTokenException("empty token", e);

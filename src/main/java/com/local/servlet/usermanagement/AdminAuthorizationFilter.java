@@ -1,7 +1,6 @@
 package com.local.servlet.usermanagement;
 
 import com.local.model.UserType;
-import com.local.servlet.UserAuthorizationFilter;
 
 import java.util.HashMap;
 

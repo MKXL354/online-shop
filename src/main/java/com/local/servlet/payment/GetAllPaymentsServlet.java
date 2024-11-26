@@ -3,7 +3,7 @@ package com.local.servlet.payment;
 import com.local.dao.DAOException;
 import com.local.model.Payment;
 import com.local.service.payment.PaymentService;
-import com.local.servlet.CommonWebComponentService;
+import com.local.servlet.common.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

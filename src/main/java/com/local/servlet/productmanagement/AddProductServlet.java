@@ -4,7 +4,7 @@ import com.local.dao.DAOException;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.model.Product;
 import com.local.service.productmanagement.*;
-import com.local.servlet.CommonWebComponentService;
+import com.local.servlet.common.CommonWebComponentService;
 import com.local.servlet.validation.RequiresValidation;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;

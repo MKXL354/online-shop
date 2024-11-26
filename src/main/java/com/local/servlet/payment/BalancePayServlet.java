@@ -23,7 +23,7 @@ public class BalancePayServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            int userId = (int)request.getAttribute("userId");
             paymentService.balancePay(userId);
         }
         catch(NumberFormatException | UserNotFoundException | PendingPaymentNotFoundException |

@@ -4,7 +4,7 @@ import com.local.dao.DAOException;
 import com.local.model.Cart;
 import com.local.service.user.UserService;
 import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.servlet.CommonWebComponentService;
+import com.local.servlet.common.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -27,7 +27,7 @@ public class GetActiveCartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            int userId = (int)request.getAttribute("userId");
             Cart cart =  userService.getActiveCart(userId);
             commonWebComponentService.writeResponse(response, cart);
         }

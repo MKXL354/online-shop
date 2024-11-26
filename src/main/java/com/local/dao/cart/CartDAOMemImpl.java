@@ -3,9 +3,6 @@ package com.local.dao.cart;
 import com.local.model.Cart;
 import com.local.model.Product;
 import com.local.model.User;
-import com.local.util.transaction.Transaction;
-import com.local.util.transaction.TransactionException;
-import com.local.util.transaction.TransactionManager;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

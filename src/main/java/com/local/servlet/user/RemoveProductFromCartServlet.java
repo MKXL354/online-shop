@@ -20,9 +20,9 @@ public class RemoveProductFromCartServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            int userId = (int)request.getAttribute("userId");
             String productName = request.getParameter("productName");
             userService.removeProductFromCart(userId, productName);
         }

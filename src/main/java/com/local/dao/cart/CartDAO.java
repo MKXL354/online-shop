@@ -6,7 +6,6 @@ import com.local.model.Product;
 import com.local.model.User;
 
 import java.util.HashSet;
-import java.util.Set;
 
 public interface CartDAO {
     Cart getActiveCart(User user) throws DAOException;

@@ -22,7 +22,7 @@ public class FinalizePurchaseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            int userId = (int)request.getAttribute("userId");
             userService.finalizePurchase(userId);
         }
         catch(NumberFormatException | UserNotFoundException | EmptyCartException |

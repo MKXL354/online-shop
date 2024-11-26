@@ -1,9 +1,8 @@
 package com.local.servlet.validation;
 
 import com.local.exception.common.ApplicationRuntimeException;
-import com.local.servlet.CommonWebComponentService;
-import com.local.servlet.InvalidRequestObjectException;
-import com.local.servlet.JsonFormatException;
+import com.local.servlet.common.CommonWebComponentService;
+import com.local.servlet.common.JsonFormatException;
 import com.local.util.objectvalidator.ObjectValidator;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

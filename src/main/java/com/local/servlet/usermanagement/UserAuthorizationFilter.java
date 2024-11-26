@@ -1,4 +1,4 @@
-package com.local.servlet;
+package com.local.servlet.usermanagement;
 
 import com.local.util.token.InvalidTokenException;
 import com.local.util.token.TokenExpiredException;
@@ -24,7 +24,9 @@ public abstract class UserAuthorizationFilter implements Filter {
         String jws = httpServletRequest.getHeader("Authorization");
         Map<String, Object> claims = setClaims();
         try{
-            tokenManager.validateSignedToken(jws, claims);
+            Map<String, Object> tokenClaims = tokenManager.validateSignedToken(jws, claims);
+            int userId = ((Double)tokenClaims.get("userId")).intValue();
+            servletRequest.setAttribute("userId", userId);
             filterChain.doFilter(servletRequest, servletResponse);
         }
         catch(InvalidTokenException | TokenExpiredException e){

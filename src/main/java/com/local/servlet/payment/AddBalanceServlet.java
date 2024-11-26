@@ -1,9 +1,7 @@
 package com.local.servlet.payment;
 
 import com.local.dao.DAOException;
-import com.local.model.User;
 import com.local.service.payment.PaymentService;
-import com.local.service.usermanagement.UserManagementService;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -25,7 +23,7 @@ public class AddBalanceServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            int userId = (int)request.getAttribute("userId");
             BigDecimal amount = new BigDecimal(request.getParameter("amount"));
             paymentService.addBalance(userId, amount);
         }

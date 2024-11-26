@@ -4,7 +4,7 @@ import com.local.dao.DAOException;
 import com.local.model.Payment;
 import com.local.service.payment.PaymentService;
 import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.servlet.CommonWebComponentService;
+import com.local.servlet.common.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -27,7 +27,7 @@ public class GetPendingPaymentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
-            int userId = Integer.parseInt(request.getParameter("userId"));
+            int userId = (int)request.getAttribute("userId");
             Payment payment = paymentService.getPendingPayment(userId);
             commonWebComponentService.writeResponse(response, payment);
         }

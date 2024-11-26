@@ -22,7 +22,7 @@ import com.local.dao.user.UserDAO;
 import com.local.dbconnector.ConnectionPool;
 import com.local.dbconnector.H2ConnectionPool;
 import com.local.service.usermanagement.UserManagementService;
-import com.local.servlet.CommonWebComponentService;
+import com.local.servlet.common.CommonWebComponentService;
 import com.local.util.persistence.SerializedPersistenceManager;
 import com.local.util.token.JwtManager;
 import com.local.util.token.TokenManager;
@@ -117,14 +117,14 @@ public class BootstrapListener implements ServletContextListener {
         serializedPersistenceManager.persistData(productDAOImpl);
     }
 }
+
+//TODO: tidy up postman
+
 //TODO: add persistence to all DAOs
 
 //TODO: use the new transaction manager instead of locks everywhere
 //TODO: services as interface? get supplied from outside and use dynamic proxy for transactions
 //TODO: one big DAO containing the smaller ones just like DB? but still work with the smaller ones
-
-//TODO: reconfigure the filters in web.xml
-//TODO: a better filter design: have admin/ and web-user/ endpoints to control their accessible actions
 
 //TODO: DI container, config file and relative path
 

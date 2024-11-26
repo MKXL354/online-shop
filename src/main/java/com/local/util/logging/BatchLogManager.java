@@ -48,9 +48,9 @@ public class BatchLogManager {
     }
 
     public void shutDown(){
+        executorService.shutdownNow();
         this.maxLogsToWrite = logs.size();
         log();
-        executorService.shutdown();
     }
 
     private void log() {

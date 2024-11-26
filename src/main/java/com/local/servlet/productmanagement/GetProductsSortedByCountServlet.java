@@ -1,9 +1,8 @@
 package com.local.servlet.productmanagement;
 
 import com.local.dao.DAOException;
-import com.local.model.Product;
 import com.local.service.productmanagement.ProductManagementService;
-import com.local.servlet.CommonWebComponentService;
+import com.local.servlet.common.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GetProductsSortedByCountServlet extends HttpServlet {

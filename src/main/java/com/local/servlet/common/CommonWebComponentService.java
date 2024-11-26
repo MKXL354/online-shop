@@ -1,4 +1,4 @@
-package com.local.servlet;
+package com.local.servlet.common;
 
 import com.google.gson.*;
 import com.local.model.*;

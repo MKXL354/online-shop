@@ -30,14 +30,14 @@
     <filter-name>ErrorResponseFilter</filter-name>
     <filter-class>com.local.servlet.ErrorResponseFilter</filter-class>
   </filter>
-<!--  <filter>-->
-<!--    <filter-name>AdminAuthorizationFilter</filter-name>-->
-<!--    <filter-class>com.local.servlet.usermanagement.AdminAuthorizationFilter</filter-class>-->
-<!--  </filter>-->
-<!--  <filter>-->
-<!--    <filter-name>WebUserAuthorizationFilter</filter-name>-->
-<!--    <filter-class>com.local.servlet.usermanagement.WebUserAuthorizationFilter</filter-class>-->
-<!--  </filter>-->
+  <filter>
+    <filter-name>AdminAuthorizationFilter</filter-name>
+    <filter-class>com.local.servlet.usermanagement.AdminAuthorizationFilter</filter-class>
+  </filter>
+  <filter>
+    <filter-name>WebUserAuthorizationFilter</filter-name>
+    <filter-class>com.local.servlet.usermanagement.WebUserAuthorizationFilter</filter-class>
+  </filter>
   <filter>
     <filter-name>ObjectValidationFilter</filter-name>
     <filter-class>com.local.servlet.validation.ObjectValidationFilter</filter-class>
@@ -51,18 +51,14 @@
     <filter-name>ErrorResponseFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-<!--  <filter-mapping>-->
-<!--    <filter-name>AdminAuthorizationFilter</filter-name>-->
-<!--    <url-pattern>/add-user</url-pattern>-->
-<!--  </filter-mapping>-->
-<!--  <filter-mapping>-->
-<!--    <filter-name>AdminAuthorizationFilter</filter-name>-->
-<!--    <url-pattern>/add-product</url-pattern>-->
-<!--  </filter-mapping>-->
-<!--  <filter-mapping>-->
-<!--    <filter-name>WebUserAuthorizationFilter</filter-name>-->
-<!--    <url-pattern>/get-products</url-pattern>-->
-<!--  </filter-mapping>-->
+  <filter-mapping>
+    <filter-name>AdminAuthorizationFilter</filter-name>
+    <url-pattern>/admin/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>WebUserAuthorizationFilter</filter-name>
+    <url-pattern>/web-user/*</url-pattern>
+  </filter-mapping>
   <filter-mapping>
     <filter-name>ObjectValidationFilter</filter-name>
     <url-pattern>/add-user</url-pattern>
@@ -143,7 +139,7 @@
 
   <servlet-mapping>
     <servlet-name>AddUserServlet</servlet-name>
-    <url-pattern>/add-user</url-pattern>
+    <url-pattern>/admin/add-user</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
@@ -151,7 +147,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AddProductServlet</servlet-name>
-    <url-pattern>/add-product</url-pattern>
+    <url-pattern>/admin/add-product</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>GetAllProductsServlet</servlet-name>
@@ -159,43 +155,43 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AddProductToCartServlet</servlet-name>
-    <url-pattern>/add-product-to-cart</url-pattern>
+    <url-pattern>/web-user/add-product-to-cart</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>RemoveProductFromCartServlet</servlet-name>
-    <url-pattern>/remove-product-from-cart</url-pattern>
+    <url-pattern>/web-user/remove-product-from-cart</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>GetActiveCartServlet</servlet-name>
-    <url-pattern>/get-active-cart</url-pattern>
+    <url-pattern>/web-user/get-active-cart</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>FinalizePurchaseServlet</servlet-name>
-    <url-pattern>/finalize-purchase</url-pattern>
+    <url-pattern>/web-user/finalize-purchase</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AddBalanceServlet</servlet-name>
-    <url-pattern>/add-balance</url-pattern>
+    <url-pattern>/web-user/add-balance</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>GetAllPaymentsServlet</servlet-name>
-    <url-pattern>/get-all-payments</url-pattern>
+    <url-pattern>/admin/get-all-payments</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>BalancePayServlet</servlet-name>
-    <url-pattern>/balance-pay</url-pattern>
+    <url-pattern>/web-user/balance-pay</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>CardPayServlet</servlet-name>
-    <url-pattern>/card-pay</url-pattern>
+    <url-pattern>/web-user/card-pay</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>CancelPaymentServlet</servlet-name>
-    <url-pattern>/cancel-payment</url-pattern>
+    <url-pattern>/web-user/cancel-payment</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>GetPendingPaymentServlet</servlet-name>
-    <url-pattern>/get-pending-payment</url-pattern>
+    <url-pattern>/web-user/get-pending-payment</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>GetProductsSortedBySellsServlet</servlet-name>

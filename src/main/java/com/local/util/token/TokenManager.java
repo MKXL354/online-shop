@@ -13,5 +13,5 @@ public abstract class TokenManager {
 
     public abstract String getSignedToken(Map<String, Object> claims);
 
-    public abstract void validateSignedToken(String jws, Map<String, Object> claims) throws InvalidTokenException, TokenExpiredException;
+    public abstract Map<String, Object> validateSignedToken(String jws, Map<String, Object> claims) throws InvalidTokenException, TokenExpiredException;
 }
