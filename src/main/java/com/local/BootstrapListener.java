@@ -15,7 +15,6 @@ import com.local.service.scheduler.PurchaseRollbackScheduler;
 import com.local.service.scheduler.ReserveRollbackScheduler;
 import com.local.service.scheduler.RollbackScheduler;
 import com.local.service.user.UserService;
-import com.local.util.lock.LockManager;
 import com.local.util.objectvalidator.ObjectValidator;
 import com.local.util.password.PasswordEncryptor;
 import com.local.util.password.PasswordEncryptorImpl;
@@ -66,8 +65,6 @@ public class BootstrapListener implements ServletContextListener {
         cartDAOImpl = CartDAOFactory.getCartDAO(DAOType.MEM, connectionPool);
         paymentDAOImpl = PaymentDAOFactory.getPaymentDAO(DAOType.MEM, connectionPool);
 
-        LockManager lockManager = new LockManager();
-
         UtilityService utilityService = new UtilityService(userDAOImpl, paymentDAOImpl);
         sce.getServletContext().setAttribute("utilityService", utilityService);
 
@@ -94,7 +91,7 @@ public class BootstrapListener implements ServletContextListener {
         PropertyManager errorResponsePropertyManager = new PropertyManager(absoluteErrorResponseConfigLocation);
         sce.getServletContext().setAttribute("errorResponsePropertyManager", errorResponsePropertyManager);
 
-        UserService userService = new UserService(utilityService, cartDAOImpl, productDAOImpl, userDAOImpl, paymentDAOImpl);
+        UserService userService = new UserService(utilityService, cartDAOImpl, productDAOImpl, paymentDAOImpl);
         sce.getServletContext().setAttribute("userService", userService);
 
         PaymentService paymentService = new PaymentService(utilityService, userDAOImpl, paymentDAOImpl);

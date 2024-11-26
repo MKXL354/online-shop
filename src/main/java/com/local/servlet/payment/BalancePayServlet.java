@@ -28,7 +28,7 @@ public class BalancePayServlet extends HttpServlet {
             paymentService.balancePay(userId);
         }
         catch(NumberFormatException | UserNotFoundException | PendingPaymentNotFoundException |
-              InsufficientBalanceException | TransactionException | DAOException e){
+              InsufficientBalanceException | DAOException e){
             throw new ServletException(e);
         }
     }

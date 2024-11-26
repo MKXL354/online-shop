@@ -101,6 +101,10 @@
     <servlet-class>com.local.servlet.user.RemoveProductFromCartServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>GetActiveCartServlet</servlet-name>
+    <servlet-class>com.local.servlet.user.GetActiveCartServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>FinalizePurchaseServlet</servlet-name>
     <servlet-class>com.local.servlet.user.FinalizePurchaseServlet</servlet-class>
   </servlet>
@@ -160,6 +164,10 @@
   <servlet-mapping>
     <servlet-name>RemoveProductFromCartServlet</servlet-name>
     <url-pattern>/remove-product-from-cart</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetActiveCartServlet</servlet-name>
+    <url-pattern>/get-active-cart</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>FinalizePurchaseServlet</servlet-name>

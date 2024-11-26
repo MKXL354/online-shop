@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class PaymentService {
     private UtilityService utilityService;
@@ -61,7 +60,6 @@ public class PaymentService {
         paymentDAO.updatePayment(payment);
     }
 
-//    TODO: maybe rewrite this better? have a mock server up and running with this main app
     public void cardPay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, WebPaymentException, DAOException {
         User user = utilityService.getUserById(userId);
         Payment payment = paymentDAO.getPendingPayment(user);
@@ -96,7 +94,7 @@ public class PaymentService {
             throw new PendingPaymentNotFoundException("no active payment found", null);
         }
         payment.setLastUpdate(LocalDateTime.now());
-        payment.setStatus(PaymentStatus.FAILED);
+        payment.setStatus(PaymentStatus.CANCELLED);
         paymentDAO.updatePayment(payment);
     }
 }

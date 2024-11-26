@@ -43,15 +43,14 @@ public class PaymentDAOMemImpl implements PaymentDAO {
         return newPayments;
     }
 
-//    TODO: maybe change this to include FAILED too?
     @Override
     public HashSet<Payment> getAllPendingPayments() {
         return getPaymentsByStatus(PaymentStatus.PENDING);
     }
 
     @Override
-    public HashSet<Payment> getAllFailedPayments(){
-        return getPaymentsByStatus(PaymentStatus.FAILED);
+    public HashSet<Payment> getAllCancelledPayments(){
+        return getPaymentsByStatus(PaymentStatus.CANCELLED);
     }
 
     private HashSet<Payment> getPaymentsByStatus(PaymentStatus status) {

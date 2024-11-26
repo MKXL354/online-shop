@@ -88,4 +88,3 @@ public class Product implements Serializable {
         return Objects.hash(id);
     }
 }
-//FIXME: removed compareTo

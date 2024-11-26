@@ -25,7 +25,7 @@ public class PurchaseRollbackScheduler extends RollbackScheduler{
     protected void rollback() {
         try{
             HashSet<Payment> rollbackCandidates = paymentDAO.getAllPendingPayments();
-            rollbackCandidates.addAll(paymentDAO.getAllFailedPayments());
+            rollbackCandidates.addAll(paymentDAO.getAllCancelledPayments());
             Cart cart;
             for (Payment payment : rollbackCandidates) {
                 cart = payment.getCart();

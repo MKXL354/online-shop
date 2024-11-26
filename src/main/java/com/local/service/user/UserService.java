@@ -4,7 +4,6 @@ import com.local.dao.DAOException;
 import com.local.dao.cart.CartDAO;
 import com.local.dao.payment.PaymentDAO;
 import com.local.dao.product.ProductDAO;
-import com.local.dao.user.UserDAO;
 import com.local.exception.service.user.EmptyCartException;
 import com.local.exception.service.user.PreviousPaymentPendingException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
@@ -20,19 +19,21 @@ public class UserService {
     private UtilityService utilityService;
     private CartDAO cartDAO;
     private ProductDAO productDAO;
-    private UserDAO userDAO;
     private PaymentDAO paymentDAO;
 
-    public UserService(UtilityService utilityService, CartDAO cartDAO, ProductDAO productDAO, UserDAO userDAO, PaymentDAO paymentDAO) {
+    public UserService(UtilityService utilityService, CartDAO cartDAO, ProductDAO productDAO, PaymentDAO paymentDAO) {
         this.utilityService = utilityService;
         this.cartDAO = cartDAO;
         this.productDAO = productDAO;
-        this.userDAO = userDAO;
         this.paymentDAO = paymentDAO;
     }
 
 //    TODO: get products in cart endpoint?
-    private Cart getCart(User user) throws DAOException{
+    public Cart getActiveCart(int userId) throws UserNotFoundException, DAOException{
+        User user = utilityService.getUserById(userId);
+        if(user == null) {
+            throw new UserNotFoundException("user not found", null);
+        }
         Cart cart;
         if((cart = cartDAO.getActiveCart(user)) == null){
             return cartDAO.addCartToUser(user);
@@ -50,7 +51,7 @@ public class UserService {
         if(paymentDAO.getPendingPayment(user) != null){
             throw new PreviousPaymentPendingException("a previous payment is pending", null);
         }
-        Cart cart = getCart(user);
+        Cart cart = getActiveCart(userId);
         Product product;
         if((product = productDAO.getProductByName(productName)) == null){
             throw new ProductNotFoundException("product not found", null);
@@ -63,10 +64,8 @@ public class UserService {
         cartDAO.updateCart(cart);
     }
 
-//    TODO: add the endpoint for removeProduct
     public void removeProductFromCart(int userId, String productName) throws UserNotFoundException, ProductNotFoundException, DAOException{
-        User user = utilityService.getUserById(userId);
-        Cart cart = getCart(user);
+        Cart cart = getActiveCart(userId);
         for(Product product : cart.getProducts()){
             if(product.getName().equals(productName)){
                 product.setStatus(ProductStatus.AVAILABLE);
@@ -86,7 +85,7 @@ public class UserService {
      */
     public void finalizePurchase(int userId) throws UserNotFoundException, EmptyCartException, DAOException {
         User user = utilityService.getUserById(userId);
-        Cart cart = getCart(user);
+        Cart cart = getActiveCart(userId);
         Set<Product> cartProducts = cart.getProducts();
         if(cartProducts.isEmpty()){
             throw new EmptyCartException("user cart is empty", null);
