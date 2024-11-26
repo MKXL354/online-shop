@@ -32,7 +32,13 @@ public class UserDAOMemImpl implements UserDAO, Serializable {
 
     @Override
     public void updateUser(User user) {
-        users.put(user.getId(), user);
+        users.computeIfPresent(user.getId(), (k, v) -> {
+            v.setUsername(user.getUsername());
+            v.setPassword(user.getPassword());
+            v.setType(user.getType());
+            v.setBalance(user.getBalance());
+            return v;
+        });
     }
 
     @Override

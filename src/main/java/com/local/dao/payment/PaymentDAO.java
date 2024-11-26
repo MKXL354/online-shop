@@ -11,5 +11,6 @@ public interface PaymentDAO {
     Payment getPendingPayment(User user) throws DAOException;
     HashSet<Payment> getAllPayments() throws DAOException;
     HashSet<Payment> getAllPendingPayments() throws DAOException;
+    HashSet<Payment> getAllFailedPayments() throws DAOException;
     void updatePayment(Payment payment) throws DAOException;
 }

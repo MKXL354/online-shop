@@ -43,19 +43,34 @@ public class PaymentDAOMemImpl implements PaymentDAO {
         return newPayments;
     }
 
+//    TODO: maybe change this to include FAILED too?
     @Override
     public HashSet<Payment> getAllPendingPayments() {
-        HashSet<Payment> pendingPayments = new HashSet<>();
+        return getPaymentsByStatus(PaymentStatus.PENDING);
+    }
+
+    @Override
+    public HashSet<Payment> getAllFailedPayments(){
+        return getPaymentsByStatus(PaymentStatus.FAILED);
+    }
+
+    private HashSet<Payment> getPaymentsByStatus(PaymentStatus status) {
+        HashSet<Payment> searchedPayments = new HashSet<>();
         for(Payment payment : payments.values()) {
-            if(payment.getStatus() == PaymentStatus.PENDING) {
-                pendingPayments.add(new Payment(payment));
+            if(payment.getStatus() == status) {
+                searchedPayments.add(new Payment(payment));
             }
         }
-        return pendingPayments;
+        return searchedPayments;
     }
 
     @Override
     public void updatePayment(Payment payment) {
-        payments.put(payment.getId(), payment);
+        payments.computeIfPresent(payment.getId(), (k, v) -> {
+            v.setAmount(payment.getAmount());
+            v.setLastUpdate(payment.getLastUpdate());
+            v.setStatus(payment.getStatus());
+            return v;
+        });
     }
 }

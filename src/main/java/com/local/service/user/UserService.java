@@ -31,6 +31,7 @@ public class UserService {
         this.paymentDAO = paymentDAO;
     }
 
+//    TODO: get products in cart endpoint?
     private Cart getCart(User user) throws DAOException{
         Cart cart;
         if((cart = cartDAO.getActiveCart(user)) == null){
@@ -62,6 +63,23 @@ public class UserService {
         cartDAO.updateCart(cart);
     }
 
+//    TODO: add the endpoint for removeProduct
+    public void removeProductFromCart(int userId, String productName) throws UserNotFoundException, ProductNotFoundException, DAOException{
+        User user = utilityService.getUserById(userId);
+        Cart cart = getCart(user);
+        for(Product product : cart.getProducts()){
+            if(product.getName().equals(productName)){
+                product.setStatus(ProductStatus.AVAILABLE);
+                productDAO.updateProduct(product);
+                cartDAO.removeProductFromCart(cart, product);
+                cart.setLastUpdateTime(LocalDateTime.now());
+                cartDAO.updateCart(cart);
+                return;
+            }
+        }
+        throw new ProductNotFoundException("product not found in cart", null);
+    }
+
 //    TODO: TM here
     /*
     products are considered sold without payment. so in time of rollback the status must change
@@ -80,10 +98,10 @@ public class UserService {
             product.setStatus(ProductStatus.SOLD);
             productDAO.updateProduct(product);
         }
-        Payment payment = new Payment(0, user, cart, totalPrice, LocalDateTime.now(), PaymentStatus.PENDING);
+        LocalDateTime now = LocalDateTime.now();
+        Payment payment = new Payment(0, user, cart, totalPrice, now, PaymentStatus.PENDING);
         paymentDAO.addPayment(payment);
 
-        LocalDateTime now = LocalDateTime.now();
         cart.setProcessTime(now);
         cart.setLastUpdateTime(now);
         cartDAO.updateCart(cart);

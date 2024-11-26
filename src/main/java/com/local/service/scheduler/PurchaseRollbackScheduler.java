@@ -24,9 +24,10 @@ public class PurchaseRollbackScheduler extends RollbackScheduler{
 //    TODO: TM here? no reading but updating of products? have update lock too -> List of locks in TM
     protected void rollback() {
         try{
-            HashSet<Payment> pendingPayments = paymentDAO.getAllPendingPayments();
+            HashSet<Payment> rollbackCandidates = paymentDAO.getAllPendingPayments();
+            rollbackCandidates.addAll(paymentDAO.getAllFailedPayments());
             Cart cart;
-            for (Payment payment : pendingPayments) {
+            for (Payment payment : rollbackCandidates) {
                 cart = payment.getCart();
                 if(Duration.between(cart.getProcessTime(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
                     for(Product product : cart.getProducts()){

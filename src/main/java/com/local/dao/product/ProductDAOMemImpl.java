@@ -32,7 +32,13 @@ public class ProductDAOMemImpl implements ProductDAO, Serializable {
 
     @Override
     public void updateProduct(Product product) {
-        products.put(product.getId(), product);
+        products.computeIfPresent(product.getId(), (k, v) -> {
+            v.setName(product.getName());
+            v.setPrice(product.getPrice());
+            v.setType(product.getType());
+            v.setStatus(product.getStatus());
+            return v;
+        });
     }
 
     @Override
@@ -62,6 +68,7 @@ public class ProductDAOMemImpl implements ProductDAO, Serializable {
         return newProducts;
     }
 
+//    TODO: rewrite the reporting services
     @Override
     public ArrayList<Product> getProductsSortedBySells() {
 //        ArrayList<Product> sortedProducts = new ArrayList<>(products.values());

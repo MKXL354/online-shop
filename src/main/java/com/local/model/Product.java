@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Product implements Comparable<Product>, Serializable {
+public class Product implements Serializable {
     @Serial
     private static final long serialVersionUID = -4599586234479562592L;
 
@@ -87,10 +87,5 @@ public class Product implements Comparable<Product>, Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    @Override
-    public int compareTo(Product product) {
-        return Integer.compare(this.id, product.id);
-    }
-//    TODO: equals, hashCode & compareTo might not be needed here
 }
+//FIXME: removed compareTo

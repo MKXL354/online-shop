@@ -118,4 +118,15 @@ public class PaymentService {
             paymentLock.unlock();
         }
     }
+
+    public void cancelPayment(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, DAOException {
+        User user = utilityService.getUserById(userId);
+        Payment payment = paymentDAO.getPendingPayment(user);
+        if(payment == null){
+            throw new PendingPaymentNotFoundException("no active payment found", null);
+        }
+        payment.setLastUpdate(LocalDateTime.now());
+        payment.setStatus(PaymentStatus.FAILED);
+        paymentDAO.updatePayment(payment);
+    }
 }
