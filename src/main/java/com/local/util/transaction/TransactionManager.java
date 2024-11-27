@@ -1,12 +1,10 @@
 package com.local.util.transaction;
 
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TransactionManager {
+    private ConcurrentHashMap<Thread, Transaction> threadTransactions = new ConcurrentHashMap<>();
     private static final TransactionManager INSTANCE = new TransactionManager();
-
-    private ThreadLocal<Map<Class<?>, Transaction<?, ?>>> transactions = new ThreadLocal<>();
 
     private TransactionManager() {}
 
@@ -14,14 +12,11 @@ public class TransactionManager {
         return INSTANCE;
     }
 
-    public void registerDataAccess(Class<?> dataAccessClass){
-//        transactions.put(dataAccessClass, )
-    }
-
-    public void startTransaction(Class<?> dataClass, Map<?, ?> data) {
-//        dataMaps.put(dataClass, data);
-//        threadTransaction.set(new Transaction());
-//        transactions.set(new ConcurrentHashMap<>());
+    public void startTransaction() {
+        if(isTransactionStarted()) {
+            throw new RuntimeException("previous transaction is not closed", null);
+        }
+        threadTransactions.put(Thread.currentThread(), new Transaction());
     }
 
     public void rollbackTransaction() {
@@ -35,37 +30,23 @@ public class TransactionManager {
     }
 
     private Transaction resetTransaction() {
-//        Transaction transaction = threadTransaction.get();
-//        if (transaction == null) {
-//            throw new ApplicationRuntimeException("no transaction is opened", null);
-//        }
-//        threadTransaction.remove();
-//        dataMaps.clear();
-//        return transaction;
-        return null;
+        Transaction transaction = threadTransactions.get(Thread.currentThread());
+        if (transaction == null) {
+            throw new RuntimeException("no transaction is opened", null);
+        }
+        threadTransactions.remove(Thread.currentThread());
+        return transaction;
     }
 
-    public void isTransactionStarted(){
-//        return threadTransaction.get() != null;
+    public boolean isTransactionStarted(){
+        return threadTransactions.containsKey(Thread.currentThread());
     }
 
-    public <K, V> void lockResource(Class<?> objectClass, Object id){
-
+    public void lockResource(Class<?> objectClass, Object id) throws TransactionException {
+        threadTransactions.get(Thread.currentThread()).lockResource(objectClass, id);
     }
 
-    public void addCreated(){
-
-    }
-
-    public void addUpdated(){
-
-    }
-
-    public void addDeleted(){
-
-    }
-
-    public <T> void addRollBackMechanism(T obj, Consumer<T> rollbackOperation, Class<T> type){
-
+    public void addRestorable(Restorable restorable){
+        threadTransactions.get(Thread.currentThread()).addRestorable(restorable);
     }
 }
