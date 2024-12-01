@@ -1,8 +1,8 @@
 //package com.local.dao.user;
 //
 //import com.local.dao.DAOException;
-//import com.local.dbconnector.ConnectionPool;
-//import com.local.dbconnector.DataBaseConnectionException;
+//import com.local.dao.dbconnector.ConnectionPool;
+//import com.local.dao.dbconnector.DataBaseConnectionException;
 //import com.local.model.User;
 //import com.local.model.UserType;
 //

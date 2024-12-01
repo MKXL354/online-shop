@@ -1,5 +1,7 @@
 package com.local.util.objectvalidator;
 
+import com.local.exception.common.ApplicationRuntimeException;
+
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.lang.reflect.Field;
@@ -39,7 +41,7 @@ public class ObjectValidator{
 						}
 					}
 					catch(ReflectiveOperationException e){
-						throw new RuntimeException("object validator error: " + e.getMessage(), e);
+						throw new ApplicationRuntimeException("object validator error: " + e.getMessage(), e);
 					}
                 }
             }

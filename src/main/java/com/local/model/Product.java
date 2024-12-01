@@ -5,7 +5,6 @@ import com.local.util.objectvalidator.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class Product implements Serializable {
     @Serial
@@ -20,20 +19,20 @@ public class Product implements Serializable {
     protected BigDecimal price;
 
     @NotNull(message = "wrong or null product type")
-    protected ProductType type;
+    protected ProductType productType;
 
-    protected ProductStatus status;
+    protected ProductStatus productStatus;
 
-    public Product(int id, String name, BigDecimal price, ProductType type, ProductStatus status) {
+    public Product(int id, String name, BigDecimal price, ProductType productType, ProductStatus productStatus) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.type = type;
-        this.status = status;
+        this.productType = productType;
+        this.productStatus = productStatus;
     }
 
     public Product(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getType(), product.getStatus());
+        this(product.getId(), product.getName(), product.getPrice(), product.getProductType(), product.getProductStatus());
     }
 
     public int getId() {
@@ -48,12 +47,12 @@ public class Product implements Serializable {
         return price;
     }
 
-    public ProductType getType() {
-        return type;
+    public ProductType getProductType() {
+        return productType;
     }
 
-    public ProductStatus getStatus() {
-        return status;
+    public ProductStatus getProductStatus() {
+        return productStatus;
     }
 
     public void setId(int id) {
@@ -68,23 +67,11 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-    public void setType(ProductType type) {
-        this.type = type;
+    public void setType(ProductType productType) {
+        this.productType = productType;
     }
 
-    public void setStatus(ProductStatus status) {
-        this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Product product)) return false;
-        return id == product.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public void setProductStatus(ProductStatus productStatus) {
+        this.productStatus = productStatus;
     }
 }

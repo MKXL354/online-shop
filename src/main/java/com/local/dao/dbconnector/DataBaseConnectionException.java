@@ -1,4 +1,4 @@
-package com.local.dbconnector;
+package com.local.dao.dbconnector;
 
 import com.local.exception.common.ApplicationException;
 

@@ -8,6 +8,6 @@ public class LaptopProduct extends Product{
     }
 
     public LaptopProduct(LaptopProduct laptopProduct){
-        this(laptopProduct.getId(), laptopProduct.getName(), laptopProduct.getPrice(), laptopProduct.getType(), laptopProduct.getStatus());
+        this(laptopProduct.getId(), laptopProduct.getName(), laptopProduct.getPrice(), laptopProduct.getProductType(), laptopProduct.getProductStatus());
     }
 }

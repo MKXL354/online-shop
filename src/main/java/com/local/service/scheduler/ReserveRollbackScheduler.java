@@ -28,7 +28,7 @@ public class ReserveRollbackScheduler extends RollbackScheduler{
                 if(Duration.between(cart.getLastUpdateTime(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
                     for(Product product : cart.getProducts().values()){
                         cartDAO.removeProductFromCart(cart, product);
-                        product.setStatus(ProductStatus.AVAILABLE);
+                        product.setProductStatus(ProductStatus.AVAILABLE);
                         productDAO.updateProduct(product);
                     }
                     cart.setLastUpdateTime(LocalDateTime.now());

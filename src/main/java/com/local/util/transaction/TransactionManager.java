@@ -1,5 +1,7 @@
 package com.local.util.transaction;
 
+import com.local.exception.common.ApplicationRuntimeException;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TransactionManager {
@@ -14,7 +16,7 @@ public class TransactionManager {
 
     public void startTransaction() {
         if(isTransactionStarted()) {
-            throw new RuntimeException("previous transaction is not closed", null);
+            throw new TransactionException("previous transaction is not closed", null);
         }
         threadTransactions.put(Thread.currentThread(), new Transaction());
     }
@@ -32,7 +34,7 @@ public class TransactionManager {
     private Transaction resetTransaction() {
         Transaction transaction = threadTransactions.get(Thread.currentThread());
         if (transaction == null) {
-            throw new RuntimeException("no transaction is opened", null);
+            throw new TransactionException("no transaction is opened", null);
         }
         threadTransactions.remove(Thread.currentThread());
         return transaction;
@@ -42,12 +44,8 @@ public class TransactionManager {
         return threadTransactions.containsKey(Thread.currentThread());
     }
 
-    public void lockResource(Class<?> objectClass, Object id) throws TransactionException {
-        threadTransactions.get(Thread.currentThread()).lockResource(objectClass, id);
-    }
-
-    public void unlockResource(Class<?> objectClass, Object id) throws TransactionException {
-        threadTransactions.get(Thread.currentThread()).unlockResource(objectClass, id);
+    public void lockResource(String id) throws TransactionException {
+        threadTransactions.get(Thread.currentThread()).lockResource(id);
     }
 
     public void addRestorable(Restorable restorable){

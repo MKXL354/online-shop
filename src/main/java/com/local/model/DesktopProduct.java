@@ -8,6 +8,6 @@ public class DesktopProduct extends Product{
     }
 
     public DesktopProduct(DesktopProduct desktopProduct){
-        this(desktopProduct.getId(), desktopProduct.getName(), desktopProduct.getPrice(), desktopProduct.getType(), desktopProduct.getStatus());
+        this(desktopProduct.getId(), desktopProduct.getName(), desktopProduct.getPrice(), desktopProduct.getProductType(), desktopProduct.getProductStatus());
     }
 }

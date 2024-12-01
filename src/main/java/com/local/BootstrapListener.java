@@ -20,8 +20,8 @@ import com.local.util.objectvalidator.ObjectValidator;
 import com.local.util.password.PasswordEncryptor;
 import com.local.util.password.PasswordEncryptorImpl;
 import com.local.dao.user.UserDAO;
-import com.local.dbconnector.ConnectionPool;
-import com.local.dbconnector.H2ConnectionPool;
+import com.local.dao.dbconnector.ConnectionPool;
+import com.local.dao.dbconnector.H2ConnectionPool;
 import com.local.service.usermanagement.UserManagementService;
 import com.local.servlet.common.CommonWebComponentService;
 import com.local.util.persistence.SerializedPersistenceManager;
@@ -125,16 +125,9 @@ public class BootstrapListener implements ServletContextListener {
     }
 }
 
-//TODO: tidy up postman
-
-//TODO: add persistence to all DAOs
-
-//TODO: use the new transaction manager instead of locks everywhere
-//TODO: services as interface? get supplied from outside and use dynamic proxy for transactions
 //TODO: one big DAO containing the smaller ones just like DB? but still work with the smaller ones
+//TODO: maybe a custom locked collection? so the locking doesn't have to repeat in every DAO method
 
 //TODO: DI container, config file and relative path
-
-//TODO: rewrite DB later
 
 //TODO: maybe use response objects for methods to avoid excessive exceptions and dispersed logic

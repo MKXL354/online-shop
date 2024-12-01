@@ -8,6 +8,6 @@ public class MobileProduct extends Product{
     }
 
     public MobileProduct(MobileProduct mobileProduct){
-        this(mobileProduct.getId(), mobileProduct.getName(), mobileProduct.getPrice(), mobileProduct.getType(), mobileProduct.getStatus());
+        this(mobileProduct.getId(), mobileProduct.getName(), mobileProduct.getPrice(), mobileProduct.getProductType(), mobileProduct.getProductStatus());
     }
 }

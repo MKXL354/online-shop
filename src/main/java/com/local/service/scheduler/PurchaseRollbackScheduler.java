@@ -28,9 +28,9 @@ public class PurchaseRollbackScheduler extends RollbackScheduler{
             Cart cart;
             for (Payment payment : rollbackCandidates) {
                 cart = payment.getCart();
-                if(Duration.between(cart.getProcessTime(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
+                if(Duration.between(cart.getLastUpdateTime(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
                     for(Product product : cart.getProducts().values()){
-                        product.setStatus(ProductStatus.AVAILABLE);
+                        product.setProductStatus(ProductStatus.AVAILABLE);
                         productDAO.updateProduct(product);
                     }
                     payment.setStatus(PaymentStatus.FAILED);

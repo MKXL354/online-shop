@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         if((product = productDAO.getProductByName(productName)) == null){
             throw new ProductNotFoundException("product not found", null);
         }
-        product.setStatus(ProductStatus.RESERVED);
+        product.setProductStatus(ProductStatus.RESERVED);
         productDAO.updateProduct(product);
         cartDAO.addProductToCart(cart, product);
 
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         Cart cart = getActiveCart(userId);
         for(Product product : cart.getProducts().values()){
             if(product.getName().equals(productName)){
-                product.setStatus(ProductStatus.AVAILABLE);
+                product.setProductStatus(ProductStatus.AVAILABLE);
                 productDAO.updateProduct(product);
                 cartDAO.removeProductFromCart(cart, product);
                 cart.setLastUpdateTime(LocalDateTime.now());
@@ -94,14 +94,13 @@ public class UserServiceImpl implements UserService {
         BigDecimal totalPrice = new BigDecimal(0);
         for(Product product : cartProducts.values()){
             totalPrice = totalPrice.add(product.getPrice());
-            product.setStatus(ProductStatus.SOLD);
+            product.setProductStatus(ProductStatus.SOLD);
             productDAO.updateProduct(product);
         }
         LocalDateTime now = LocalDateTime.now();
         Payment payment = new Payment(0, user, cart, totalPrice, now, PaymentStatus.PENDING);
         paymentDAO.addPayment(payment);
 
-        cart.setProcessTime(now);
         cart.setLastUpdateTime(now);
         cartDAO.updateCart(cart);
     }

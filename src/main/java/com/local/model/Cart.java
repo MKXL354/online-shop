@@ -9,18 +9,18 @@ public class Cart {
     private User user;
     private Map<Integer, Product> products;
     private LocalDateTime lastUpdateTime;
-    private LocalDateTime processTime;
+    private CartStatus cartStatus;
 
-    public Cart(int id, User user, Map<Integer, Product> products, LocalDateTime lastUpdateTime, LocalDateTime processTime) {
+    public Cart(int id, User user, Map<Integer, Product> products, LocalDateTime lastUpdateTime, CartStatus cartStatus) {
         this.id = id;
         this.user = user;
         this.products = products;
         this.lastUpdateTime = lastUpdateTime;
-        this.processTime = processTime;
+        this.cartStatus = cartStatus;
     }
 
     public Cart(Cart cart){
-        this(cart.getId(), null, null, cart.getLastUpdateTime(), cart.getProcessTime());
+        this(cart.getId(), null, null, cart.getLastUpdateTime(), cart.getCartStatus());
         User user = new User(cart.getUser());
         this.setUser(user);
         Map<Integer, Product> products = new HashMap<>();
@@ -46,8 +46,8 @@ public class Cart {
         return lastUpdateTime;
     }
 
-    public LocalDateTime getProcessTime() {
-        return processTime;
+    public CartStatus getCartStatus() {
+        return cartStatus;
     }
 
     public void setId(int id) {
@@ -66,7 +66,7 @@ public class Cart {
         this.lastUpdateTime = lastUpdateTime;
     }
 
-    public void setProcessTime(LocalDateTime processTime) {
-        this.processTime = processTime;
+    public void setCartStatus(CartStatus cartStatus) {
+        this.cartStatus = cartStatus;
     }
 }

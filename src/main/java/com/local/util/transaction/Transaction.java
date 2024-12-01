@@ -20,8 +20,8 @@ public class Transaction {
         restorables.add(restorable);
     }
 
-    public void lockResource(Class<?> objectClass, Object id) throws TransactionException {
-        Lock lock = lockManager.getLock(objectClass, id);
+    public void lockResource(String id) throws TransactionException {
+        Lock lock = lockManager.getLock(id);
         try {
             if(lock.tryLock(ThreadLocalRandom.current().nextInt(10, 20), TimeUnit.MILLISECONDS)){
                 locks.add(lock);
@@ -41,11 +41,6 @@ public class Transaction {
         restorables.forEach(Restorable::restore);
         restorables.clear();
         unlockAllResources();
-    }
-
-    public void unlockResource(Class<?> objectClass, Object id) throws TransactionException {
-        Lock lock = lockManager.getLock(objectClass, id);
-        lock.unlock();
     }
 
     public void unlockAllResources() {

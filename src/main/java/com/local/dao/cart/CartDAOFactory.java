@@ -2,7 +2,7 @@ package com.local.dao.cart;
 
 import com.local.exception.common.ApplicationRuntimeException;
 import com.local.dao.DAOType;
-import com.local.dbconnector.ConnectionPool;
+import com.local.dao.dbconnector.ConnectionPool;
 import com.local.util.persistence.PersistenceManager;
 
 public class CartDAOFactory {
