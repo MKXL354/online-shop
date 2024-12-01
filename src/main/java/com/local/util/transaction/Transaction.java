@@ -32,7 +32,7 @@ public class Transaction {
                 throw new TransactionException("failed transaction", null);
             }
         } catch (InterruptedException e) {
-            unlockAllLocks();
+            unlockAllResources();
             throw new TransactionException("failed transaction", null);
         }
     }
@@ -40,10 +40,15 @@ public class Transaction {
     public void rollbackTransaction() {
         restorables.forEach(Restorable::restore);
         restorables.clear();
-        unlockAllLocks();
+        unlockAllResources();
     }
 
-    public void unlockAllLocks() {
+    public void unlockResource(Class<?> objectClass, Object id) throws TransactionException {
+        Lock lock = lockManager.getLock(objectClass, id);
+        lock.unlock();
+    }
+
+    public void unlockAllResources() {
         for(Lock lock : locks){
             lock.unlock();
         }

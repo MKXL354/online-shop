@@ -15,6 +15,7 @@ import com.local.service.scheduler.PurchaseRollbackScheduler;
 import com.local.service.scheduler.ReserveRollbackScheduler;
 import com.local.service.scheduler.RollbackScheduler;
 import com.local.service.user.UserService;
+import com.local.service.user.UserServiceImpl;
 import com.local.util.objectvalidator.ObjectValidator;
 import com.local.util.password.PasswordEncryptor;
 import com.local.util.password.PasswordEncryptorImpl;
@@ -28,8 +29,11 @@ import com.local.util.token.JwtManager;
 import com.local.util.token.TokenManager;
 import com.local.util.PropertyManager;
 import com.local.util.logging.BatchLogManager;
+import com.local.util.transaction.TransactionProxy;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+
+import java.lang.reflect.Proxy;
 
 public class BootstrapListener implements ServletContextListener {
     private ConnectionPool connectionPool;
@@ -62,10 +66,10 @@ public class BootstrapListener implements ServletContextListener {
 
         userDAOImpl = UserDAOFactory.getUserDAO(DAOType.MEM, connectionPool, serializedPersistenceManager);
         productDAOImpl = ProductDAOFactory.getProductDAO(DAOType.MEM, connectionPool, serializedPersistenceManager);
-        cartDAOImpl = CartDAOFactory.getCartDAO(DAOType.MEM, connectionPool);
-        paymentDAOImpl = PaymentDAOFactory.getPaymentDAO(DAOType.MEM, connectionPool);
+        cartDAOImpl = CartDAOFactory.getCartDAO(DAOType.MEM, connectionPool, serializedPersistenceManager);
+        paymentDAOImpl = PaymentDAOFactory.getPaymentDAO(DAOType.MEM, connectionPool, serializedPersistenceManager);
 
-        UtilityService utilityService = new UtilityService(userDAOImpl, paymentDAOImpl);
+        UtilityService utilityService = new UtilityService(userDAOImpl);
         sce.getServletContext().setAttribute("utilityService", utilityService);
 
         PasswordEncryptor passwordEncryptorImpl = new PasswordEncryptorImpl(1000, 32, 256);
@@ -91,8 +95,9 @@ public class BootstrapListener implements ServletContextListener {
         PropertyManager errorResponsePropertyManager = new PropertyManager(absoluteErrorResponseConfigLocation);
         sce.getServletContext().setAttribute("errorResponsePropertyManager", errorResponsePropertyManager);
 
-        UserService userService = new UserService(utilityService, cartDAOImpl, productDAOImpl, paymentDAOImpl);
-        sce.getServletContext().setAttribute("userService", userService);
+        UserService userServiceImpl = new UserServiceImpl(utilityService, cartDAOImpl, productDAOImpl, paymentDAOImpl);
+        UserService proxyUserService = (UserService)Proxy.newProxyInstance(UserService.class.getClassLoader(), new Class[]{UserService.class}, new TransactionProxy(userServiceImpl));
+        sce.getServletContext().setAttribute("userService", proxyUserService);
 
         PaymentService paymentService = new PaymentService(utilityService, userDAOImpl, paymentDAOImpl);
         sce.getServletContext().setAttribute("paymentService", paymentService);
@@ -115,6 +120,8 @@ public class BootstrapListener implements ServletContextListener {
 
         serializedPersistenceManager.persistData(userDAOImpl);
         serializedPersistenceManager.persistData(productDAOImpl);
+        serializedPersistenceManager.persistData(cartDAOImpl);
+        serializedPersistenceManager.persistData(paymentDAOImpl);
     }
 }
 

@@ -4,6 +4,7 @@ import com.local.dao.DAOException;
 import com.local.dao.payment.PaymentDAO;
 import com.local.dao.user.UserDAO;
 import com.local.exception.service.payment.InsufficientBalanceException;
+import com.local.exception.service.payment.PaymentInProgressException;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
 import com.local.exception.service.payment.WebPaymentException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
@@ -15,17 +16,21 @@ import com.local.service.UtilityService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class PaymentService {
     private UtilityService utilityService;
     private UserDAO userDAO;
     private PaymentDAO paymentDAO;
+    private Set<Payment> inProgressPayments;
 
     public PaymentService(UtilityService utilityService, UserDAO userDAO, PaymentDAO paymentDAO) {
         this.utilityService = utilityService;
         this.userDAO = userDAO;
         this.paymentDAO = paymentDAO;
+        inProgressPayments = ConcurrentHashMap.newKeySet();
     }
 
     public Payment getPendingPayment(int userId) throws UserNotFoundException, DAOException {
@@ -43,7 +48,7 @@ public class PaymentService {
         userDAO.updateUser(user);
     }
 
-    public void balancePay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, InsufficientBalanceException, DAOException {
+    public void balancePay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, PaymentInProgressException, InsufficientBalanceException, DAOException {
         User user = utilityService.getUserById(userId);
         Payment payment = getPendingPayment(userId);
         if(payment == null){
@@ -52,12 +57,23 @@ public class PaymentService {
         if(user.getBalance().compareTo(payment.getAmount()) < 0){
             throw new InsufficientBalanceException("insufficient account balance", null);
         }
-        user.setBalance(user.getBalance().subtract(payment.getAmount()));
-        userDAO.updateUser(user);
 
-        payment.setLastUpdate(LocalDateTime.now());
-        payment.setStatus(PaymentStatus.SUCCESSFUL);
-        paymentDAO.updatePayment(payment);
+        if(inProgressPayments.contains(payment)){
+            throw new PaymentInProgressException("payment is in progress", null);
+        }
+        inProgressPayments.add(payment);
+
+        try{
+            user.setBalance(user.getBalance().subtract(payment.getAmount()));
+            userDAO.updateUser(user);
+
+            payment.setLastUpdate(LocalDateTime.now());
+            payment.setStatus(PaymentStatus.SUCCESSFUL);
+            paymentDAO.updatePayment(payment);
+        }
+        finally {
+            inProgressPayments.remove(payment);
+        }
     }
 
     public void cardPay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, WebPaymentException, DAOException {

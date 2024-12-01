@@ -26,7 +26,7 @@ public class TransactionManager {
 
     public void commitTransaction() {
         Transaction transaction = resetTransaction();
-        transaction.unlockAllLocks();
+        transaction.unlockAllResources();
     }
 
     private Transaction resetTransaction() {
@@ -44,6 +44,10 @@ public class TransactionManager {
 
     public void lockResource(Class<?> objectClass, Object id) throws TransactionException {
         threadTransactions.get(Thread.currentThread()).lockResource(objectClass, id);
+    }
+
+    public void unlockResource(Class<?> objectClass, Object id) throws TransactionException {
+        threadTransactions.get(Thread.currentThread()).unlockResource(objectClass, id);
     }
 
     public void addRestorable(Restorable restorable){
