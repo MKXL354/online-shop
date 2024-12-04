@@ -1,7 +1,7 @@
 package com.local.service;
 
 import com.local.dao.DAOException;
-import com.local.dao.user.UserDAO;
+import com.local.dao.UserDAO;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.User;
 

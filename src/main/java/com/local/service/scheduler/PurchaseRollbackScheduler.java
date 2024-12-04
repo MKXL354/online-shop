@@ -1,8 +1,8 @@
 package com.local.service.scheduler;
 
 import com.local.dao.DAOException;
-import com.local.dao.payment.PaymentDAO;
-import com.local.dao.product.ProductDAO;
+import com.local.dao.PaymentDAO;
+import com.local.dao.ProductDAO;
 import com.local.model.*;
 
 import java.time.Duration;
@@ -33,8 +33,8 @@ public class PurchaseRollbackScheduler extends RollbackScheduler{
                         product.setProductStatus(ProductStatus.AVAILABLE);
                         productDAO.updateProduct(product);
                     }
-                    payment.setStatus(PaymentStatus.FAILED);
-                    payment.setLastUpdate(LocalDateTime.now());
+                    payment.setPaymentStatus(PaymentStatus.FAILED);
+                    payment.setLastUpdateTime(LocalDateTime.now());
                     paymentDAO.updatePayment(payment);
                 }
             }

@@ -1,27 +1,32 @@
 package com.local.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Payment implements Comparable<Payment>{
+public class Payment implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -452546719247246259L;
+
     private int id;
     private User user;
     private Cart cart;
     private BigDecimal amount;
-    private LocalDateTime lastUpdate;
-    private PaymentStatus status;
+    private LocalDateTime lastUpdateTime;
+    private PaymentStatus paymentStatus;
 
-    public Payment(int id, User user, Cart cart, BigDecimal amount, LocalDateTime lastUpdate, PaymentStatus status) {
+    public Payment(int id, User user, Cart cart, BigDecimal amount, LocalDateTime lastUpdateTime, PaymentStatus paymentStatus) {
         this.id = id;
         this.user = user;
         this.cart = cart;
         this.amount = amount;
-        this.lastUpdate = lastUpdate;
-        this.status = status;
+        this.lastUpdateTime = lastUpdateTime;
+        this.paymentStatus = paymentStatus;
     }
 
     public Payment(Payment payment){
-        this(payment.getId(), null, null, payment.getAmount(), payment.getLastUpdate(), payment.getStatus());
+        this(payment.getId(), null, null, payment.getAmount(), payment.getLastUpdateTime(), payment.getPaymentStatus());
         User newUser = new User(payment.getUser());
         Cart cart = new Cart(payment.getCart());
         this.setUser(newUser);
@@ -60,24 +65,19 @@ public class Payment implements Comparable<Payment>{
         this.amount = amount;
     }
 
-    public LocalDateTime getLastUpdate() {
-        return lastUpdate;
+    public LocalDateTime getLastUpdateTime() {
+        return lastUpdateTime;
     }
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public void setLastUpdateTime(LocalDateTime lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
     }
 
-    public PaymentStatus getStatus() {
-        return status;
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setStatus(PaymentStatus status) {
-        this.status = status;
-    }
-
-    @Override
-    public int compareTo(Payment payment) {
-        return Integer.compare(this.id, payment.id);
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

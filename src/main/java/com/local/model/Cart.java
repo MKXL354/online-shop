@@ -1,10 +1,15 @@
 package com.local.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Cart {
+public class Cart implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -4617074480075035012L;
+
     private int id;
     private User user;
     private Map<Integer, Product> products;

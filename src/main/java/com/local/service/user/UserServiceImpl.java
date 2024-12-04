@@ -1,9 +1,9 @@
 package com.local.service.user;
 
 import com.local.dao.DAOException;
-import com.local.dao.cart.CartDAO;
-import com.local.dao.payment.PaymentDAO;
-import com.local.dao.product.ProductDAO;
+import com.local.dao.CartDAO;
+import com.local.dao.PaymentDAO;
+import com.local.dao.ProductDAO;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.exception.service.user.EmptyCartException;
 import com.local.exception.service.user.PreviousPaymentPendingException;

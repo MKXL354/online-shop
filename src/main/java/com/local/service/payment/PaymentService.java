@@ -1,8 +1,8 @@
 package com.local.service.payment;
 
 import com.local.dao.DAOException;
-import com.local.dao.payment.PaymentDAO;
-import com.local.dao.user.UserDAO;
+import com.local.dao.PaymentDAO;
+import com.local.dao.UserDAO;
 import com.local.exception.service.payment.InsufficientBalanceException;
 import com.local.exception.service.payment.PaymentInProgressException;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
@@ -67,8 +67,8 @@ public class PaymentService {
             user.setBalance(user.getBalance().subtract(payment.getAmount()));
             userDAO.updateUser(user);
 
-            payment.setLastUpdate(LocalDateTime.now());
-            payment.setStatus(PaymentStatus.SUCCESSFUL);
+            payment.setLastUpdateTime(LocalDateTime.now());
+            payment.setPaymentStatus(PaymentStatus.SUCCESSFUL);
             paymentDAO.updatePayment(payment);
         }
         finally {
@@ -87,8 +87,8 @@ public class PaymentService {
             Thread.sleep(2*60*1000);
             double randomValue = ThreadLocalRandom.current().nextDouble(0, 1);
             if(randomValue < 0.7){
-                payment.setLastUpdate(LocalDateTime.now());
-                payment.setStatus(PaymentStatus.SUCCESSFUL);
+                payment.setLastUpdateTime(LocalDateTime.now());
+                payment.setPaymentStatus(PaymentStatus.SUCCESSFUL);
                 paymentDAO.updatePayment(payment);
             }
             else if(randomValue < 0.9){
@@ -109,8 +109,8 @@ public class PaymentService {
         if(payment == null){
             throw new PendingPaymentNotFoundException("no active payment found", null);
         }
-        payment.setLastUpdate(LocalDateTime.now());
-        payment.setStatus(PaymentStatus.CANCELLED);
+        payment.setLastUpdateTime(LocalDateTime.now());
+        payment.setPaymentStatus(PaymentStatus.CANCELLED);
         paymentDAO.updatePayment(payment);
     }
 }

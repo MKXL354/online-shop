@@ -21,6 +21,7 @@ public class User implements Serializable {
     @NotNull(message = "wrong or null user type")
     private UserType type;
 
+    @NotNull(message = "user balance can't be null")
     private BigDecimal balance;
 
     public User(int id, String username, String password, UserType type, BigDecimal balance) {
