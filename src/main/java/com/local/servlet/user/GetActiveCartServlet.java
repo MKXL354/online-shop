@@ -2,7 +2,7 @@ package com.local.servlet.user;
 
 import com.local.dao.DAOException;
 import com.local.model.Cart;
-import com.local.service.user.UserService;
+import com.local.service.common.CommonService;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.servlet.common.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
@@ -14,13 +14,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class GetActiveCartServlet extends HttpServlet {
-    private UserService userService;
+    private CommonService commonService;
     private CommonWebComponentService commonWebComponentService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        userService = (UserService)getServletContext().getAttribute("userService");
+        commonService = (CommonService)getServletContext().getAttribute("commonService");
         commonWebComponentService = (CommonWebComponentService)getServletContext().getAttribute("commonWebComponentService");
     }
 
@@ -28,7 +28,7 @@ public class GetActiveCartServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             int userId = (int)request.getAttribute("userId");
-            Cart cart =  userService.getActiveCart(userId);
+            Cart cart =  commonService.getActiveCart(userId);
             commonWebComponentService.writeResponse(response, cart);
         }
         catch (NumberFormatException | UserNotFoundException | DAOException e) {

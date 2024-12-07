@@ -9,7 +9,7 @@ import com.local.exception.service.user.EmptyCartException;
 import com.local.exception.service.user.PreviousPaymentPendingException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.*;
-import com.local.service.CommonService;
+import com.local.service.common.CommonService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,28 +29,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Cart getActiveCart(int userId) throws UserNotFoundException, DAOException {
-        User user = commonService.getUserById(userId);
-        if(user == null) {
-            throw new UserNotFoundException("user not found", null);
-        }
-        Cart cart;
-        if((cart = cartDAO.getActiveCart(user)) == null){
-            return cartDAO.addCartToUser(user);
-        }
-        return cart;
-    }
-
-    /*
-    if there is a pending payment, no product can be added to a new cart
-     */
-    @Override
     public void addProductToCart(int userId, String productName) throws UserNotFoundException, PreviousPaymentPendingException, ProductNotFoundException, DAOException {
         User user = commonService.getUserById(userId);
-        if(paymentDAO.getPendingPayment(user) != null){
+        if(commonService.getPendingPayment(userId) != null){
             throw new PreviousPaymentPendingException("a previous payment is pending", null);
         }
-        Cart cart = getActiveCart(userId);
+        Cart cart = commonService.getActiveCart(userId);
         Product product;
         if((product = productDAO.getProductByName(productName)) == null){
             throw new ProductNotFoundException("product not found", null);
@@ -65,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void removeProductFromCart(int userId, String productName) throws UserNotFoundException, ProductNotFoundException, DAOException{
-        Cart cart = getActiveCart(userId);
+        Cart cart = commonService.getActiveCart(userId);
         for(Product product : cart.getProducts().values()){
             if(product.getName().equals(productName)){
                 product.setProductStatus(ProductStatus.AVAILABLE);
@@ -85,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void finalizePurchase(int userId) throws UserNotFoundException, EmptyCartException, DAOException {
         User user = commonService.getUserById(userId);
-        Cart cart = getActiveCart(userId);
+        Cart cart = commonService.getActiveCart(userId);
         Map<Integer, Product> cartProducts = cart.getProducts();
         if(cartProducts.isEmpty()){
             throw new EmptyCartException("user cart is empty", null);

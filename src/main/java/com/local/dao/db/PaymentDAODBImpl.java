@@ -9,7 +9,6 @@ import com.local.dao.transaction.TransactionManager;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
 public class PaymentDAODBImpl implements PaymentDAO {
     private TransactionManager transactionManager;
@@ -51,29 +50,26 @@ public class PaymentDAODBImpl implements PaymentDAO {
     }
 
     @Override
-    public Payment getPendingPayment(User user) throws DAOException {
-        String query = "select p.ID as P_ID, AMOUNT, p.LAST_UPDATE_TIME as P_LAST_UPDATE_TIME, PAYMENT_STATUS, CART_ID, c.LAST_UPDATE_TIME as C_LAST_UPDATE_TIME, CART_STATUS " +
-                "from PAYMENTS p inner join CARTS c on p.CART_ID = c.ID " +
-                "where p.USER_ID = ? and PAYMENT_STATUS = ?";
+    public Payment getPendingPayment(int userId) throws DAOException {
+        String query = "select ID, CART_ID, AMOUNT, LAST_UPDATE_TIME, PAYMENT_STATUS from PAYMENTS where USER_ID = ? and PAYMENT_STATUS = ?";
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
-            statement.setInt(1, user.getId());
+            statement.setInt(1, userId);
             statement.setString(2, PaymentStatus.PENDING.toString());
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
-                int paymentId = resultSet.getInt("P_ID");
+                int paymentId = resultSet.getInt("ID");
+                int cartId = resultSet.getInt("CART_ID");
                 BigDecimal amount = resultSet.getBigDecimal("AMOUNT");
-                LocalDateTime lastUpdateTime = LocalDateTime.parse(resultSet.getString("P_LAST_UPDATE_TIME"));
+                LocalDateTime lastUpdateTime = LocalDateTime.parse(resultSet.getString("LAST_UPDATE_TIME"));
                 PaymentStatus paymentStatus = PaymentStatus.valueOf(resultSet.getString("PAYMENT_STATUS"));
 
-                int cartId = resultSet.getInt("CART_ID");
-                LocalDateTime cartLastUpdateTime = LocalDateTime.parse(resultSet.getString("C_LAST_UPDATE_TIME"));
-                CartStatus cartStatus = CartStatus.valueOf(resultSet.getString("CART_STATUS"));
-
-                return new Payment(paymentId, user, new Cart(cartId, user, null, cartLastUpdateTime, cartStatus), amount, lastUpdateTime, paymentStatus);
+                User user = new User(userId, null, null, null, null);
+                Cart cart = new Cart(cartId, null, null, null, null);
+                return new Payment(paymentId, user, cart, amount, lastUpdateTime, paymentStatus);
             }
             else{
                 return null;

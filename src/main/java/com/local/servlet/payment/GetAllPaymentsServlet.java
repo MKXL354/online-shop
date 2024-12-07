@@ -1,7 +1,5 @@
 package com.local.servlet.payment;
 
-import com.local.dao.DAOException;
-import com.local.model.Payment;
 import com.local.service.payment.PaymentService;
 import com.local.servlet.common.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
@@ -11,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.HashSet;
 
 public class GetAllPaymentsServlet extends HttpServlet {
     private PaymentService paymentService;
