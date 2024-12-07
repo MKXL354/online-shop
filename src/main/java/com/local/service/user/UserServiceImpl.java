@@ -9,20 +9,20 @@ import com.local.exception.service.user.EmptyCartException;
 import com.local.exception.service.user.PreviousPaymentPendingException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.*;
-import com.local.service.UtilityService;
+import com.local.service.CommonService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 
 public class UserServiceImpl implements UserService {
-    private UtilityService utilityService;
+    private CommonService commonService;
     private CartDAO cartDAO;
     private ProductDAO productDAO;
     private PaymentDAO paymentDAO;
 
-    public UserServiceImpl(UtilityService utilityService, CartDAO cartDAO, ProductDAO productDAO, PaymentDAO paymentDAO) {
-        this.utilityService = utilityService;
+    public UserServiceImpl(CommonService commonService, CartDAO cartDAO, ProductDAO productDAO, PaymentDAO paymentDAO) {
+        this.commonService = commonService;
         this.cartDAO = cartDAO;
         this.productDAO = productDAO;
         this.paymentDAO = paymentDAO;
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Cart getActiveCart(int userId) throws UserNotFoundException, DAOException {
-        User user = utilityService.getUserById(userId);
+        User user = commonService.getUserById(userId);
         if(user == null) {
             throw new UserNotFoundException("user not found", null);
         }
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void addProductToCart(int userId, String productName) throws UserNotFoundException, PreviousPaymentPendingException, ProductNotFoundException, DAOException {
-        User user = utilityService.getUserById(userId);
+        User user = commonService.getUserById(userId);
         if(paymentDAO.getPendingPayment(user) != null){
             throw new PreviousPaymentPendingException("a previous payment is pending", null);
         }
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void finalizePurchase(int userId) throws UserNotFoundException, EmptyCartException, DAOException {
-        User user = utilityService.getUserById(userId);
+        User user = commonService.getUserById(userId);
         Cart cart = getActiveCart(userId);
         Map<Integer, Product> cartProducts = cart.getProducts();
         if(cartProducts.isEmpty()){

@@ -11,6 +11,6 @@ public interface ProductDAO {
     Product getProductById(int id) throws DAOException;
     Product getProductByName(String name) throws DAOException;
     HashSet<Product> getAllProducts() throws DAOException;
-    LinkedHashMap<String, Integer> getProductsSortedBySells() throws DAOException;
-    LinkedHashMap<String, Integer> getProductsSortedByCount() throws DAOException;
+    LinkedHashMap<String, Integer> getProductsSortedBySold() throws DAOException;
+    LinkedHashMap<String, Integer> getProductsSortedByAvailable() throws DAOException;
 }

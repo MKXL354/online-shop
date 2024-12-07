@@ -9,7 +9,7 @@ import com.local.dao.ProductDAO;
 import com.local.dao.transaction.TransactionManager;
 import com.local.dao.transaction.db.DBTransactionManager;
 import com.local.dao.transaction.db.DBTransactionProxy;
-import com.local.service.UtilityService;
+import com.local.service.CommonService;
 import com.local.service.payment.PaymentService;
 import com.local.service.productmanagement.ProductManagementService;
 import com.local.service.scheduler.PurchaseRollbackScheduler;
@@ -64,12 +64,11 @@ public class Bootstrap implements ServletContextListener {
         CartDAO cartDAOImpl = daoFactory.getCartDAO();
         PaymentDAO paymentDAOImpl = daoFactory.getPaymentDAO();
 
-        UtilityService utilityService = new UtilityService(userDAOImpl);
-        sce.getServletContext().setAttribute("utilityService", utilityService);
+        CommonService commonService = new CommonService(userDAOImpl);
+        sce.getServletContext().setAttribute("commonService", commonService);
 
         PasswordEncryptor passwordEncryptorImpl = new PasswordEncryptorImpl(1000, 32, 256);
         UserManagementService userManagementService = new UserManagementServiceImpl(userDAOImpl, passwordEncryptorImpl);
-//        to be fixed later through abstract factory
         UserManagementService proxyUserManagementService = (UserManagementService)Proxy.newProxyInstance(UserManagementService.class.getClassLoader(), new Class[]{UserManagementService.class}, new DBTransactionProxy(userManagementService, transactionManager));
         sce.getServletContext().setAttribute("userManagementService", proxyUserManagementService);
 
@@ -92,11 +91,11 @@ public class Bootstrap implements ServletContextListener {
         PropertyManager errorResponsePropertyManager = new PropertyManager(absoluteErrorResponseConfigLocation);
         sce.getServletContext().setAttribute("errorResponsePropertyManager", errorResponsePropertyManager);
 
-        UserService userServiceImpl = new UserServiceImpl(utilityService, cartDAOImpl, productDAOImpl, paymentDAOImpl);
+        UserService userServiceImpl = new UserServiceImpl(commonService, cartDAOImpl, productDAOImpl, paymentDAOImpl);
         UserService proxyUserService = (UserService)Proxy.newProxyInstance(UserService.class.getClassLoader(), new Class[]{UserService.class}, new DBTransactionProxy(userServiceImpl, transactionManager));
         sce.getServletContext().setAttribute("userService", proxyUserService);
 
-        PaymentService paymentService = new PaymentService(utilityService, userDAOImpl, paymentDAOImpl);
+        PaymentService paymentService = new PaymentService(commonService, userDAOImpl, paymentDAOImpl);
         sce.getServletContext().setAttribute("paymentService", paymentService);
 
         purchaseRollbackScheduler = new PurchaseRollbackScheduler(10*1000, 60*1000, paymentDAOImpl, productDAOImpl);
@@ -120,13 +119,15 @@ public class Bootstrap implements ServletContextListener {
 //TODO: rewrite the queries
 //TODO: cache the InProgressPayments
 
-//TODO: better structure of DB queries especially for select? general query, pass predicate, get list
+//TODO: change structure of business rollbacks? schedule them individually for smaller queries. might remove the need for lazy fetch
+
+//TODO: pass Id to DAO as well
+
+//TODO: better structure of DB select queries? a fluent, table/DAO specific query constructor?
 
 //TODO: internal DB tables for constant-value checks not hard-coded?
 
-//TODO: change structure of business rollbacks? schedule them individually for smaller queries. might remove the need for lazy fetch
-
-//TODO: dynamic proxy for DAOs to remove duplicate opening and closing connection(maybe bytecode manipulation and annotation processing?)
+//TODO: dynamic proxy for DAOs to remove duplicate opening and closing connection(too slow? -> bytecode manipulation and annotation processing?)
 
 //TODO: lazy fetch on aggregates(patch inside a common service)? like Cart for Payment or Products for Cart
 //TODO: atomized lazy queries, DTO filter to send DTO over the web not the full object
@@ -140,4 +141,4 @@ public class Bootstrap implements ServletContextListener {
 //TODO: access MemDAO like DB. get a connection and delegate to a basic composed collection with locking
 //TODO: maybe a custom locked collection? so the locking doesn't have to repeat in every DAO method
 
-//TODO: maybe use response objects for methods to avoid excessive exceptions and dispersed logic
+//TODO: maybe use generic response objects for services to avoid excessive exceptions and dispersed logic

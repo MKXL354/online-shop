@@ -11,7 +11,7 @@ import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.Payment;
 import com.local.model.PaymentStatus;
 import com.local.model.User;
-import com.local.service.UtilityService;
+import com.local.service.CommonService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,35 +21,35 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class PaymentService {
-    private UtilityService utilityService;
+    private CommonService commonService;
     private UserDAO userDAO;
     private PaymentDAO paymentDAO;
     private Set<Payment> inProgressPayments;
 
-    public PaymentService(UtilityService utilityService, UserDAO userDAO, PaymentDAO paymentDAO) {
-        this.utilityService = utilityService;
+    public PaymentService(CommonService commonService, UserDAO userDAO, PaymentDAO paymentDAO) {
+        this.commonService = commonService;
         this.userDAO = userDAO;
         this.paymentDAO = paymentDAO;
         inProgressPayments = ConcurrentHashMap.newKeySet();
     }
 
     public Payment getPendingPayment(int userId) throws UserNotFoundException, DAOException {
-        User user = utilityService.getUserById(userId);
+        User user = commonService.getUserById(userId);
         return paymentDAO.getPendingPayment(user);
     }
 
-    public HashSet<Payment> getAllPayments() throws DAOException {
-        return paymentDAO.getAllPayments();
-    }
+//    public HashSet<Payment> getAllPayments() throws DAOException {
+//        return paymentDAO.getAllPayments();
+//    }
 
     public void addBalance(int userId, BigDecimal amount) throws UserNotFoundException, DAOException {
-        User user = utilityService.getUserById(userId);
+        User user = commonService.getUserById(userId);
         user.setBalance(user.getBalance().add(amount));
         userDAO.updateUser(user);
     }
 
     public void balancePay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, PaymentInProgressException, InsufficientBalanceException, DAOException {
-        User user = utilityService.getUserById(userId);
+        User user = commonService.getUserById(userId);
         Payment payment = getPendingPayment(userId);
         if(payment == null){
             throw new PendingPaymentNotFoundException("no pending payment found", null);
@@ -77,7 +77,7 @@ public class PaymentService {
     }
 
     public void cardPay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, WebPaymentException, DAOException {
-        User user = utilityService.getUserById(userId);
+        User user = commonService.getUserById(userId);
         Payment payment = paymentDAO.getPendingPayment(user);
         if(payment == null){
             throw new PendingPaymentNotFoundException("no active payment found", null);
@@ -104,7 +104,7 @@ public class PaymentService {
     }
 
     public void cancelPayment(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, DAOException {
-        User user = utilityService.getUserById(userId);
+        User user = commonService.getUserById(userId);
         Payment payment = paymentDAO.getPendingPayment(user);
         if(payment == null){
             throw new PendingPaymentNotFoundException("no active payment found", null);

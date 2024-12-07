@@ -53,7 +53,10 @@ public class CartDAODBImpl implements CartDAO {
             transactionManager.closeConnection(connection);
         }
     }
-    
+
+    /*
+    here because of the schedulers. if those are removed this too will be removed
+     */
     @Override
     public HashSet<Cart> getAllActiveCarts() throws DAOException {
         HashSet<Cart> activeCarts = new HashSet<>();
@@ -70,7 +73,6 @@ public class CartDAODBImpl implements CartDAO {
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
                 int cartId = resultSet.getInt("CART_ID");
-                HashMap<Integer, Product> products = getProductsInCart(cartId);
                 LocalDateTime lastUpdateTime = LocalDateTime.parse(resultSet.getString("LAST_UPDATE_TIME"));
                 CartStatus cartStatus = CartStatus.valueOf(resultSet.getString("CART_STATUS"));
 

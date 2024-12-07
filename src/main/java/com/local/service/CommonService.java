@@ -5,10 +5,10 @@ import com.local.dao.UserDAO;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.User;
 
-public class UtilityService {
+public class CommonService {
     private UserDAO userDAO;
 
-    public UtilityService(UserDAO userDAO) {
+    public CommonService(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 

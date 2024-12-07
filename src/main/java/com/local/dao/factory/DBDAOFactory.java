@@ -6,6 +6,7 @@ import com.local.dao.ProductDAO;
 import com.local.dao.UserDAO;
 import com.local.dao.db.CartDAODBImpl;
 import com.local.dao.db.PaymentDAODBImpl;
+import com.local.dao.db.ProductDAODBImpl;
 import com.local.dao.db.UserDAODBImpl;
 import com.local.dao.transaction.TransactionManager;
 

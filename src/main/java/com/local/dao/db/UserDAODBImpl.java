@@ -75,42 +75,22 @@ public class UserDAODBImpl implements UserDAO {
 
     @Override
     public User getUserById(int id) throws DAOException {
-        String query = "select * from USERS where ID = ?";
-        Connection connection = null;
-        try{
-            connection = transactionManager.openConnection();
-            PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-
-            statement.setInt(1, id);
-            try(ResultSet resultSet = statement.executeQuery()){
-                if(resultSet.next()){
-                    return createUserFromResultSet(resultSet);
-                }
-                else{
-                    return null;
-                }
-            }
-        }
-        catch(TransactionManagerException e){
-            throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
-            throw new DAOException("unexpected exception", e);
-        }
-        finally {
-            transactionManager.closeConnection(connection);
-        }
+        return getUserByIdentifier("ID", id, JDBCType.INTEGER);
     }
 
     @Override
     public User getUserByUsername(String username) throws DAOException {
-        String query = "select * from USERS where USERNAME = ?";
+        return getUserByIdentifier("USERNAME", username, JDBCType.VARCHAR);
+    }
+
+    private User getUserByIdentifier(String columnName, Object value, SQLType type) throws DAOException {
+        String query = String.format("select * from USERS where %s = ?", columnName);
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
-            PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = connection.prepareStatement(query);
 
-            statement.setString(1, username);
+            statement.setObject(1, value, type);
             try(ResultSet resultSet = statement.executeQuery()){
                 if(resultSet.next()){
                     return createUserFromResultSet(resultSet);

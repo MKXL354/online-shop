@@ -37,10 +37,10 @@ public class ProductManagementService {
     }
 
     public HashMap<String, Integer> getProductsSortedBySells() throws DAOException{
-        return productDAO.getProductsSortedBySells();
+        return productDAO.getProductsSortedBySold();
     }
 
     public HashMap<String, Integer> getProductsSortedByCount() throws DAOException{
-        return productDAO.getProductsSortedByCount();
+        return productDAO.getProductsSortedByAvailable();
     }
 }

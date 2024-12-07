@@ -9,12 +9,10 @@ import com.local.dao.transaction.TransactionManagerException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class DBTransactionManager implements TransactionManager {
     private ConnectionPool connectionPool;
     private ConcurrentHashMap<Thread, Connection> threadConnections;
-    private static AtomicInteger counter = new AtomicInteger(0);
 
     public DBTransactionManager(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;

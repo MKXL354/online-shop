@@ -26,11 +26,13 @@ public class GetAllPaymentsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            HashSet<Payment> payments = paymentService.getAllPayments();
-            commonWebComponentService.writeResponse(response, payments);
-        } catch (DAOException e) {
-            throw new ServletException(e);
-        }
+//        try {
+//            HashSet<Payment> payments = paymentService.getAllPayments();
+//            commonWebComponentService.writeResponse(response, null);
+//        } catch (DAOException e) {
+//            throw new ServletException(e);
+//        }
     }
 }
+
+//TODO: maybe later

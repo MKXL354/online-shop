@@ -18,7 +18,7 @@ create table carts(
 
 create table products(
     id int auto_increment primary key,
-    name varchar(256) unique,
+    name varchar(256) not null,
     price decimal(15, 3) not null,
     product_type varchar(64),
     product_status varchar(64),

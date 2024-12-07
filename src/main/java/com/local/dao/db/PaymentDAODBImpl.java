@@ -91,23 +91,27 @@ public class PaymentDAODBImpl implements PaymentDAO {
     }
 
     @Override
-    public HashSet<Payment> getAllPendingPayments() throws DAOException {
-        return null;
-    }
-
-    @Override
-    public HashSet<Payment> getAllCancelledPayments() throws DAOException {
-        return null;
-    }
-
-    @Override
-    public HashSet<Payment> getAllPayments() throws DAOException {
-        return null;
-    }
-
-    @Override
     public void updatePayment(Payment payment) throws DAOException {
+        String query = "update PAYMENTS set AMOUNT = ?, LAST_UPDATE_TIME = ?, PAYMENT_STATUS = ? where ID = ?";
+        Connection connection = null;
+        try{
+            connection = transactionManager.openConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
 
+            statement.setBigDecimal(1, payment.getAmount());
+            statement.setTimestamp(2, Timestamp.valueOf(payment.getLastUpdateTime()));
+            statement.setString(3, payment.getPaymentStatus().toString());
+            statement.setInt(4, payment.getId());
+            statement.executeUpdate();
+        }
+        catch(TransactionManagerException e){
+            throw new DAOException(e.getMessage(), e);
+        }
+        catch(SQLException e){
+            throw new DAOException("unexpected exception", e);
+        }
+        finally {
+            transactionManager.closeConnection(connection);
+        }
     }
 }
-//TODO: write later using general queries
