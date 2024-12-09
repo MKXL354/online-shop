@@ -97,12 +97,7 @@ public class UserServiceImpl implements UserService {
         cart.setCartStatus(CartStatus.PROCESSED);
         cartDAO.updateCart(cart);
         taskScheduler.submitTask(() -> {
-            try{
-                proxy.cancelPurchase(userId);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+            proxy.cancelPurchase(userId);
             return null;
         }, 5 * 60 * 1000);
     }
