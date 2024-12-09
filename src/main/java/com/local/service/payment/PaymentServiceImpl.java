@@ -15,7 +15,6 @@ import com.local.service.common.CommonService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -23,13 +22,13 @@ public class PaymentServiceImpl implements PaymentService{
     private CommonService commonService;
     private UserDAO userDAO;
     private PaymentDAO paymentDAO;
-    private Set<Payment> inProgressPayments;
+    private ConcurrentHashMap<Integer, Payment> inProgressPayments;
 
     public PaymentServiceImpl(CommonService commonService, UserDAO userDAO, PaymentDAO paymentDAO) {
         this.commonService = commonService;
         this.userDAO = userDAO;
         this.paymentDAO = paymentDAO;
-        inProgressPayments = ConcurrentHashMap.newKeySet();
+        this.inProgressPayments = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -49,11 +48,9 @@ public class PaymentServiceImpl implements PaymentService{
         if(user.getBalance().compareTo(payment.getAmount()) < 0){
             throw new InsufficientBalanceException("insufficient account balance", null);
         }
-
-        if(inProgressPayments.contains(payment)){
-            throw new PaymentInProgressException("payment is in progress", null);
+        if(inProgressPayments.putIfAbsent(payment.getId(), payment) != null){
+            throw new PaymentInProgressException("payment already in progress", null);
         }
-        inProgressPayments.add(payment);
 
         try{
             user.setBalance(user.getBalance().subtract(payment.getAmount()));
@@ -64,15 +61,18 @@ public class PaymentServiceImpl implements PaymentService{
             paymentDAO.updatePayment(payment);
         }
         finally {
-            inProgressPayments.remove(payment);
+            inProgressPayments.remove(payment.getId());
         }
     }
 
     @Override
-    public void cardPay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, WebPaymentException, DAOException {
+    public void cardPay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, PaymentInProgressException, WebPaymentException, DAOException {
         Payment payment = commonService.getPendingPayment(userId);
         if(payment == null){
             throw new PendingPaymentNotFoundException("no active payment found", null);
+        }
+        if(inProgressPayments.putIfAbsent(payment.getId(), payment) != null){
+            throw new PaymentInProgressException("payment already in progress", null);
         }
         try{
             //Simulated connection to foreign API (like a payment portal)
@@ -92,6 +92,9 @@ public class PaymentServiceImpl implements PaymentService{
         }
         catch (InterruptedException e) {
             throw new WebPaymentException("payment interrupted", null);
+        }
+        finally {
+            inProgressPayments.remove(payment.getId());
         }
     }
 }

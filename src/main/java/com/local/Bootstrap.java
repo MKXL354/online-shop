@@ -114,6 +114,8 @@ public class Bootstrap implements ServletContextListener {
     }
 }
 
+//TODO: Connection inheritance/composition/delegation for auto-close
+
 //TODO: cache the InProgressPayments
 
 //TODO: DAO to work with ids too(like service)? unified layers, less get methods, faster

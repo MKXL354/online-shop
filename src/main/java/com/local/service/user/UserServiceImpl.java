@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         taskScheduler.submitTask(() -> {
             proxy.removeProductFromCart(userId, product.getId());
             return null;
-        }, 1 * 60 * 1000);
+        }, 10 * 60 * 1000);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
                 e.printStackTrace();
             }
             return null;
-        }, 30 * 1000);
+        }, 5 * 60 * 1000);
     }
 
     @Override

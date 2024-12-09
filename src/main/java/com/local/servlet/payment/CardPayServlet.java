@@ -1,6 +1,7 @@
 package com.local.servlet.payment;
 
 import com.local.dao.DAOException;
+import com.local.exception.service.payment.PaymentInProgressException;
 import com.local.service.payment.PaymentService;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
 import com.local.exception.service.payment.WebPaymentException;
@@ -26,7 +27,8 @@ public class CardPayServlet extends HttpServlet {
             int userId = (int)request.getAttribute("userId");
             paymentService.cardPay(userId);
         }
-        catch(NumberFormatException | UserNotFoundException | PendingPaymentNotFoundException | WebPaymentException | DAOException e){
+        catch(NumberFormatException | UserNotFoundException | PendingPaymentNotFoundException |
+              PaymentInProgressException | WebPaymentException | DAOException e){
             throw new ServletException(e);
         }
     }

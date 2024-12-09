@@ -17,7 +17,7 @@ public class TaskScheduler {
 
     public void stop(){
         List<Runnable> remainingTasks = scheduler.shutdownNow();
-        try(ExecutorService executorService = Executors.newCachedThreadPool();){
+        try(ExecutorService executorService = Executors.newCachedThreadPool()){
             remainingTasks.forEach(executorService::execute);
         }
     }
