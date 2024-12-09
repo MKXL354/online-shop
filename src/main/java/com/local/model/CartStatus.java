@@ -2,5 +2,6 @@ package com.local.model;
 
 public enum CartStatus {
     ACTIVE,
-    PROCESSED
+    PROCESSED,
+    CANCELLED
 }

@@ -14,6 +14,6 @@ public interface ProductManagementService {
     Product addProduct(Product product) throws InvalidProductPriceException, DAOException;
     Product getProductById(int id) throws ProductNotFoundException, DAOException;
     HashSet<Product> getAllProducts() throws DAOException;
-    HashMap<String, Integer> getProductsSortedBySells() throws DAOException;
-    HashMap<String, Integer> getProductsSortedByCount() throws DAOException;
+    HashMap<String, Integer> GetProductsSortedBySold() throws DAOException;
+    HashMap<String, Integer> getProductsSortedByAvailable() throws DAOException;
 }

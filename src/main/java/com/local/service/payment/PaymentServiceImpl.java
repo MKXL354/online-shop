@@ -94,16 +94,5 @@ public class PaymentServiceImpl implements PaymentService{
             throw new WebPaymentException("payment interrupted", null);
         }
     }
-
-    @Override
-    public void cancelPayment(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, DAOException {
-        Payment payment = commonService.getPendingPayment(userId);
-        if(payment == null){
-            throw new PendingPaymentNotFoundException("no active payment found", null);
-        }
-        payment.setLastUpdateTime(LocalDateTime.now());
-        payment.setPaymentStatus(PaymentStatus.CANCELLED);
-        paymentDAO.updatePayment(payment);
-    }
 }
 //TODO: payment cache upper in the layers

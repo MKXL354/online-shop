@@ -23,8 +23,8 @@ public class RemoveProductFromCartServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
             int userId = (int)request.getAttribute("userId");
-            String productName = request.getParameter("productName");
-            userService.removeProductFromCart(userId, productName);
+            int productId = Integer.parseInt(request.getParameter("productId"));
+            userService.removeProductFromCart(userId, productId);
         }
         catch (NumberFormatException | UserNotFoundException | ProductNotFoundException | DAOException e) {
             throw new ServletException(e);

@@ -16,7 +16,7 @@ public class CommonWebComponentService {
         @Override
         public Product deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
-            String type = jsonObject.get("type").getAsString();
+            String type = jsonObject.get("productType").getAsString();
 
             switch (ProductType.valueOf(type)) {
                 case PRODUCT -> {

@@ -121,20 +121,20 @@
     <servlet-class>com.local.servlet.payment.CardPayServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>CancelPaymentServlet</servlet-name>
-    <servlet-class>com.local.servlet.payment.CancelPaymentServlet</servlet-class>
+    <servlet-name>CancelPurchaseServlet</servlet-name>
+    <servlet-class>com.local.servlet.user.CancelPurchaseServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>GetPendingPaymentServlet</servlet-name>
     <servlet-class>com.local.servlet.payment.GetPendingPaymentServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>GetProductsSortedBySellsServlet</servlet-name>
-    <servlet-class>com.local.servlet.productmanagement.GetProductsSortedBySellsServlet</servlet-class>
+    <servlet-name>GetProductsSortedBySoldServlet</servlet-name>
+    <servlet-class>com.local.servlet.productmanagement.GetProductsSortedBySoldServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>GetProductsSortedByCountServlet</servlet-name>
-    <servlet-class>com.local.servlet.productmanagement.GetProductsSortedByCountServlet</servlet-class>
+    <servlet-name>GetProductsSortedByAvailableServlet</servlet-name>
+    <servlet-class>com.local.servlet.productmanagement.GetProductsSortedByAvailableServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -186,7 +186,7 @@
     <url-pattern>/web-user/card-pay</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>CancelPaymentServlet</servlet-name>
+    <servlet-name>CancelPurchaseServlet</servlet-name>
     <url-pattern>/web-user/cancel-payment</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
@@ -194,11 +194,11 @@
     <url-pattern>/web-user/get-pending-payment</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>GetProductsSortedBySellsServlet</servlet-name>
-    <url-pattern>/get-products-sorted-by-sells</url-pattern>
+    <servlet-name>GetProductsSortedBySoldServlet</servlet-name>
+    <url-pattern>/get-products-sorted-by-sold</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>GetProductsSortedByCountServlet</servlet-name>
-    <url-pattern>/get-products-sorted-by-count</url-pattern>
+    <servlet-name>GetProductsSortedByAvailableServlet</servlet-name>
+    <url-pattern>/get-products-sorted-by-available</url-pattern>
   </servlet-mapping>
 </web-app>

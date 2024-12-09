@@ -13,7 +13,7 @@ create table carts(
     last_update_time timestamp not null,
     cart_status varchar(64),
     foreign key (user_id) references users(id),
-    check (cart_status in ('ACTIVE', 'PROCESSED'))
+    check (cart_status in ('ACTIVE', 'PROCESSED', 'CANCELLED'))
 );
 
 create table products(
@@ -43,5 +43,6 @@ create table payments(
     last_update_time timestamp not null,
     payment_status varchar(64),
     foreign key (user_id) references users(id),
-    check (payment_status in ('SUCCESSFUL', 'PENDING', 'CANCELLED', 'FAILED'))
+    foreign key (cart_id) references carts(id),
+    check (payment_status in ('SUCCESSFUL', 'PENDING', 'FAILED'))
 )

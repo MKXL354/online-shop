@@ -23,7 +23,7 @@ public class PaymentDAODBImpl implements PaymentDAO {
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
+            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             statement.setInt(1, payment.getId());
             statement.setInt(2, payment.getUser().getId());
@@ -34,7 +34,7 @@ public class PaymentDAODBImpl implements PaymentDAO {
             statement.executeUpdate();
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 generatedKeys.next();
-                payment.setId(generatedKeys.getInt(1));
+                payment.setId(generatedKeys.getInt("ID"));
                 return payment;
             }
         }
@@ -64,7 +64,7 @@ public class PaymentDAODBImpl implements PaymentDAO {
                 int paymentId = resultSet.getInt("ID");
                 int cartId = resultSet.getInt("CART_ID");
                 BigDecimal amount = resultSet.getBigDecimal("AMOUNT");
-                LocalDateTime lastUpdateTime = LocalDateTime.parse(resultSet.getString("LAST_UPDATE_TIME"));
+                LocalDateTime lastUpdateTime = resultSet.getTimestamp("LAST_UPDATE_TIME").toLocalDateTime();
                 PaymentStatus paymentStatus = PaymentStatus.valueOf(resultSet.getString("PAYMENT_STATUS"));
 
                 User user = new User(userId, null, null, null, null);

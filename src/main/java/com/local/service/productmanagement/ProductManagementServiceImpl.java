@@ -40,12 +40,12 @@ public class ProductManagementServiceImpl implements ProductManagementService{
     }
 
     @Override
-    public HashMap<String, Integer> getProductsSortedBySells() throws DAOException{
+    public HashMap<String, Integer> GetProductsSortedBySold() throws DAOException{
         return productDAO.getProductsSortedBySold();
     }
 
     @Override
-    public HashMap<String, Integer> getProductsSortedByCount() throws DAOException{
+    public HashMap<String, Integer> getProductsSortedByAvailable() throws DAOException{
         return productDAO.getProductsSortedByAvailable();
     }
 }

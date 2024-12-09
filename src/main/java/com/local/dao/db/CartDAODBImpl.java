@@ -29,7 +29,7 @@ public class CartDAODBImpl implements CartDAO {
             statement.setInt(1, cartId);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
-                LocalDateTime lastUpdateTime = LocalDateTime.parse(resultSet.getString("LAST_UPDATE_TIME"));
+                LocalDateTime lastUpdateTime = resultSet.getTimestamp("LAST_UPDATE_TIME").toLocalDateTime();
                 CartStatus cartStatus = CartStatus.valueOf(resultSet.getString("CART_STATUS"));
 
                 int userId = resultSet.getInt("USER_ID");
@@ -64,7 +64,7 @@ public class CartDAODBImpl implements CartDAO {
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
                 int id = resultSet.getInt("ID");
-                LocalDateTime lastUpdateTime = LocalDateTime.parse(resultSet.getString("LAST_UPDATE_TIME"));
+                LocalDateTime lastUpdateTime = resultSet.getTimestamp("LAST_UPDATE_TIME").toLocalDateTime();
 
                 User user = new User(userId, null, null, null, null);
                 return new Cart(id, user, null, lastUpdateTime, CartStatus.ACTIVE);
@@ -103,7 +103,7 @@ public class CartDAODBImpl implements CartDAO {
 //            ResultSet resultSet = statement.executeQuery();
 //            while(resultSet.next()){
 //                int cartId = resultSet.getInt("CART_ID");
-//                LocalDateTime lastUpdateTime = LocalDateTime.parse(resultSet.getString("LAST_UPDATE_TIME"));
+//                LocalDateTime lastUpdateTime = resultSet.getTimestamp("LAST_UPDATE_TIME").toLocalDateTime();
 //                CartStatus cartStatus = CartStatus.valueOf(resultSet.getString("CART_STATUS"));
 //
 //                int userId = resultSet.getInt("USER_ID");

@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class GetProductsSortedBySellsServlet extends HttpServlet {
+public class GetProductsSortedBySoldServlet extends HttpServlet {
     private ProductManagementService productManagementService;
     private CommonWebComponentService commonWebComponentService;
 
@@ -25,7 +25,7 @@ public class GetProductsSortedBySellsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try{
-            HashMap<String, Integer> products = productManagementService.getProductsSortedBySells();
+            HashMap<String, Integer> products = productManagementService.GetProductsSortedBySold();
             commonWebComponentService.writeResponse(response, products);
         }
         catch (DAOException e) {

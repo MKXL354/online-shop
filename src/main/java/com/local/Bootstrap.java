@@ -15,9 +15,7 @@ import com.local.service.payment.PaymentService;
 import com.local.service.payment.PaymentServiceImpl;
 import com.local.service.productmanagement.ProductManagementService;
 import com.local.service.productmanagement.ProductManagementServiceImpl;
-import com.local.service.scheduler.PurchaseRollbackScheduler;
-import com.local.service.scheduler.ReserveRollbackScheduler;
-import com.local.service.scheduler.RollbackScheduler;
+import com.local.service.scheduler.TaskScheduler;
 import com.local.service.user.UserService;
 import com.local.service.user.UserServiceImpl;
 import com.local.service.usermanagement.UserManagementServiceImpl;
@@ -41,9 +39,7 @@ import java.lang.reflect.Proxy;
 public class Bootstrap implements ServletContextListener {
     private ConnectionPool connectionPool;
     private BatchLogManager batchLogManager;
-
-    private RollbackScheduler purchaseRollbackScheduler;
-    private RollbackScheduler reserveRollbackScheduler;
+    private TaskScheduler taskScheduler;
 
     @Override
     public void contextInitialized(ServletContextEvent sce){
@@ -82,7 +78,7 @@ public class Bootstrap implements ServletContextListener {
 
         String relativeTokenManagerConfigFileLocation = sce.getServletContext().getInitParameter("relativeTokenManagerConfigFileLocation");
         String absoluteTokenManagerConfigFileLocation = sce.getServletContext().getRealPath(relativeTokenManagerConfigFileLocation);
-        TokenManager jwtManager = new JwtManager(absoluteTokenManagerConfigFileLocation, 10*60*1000);
+        TokenManager jwtManager = new JwtManager(absoluteTokenManagerConfigFileLocation, 15*60*1000);
         sce.getServletContext().setAttribute("tokenManager", jwtManager);
 
         ObjectValidator objectValidator = new ObjectValidator();
@@ -96,19 +92,17 @@ public class Bootstrap implements ServletContextListener {
         PropertyManager errorResponsePropertyManager = new PropertyManager(absoluteErrorResponseConfigLocation);
         sce.getServletContext().setAttribute("errorResponsePropertyManager", errorResponsePropertyManager);
 
-        UserService userServiceImpl = new UserServiceImpl(commonService, cartDAOImpl, productDAOImpl, paymentDAOImpl);
+        taskScheduler = new TaskScheduler(16);
+        taskScheduler.start();
+
+        UserService userServiceImpl = new UserServiceImpl(commonService, taskScheduler, cartDAOImpl, productDAOImpl, paymentDAOImpl);
         UserService proxyUserService = (UserService)Proxy.newProxyInstance(UserService.class.getClassLoader(), new Class[]{UserService.class}, new DBTransactionProxy(userServiceImpl, transactionManager));
+        userServiceImpl.setProxy(proxyUserService);
         sce.getServletContext().setAttribute("userService", proxyUserService);
 
         PaymentService paymentService = new PaymentServiceImpl(commonService, userDAOImpl, paymentDAOImpl);
         PaymentService proxyPaymentService = (PaymentService)Proxy.newProxyInstance(PaymentService.class.getClassLoader(), new Class[]{PaymentService.class}, new DBTransactionProxy(paymentService, transactionManager));
         sce.getServletContext().setAttribute("paymentService", proxyPaymentService);
-
-        purchaseRollbackScheduler = new PurchaseRollbackScheduler(10*1000, 60*1000, paymentDAOImpl, productDAOImpl);
-        purchaseRollbackScheduler.start();
-
-        reserveRollbackScheduler = new ReserveRollbackScheduler(5*1000, 30*1000, cartDAOImpl, productDAOImpl);
-        reserveRollbackScheduler.start();
     }
 
     @Override
@@ -116,15 +110,15 @@ public class Bootstrap implements ServletContextListener {
         System.out.println("Shutting down ...");
         connectionPool.closePool();
         batchLogManager.shutDown();
-
-        purchaseRollbackScheduler.stop();
-        reserveRollbackScheduler.stop();
+        taskScheduler.stop();
     }
 }
 
 //TODO: cache the InProgressPayments
 
-//TODO: change structure of business rollbacks? schedule them individually for smaller queries. might remove the need for lazy fetch
+//TODO: DAO to work with ids too(like service)? unified layers, less get methods, faster
+
+//TODO: change structure of logs? internal log manager(new Log().submit()), logs for activity, exception etc.
 
 //TODO: better structure of DB select queries? a fluent, table/DAO specific query constructor?
 

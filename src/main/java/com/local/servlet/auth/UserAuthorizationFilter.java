@@ -29,7 +29,7 @@ public abstract class UserAuthorizationFilter implements Filter {
             servletRequest.setAttribute("userId", userId);
             filterChain.doFilter(servletRequest, servletResponse);
         }
-        catch(InvalidTokenException | TokenExpiredException | RuntimeException e){
+        catch(InvalidTokenException | TokenExpiredException e){
             throw new ServletException(e);
         }
     }

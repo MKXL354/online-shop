@@ -17,6 +17,4 @@ public interface PaymentService {
     void balancePay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, PaymentInProgressException, InsufficientBalanceException, DAOException;
     @ManagedTransaction
     void cardPay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, WebPaymentException, DAOException;
-    @ManagedTransaction
-    void cancelPayment(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, DAOException;
 }

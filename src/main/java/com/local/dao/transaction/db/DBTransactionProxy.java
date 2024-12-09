@@ -31,7 +31,12 @@ public class DBTransactionProxy implements InvocationHandler {
             }
         }
         else {
-            return method.invoke(target, args);
+            try {
+                return method.invoke(target, args);
+            }
+            catch(InvocationTargetException e) {
+                throw e.getCause();
+            }
         }
     }
 }

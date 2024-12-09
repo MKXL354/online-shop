@@ -104,22 +104,42 @@ public class ProductDAODBImpl implements ProductDAO {
 
     @Override
     public Product getProductById(int id) throws DAOException {
-        return getProductByIdentifier("ID", id, JDBCType.INTEGER);
-    }
-
-    @Override
-    public Product getProductByName(String name) throws DAOException {
-        return getProductByIdentifier("NAME", name, JDBCType.VARCHAR);
-    }
-
-    private Product getProductByIdentifier(String columnName, Object value, SQLType type) throws DAOException {
-        String query = String.format("select * from PRODUCTS where %s = ?", columnName);
+        String query = "select * from PRODUCTS where ID = ?";
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
-            statement.setObject(1, value, type);
+            statement.setInt(1, id);
+            try(ResultSet resultSet = statement.executeQuery()){
+                if(resultSet.next()){
+                    return createProductFromResultSet(resultSet);
+                }
+                else{
+                    return null;
+                }
+            }
+        }
+        catch(TransactionManagerException e){
+            throw new DAOException(e.getMessage(), e);
+        }
+        catch(SQLException e){
+            throw new DAOException("unexpected exception", e);
+        }
+        finally {
+            transactionManager.closeConnection(connection);
+        }
+    }
+
+    @Override
+    public Product getProductByName(String name) throws DAOException {
+        String query = "select * from PRODUCTS where NAME = ? and PRODUCT_STATUS = 'AVAILABLE'";
+        Connection connection = null;
+        try{
+            connection = transactionManager.openConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            statement.setString(1, name);
             try(ResultSet resultSet = statement.executeQuery()){
                 if(resultSet.next()){
                     return createProductFromResultSet(resultSet);
@@ -161,7 +181,7 @@ public class ProductDAODBImpl implements ProductDAO {
 
     private LinkedHashMap<String, Integer> getProductsSortedByStatus(ProductStatus productStatus) throws DAOException {
         LinkedHashMap<String, Integer> products = new LinkedHashMap<>();
-        String query = "select NAME, COUNT(*) as SOLD from PRODUCTS where PRODUCT_STATUS = ? group by NAME order by SOLD desc";
+        String query = "select NAME, COUNT(*) as COUNT from PRODUCTS where PRODUCT_STATUS = ? group by NAME order by COUNT desc";
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
@@ -171,7 +191,7 @@ public class ProductDAODBImpl implements ProductDAO {
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
                 String name = resultSet.getString("NAME");
-                int count = resultSet.getInt(productStatus.toString());
+                int count = resultSet.getInt("COUNT");
                 products.put(name, count);
             }
             return products;

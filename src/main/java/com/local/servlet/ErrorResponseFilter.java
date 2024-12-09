@@ -28,17 +28,17 @@ public class ErrorResponseFilter implements Filter {
         }
     }
 
-    private void sendErrorResponse(ServletResponse servletResponse, ServletException e) throws IOException, ServletException {
-        Exception exception = (Exception)e.getRootCause();
-        String errorResponseType = exception.getClass().getSimpleName();
+    private void sendErrorResponse(ServletResponse servletResponse, ServletException servletException) throws IOException, ServletException {
+        Exception originalException = (Exception)servletException.getRootCause();
+        String errorResponseType = originalException.getClass().getSimpleName();
         int statusCode;
         try{
             statusCode = Integer.parseInt(propertyManager.getProperty(errorResponseType));
         }
         catch(NumberFormatException nfe){
-            throw new ServletException(nfe);
+            throw servletException;
         }
-        String message = exception.getMessage();
+        String message = originalException.getMessage();
         ErrorResponse errorResponse = new ErrorResponse(statusCode, errorResponseType, message);
         HttpServletResponse httpResponse = (HttpServletResponse)servletResponse;
         httpResponse.setStatus(statusCode);
