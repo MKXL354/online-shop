@@ -24,7 +24,6 @@ public class ErrorResponseFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
         }
         catch(ServletException e){
-            e.printStackTrace();
             sendErrorResponse(servletResponse, e);
         }
     }

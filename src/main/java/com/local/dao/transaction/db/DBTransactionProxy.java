@@ -1,6 +1,5 @@
 package com.local.dao.transaction.db;
 
-import com.local.dao.DAOException;
 import com.local.dao.transaction.ManagedTransaction;
 import com.local.dao.transaction.TransactionManager;
 import com.local.exception.common.ApplicationRuntimeException;
@@ -32,18 +31,14 @@ public class DBTransactionProxy implements InvocationHandler {
                 }
                 catch(InvocationTargetException e) {
                     transactionManager.rollbackTransaction();
-                    Throwable cause = e.getCause();
-//                    TODO: a better, general, recursive approach here
-                    if(cause instanceof DAOException && cause.getCause() instanceof SQLTransientException){
-//                        TODO: finer-tuned waiting?
+                    if(causedBy(e, SQLTransientException.class)){
                         ThreadLocalRandom.current().nextInt(50, 250);
                         continue;
                     }
-                    throw cause;
+                    throw e.getCause();
                 }
             }
-//            TODO: or maybe throw a TransactionFailed exception
-            throw new ApplicationRuntimeException("failed transaction", null);
+            throw new ApplicationRuntimeException("transaction failed", null);
         }
         else {
             try {
@@ -53,5 +48,14 @@ public class DBTransactionProxy implements InvocationHandler {
                 throw e.getCause();
             }
         }
+    }
+
+    private boolean causedBy(Throwable main, Class<?> cause) {
+        while((main = main.getCause()) != null){
+            if(cause.isInstance(main)){
+                return true;
+            }
+        }
+        return false;
     }
 }
