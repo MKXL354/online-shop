@@ -108,15 +108,19 @@ public class Bootstrap implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         System.out.println("Shutting down ...");
-        connectionPool.closePool();
         batchLogManager.shutDown();
         taskScheduler.stop();
+        connectionPool.closePool();
     }
 }
 
-//TODO: Connection inheritance/composition/delegation for auto-close
 
-//TODO: cache the InProgressPayments
+//TODO: apply Custom AutoClose inside all DBDAOs? -> remove closeConnection() of TransactionManager
+//TODO: one catch block inside DBDAO methods?
+
+//TODO: maybe work with transaction manager in contextDestroyed not the connectionPool itself
+
+//TODO: service exceptions being thrown up instead of many smaller ones?
 
 //TODO: DAO to work with ids too(like service)? unified layers, less get methods, faster
 
@@ -126,8 +130,8 @@ public class Bootstrap implements ServletContextListener {
 
 //TODO: internal DB tables for constant-value checks not hard-coded?
 
-//TODO: lazy fetch on aggregates(patch inside a common service)? like Cart for Payment or Products for Cart
-//TODO: atomized lazy queries, DTO filter to send DTO over the web not the full object
+//TODO: lazy fetch on aggregates(builder inside commonService)? like Cart and User for Payment
+//TODO: send model DTO over the web not the full object
 
 //TODO: annotation for filter authentication? like an annotation on servlet: @RequiresAuth?
 
@@ -135,7 +139,7 @@ public class Bootstrap implements ServletContextListener {
 
 //TODO: DI container, config file and relative path
 
-//TODO: persistence/rewrite/transaction(read-update, insertion, rollback) for all MemDAOs later
+//TODO: persistence/rewrite/transaction(read-update, insertion, rollback) for all MemDAOs?
 
-//TODO: access MemDAO like DB. get a connection and delegate to a basic composed collection with locking
-//TODO: maybe a custom locked collection? so the locking doesn't have to repeat in every DAO method
+//TODO: access MemDAO like DB? get a connection and delegate to a custom composed collection
+//TODO: custom locked collection -> so the locking doesn't have to repeat in every DAO method
