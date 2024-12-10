@@ -1,11 +1,51 @@
+-- ENUMS
+
+create table cart_status(
+    enum_value varchar(64) primary key
+);
+insert into cart_status values ('ACTIVE');
+insert into cart_status values ('PROCESSED');
+insert into cart_status values ('CANCELLED');
+
+create table payment_status(
+    enum_value varchar(64) primary key
+);
+insert into payment_status values ('SUCCESSFUL');
+insert into payment_status values ('PENDING');
+insert into payment_status values ('FAILED');
+
+create table product_status(
+    enum_value varchar(64) primary key
+);
+insert into product_status values ('AVAILABLE');
+insert into product_status values ('RESERVED');
+insert into product_status values ('SOLD');
+
+create table product_type(
+    enum_value varchar(64) primary key
+);
+insert into product_type values ('PRODUCT');
+insert into product_type values ('DESKTOP');
+insert into product_type values ('LAPTOP');
+insert into product_type values ('MOBILE');
+
+create table user_type(
+    enum_value varchar(64) primary key
+);
+insert into user_type values ('WEB_USER');
+insert into user_type values ('ADMIN');
+
+-- TABLES
+
 create table users(
     id int auto_increment primary key,
     username varchar(256) unique not null,
     password varchar(512) not null,
     user_type varchar(64),
     balance decimal(15, 3) not null,
-    check (user_type in ('WEB_USER', 'ADMIN'))
+    foreign key (user_type) references user_type (enum_value)
 );
+insert into users values (0, 'admin', 'nn9EysQOvC9Dm5LwpdhgBkrLj6eUwm0E+gxvTU8ZSaA=:4ZFmj0Gd+Ly8zb/okH5AM+kFpraRJrY4qIBT9PKP164=', 'ADMIN', 0.000);
 
 create table carts(
     id int auto_increment primary key,
@@ -13,7 +53,7 @@ create table carts(
     last_update_time timestamp not null,
     cart_status varchar(64),
     foreign key (user_id) references users(id),
-    check (cart_status in ('ACTIVE', 'PROCESSED', 'CANCELLED'))
+    foreign key (cart_status) references cart_status (enum_value)
 );
 
 create table products(
@@ -23,8 +63,8 @@ create table products(
     product_type varchar(64),
     product_status varchar(64),
     check (price > 0),
-    check (product_type in ('PRODUCT', 'DESKTOP', 'LAPTOP', 'MOBILE')),
-    check (product_status in ('AVAILABLE', 'RESERVED', 'SOLD'))
+    foreign key (product_type) references product_type (enum_value),
+    foreign key (product_status) references product_status (enum_value)
 );
 
 create table carts_products(
@@ -44,5 +84,5 @@ create table payments(
     payment_status varchar(64),
     foreign key (user_id) references users(id),
     foreign key (cart_id) references carts(id),
-    check (payment_status in ('SUCCESSFUL', 'PENDING', 'FAILED'))
-)
+    foreign key (payment_status) references payment_status (enum_value)
+);

@@ -118,8 +118,6 @@ public class Bootstrap implements ServletContextListener {
 //TODO: apply Custom AutoClose inside all DBDAOs? -> remove closeConnection() of TransactionManager
 //TODO: one catch block inside DBDAO methods?
 
-//TODO: maybe work with transaction manager in contextDestroyed not the connectionPool itself
-
 //TODO: service exceptions being thrown up instead of many smaller ones?
 
 //TODO: DAO to work with ids too(like service)? unified layers, less get methods, faster
@@ -128,7 +126,7 @@ public class Bootstrap implements ServletContextListener {
 
 //TODO: better structure of DB select queries? a fluent, table/DAO specific query constructor?
 
-//TODO: internal DB tables for constant-value checks not hard-coded?
+//TODO: status enums keeping generic state -> one enums class being used and one DB table
 
 //TODO: lazy fetch on aggregates(builder inside commonService)? like Cart and User for Payment
 //TODO: send model DTO over the web not the full object
