@@ -113,27 +113,27 @@ public class Bootstrap implements ServletContextListener {
     }
 }
 
-//TODO: change structure of logs? internal log manager(new Log().submit()), logs for activity, exception etc.
-//TODO: rewrite LoggingFilter
-
 //TODO: apply Custom AutoClose inside all DBDAOs? -> remove closeConnection() of TransactionManager
 //TODO: one catch block inside DBDAO methods?
+//TODO: better wait logic for getting connection? maybe not at all
+//TODO: better DAOExceptions being thrown up? as they don't go to the user they can be logged better
 
-//TODO: service exceptions being thrown up instead of many smaller ones?
+//TODO: DAO to work with ids too(like service)? unified layer interaction, less get methods, faster
 
-//TODO: DAO to work with ids too(like service)? unified layers, less get methods, faster
-
-//TODO: better structure of DB select queries? a fluent, table/DAO specific query constructor?
-
-//TODO: lazy fetch on aggregates(builder inside commonService)? like Cart and User for Payment
 //TODO: send model DTO over the web not the full object
 
 //TODO: annotation for filter authentication? like an annotation on servlet: @RequiresAuth?
-//TODO: change filter configuration
+//TODO: config filters and servlets using annotations?
+
+//TODO: lazy fetch on aggregates(builder inside commonService)? like Cart and User for Payment
 
 //TODO: status enums keeping generic state -> one enums class being used and one DB table
 
+//TODO: service exceptions being thrown up instead of many smaller ones?
+
 //TODO: maybe use generic response objects for services to avoid excessive exceptions and dispersed logic
+
+//TODO: better structure of DB select queries? a fluent, table/DAO specific query constructor?
 
 //TODO: DI container, config file and relative path
 

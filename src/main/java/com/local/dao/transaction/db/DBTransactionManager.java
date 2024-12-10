@@ -5,9 +5,12 @@ import com.local.dao.db.dbconnector.DataBaseConnectionException;
 import com.local.dao.transaction.BadTransactionException;
 import com.local.dao.transaction.TransactionManager;
 import com.local.dao.transaction.TransactionManagerException;
+import com.local.util.logging.LogLevel;
+import com.local.util.logging.LogObject;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DBTransactionManager implements TransactionManager {
@@ -93,7 +96,9 @@ public class DBTransactionManager implements TransactionManager {
                 connection.close();
             }
         }
-        catch(SQLException e){}
+        catch(SQLException e){
+            new LogObject.Builder().setLevel(LogLevel.ERROR).setThrowable(e).setEndTime(LocalDateTime.now()).build().submit();
+        }
     }
 }
 
