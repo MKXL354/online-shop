@@ -1,5 +1,9 @@
 package com.local.service.scheduler;
 
+import com.local.util.logging.LogLevel;
+import com.local.util.logging.LogObject;
+
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.concurrent.*;
 
@@ -35,7 +39,9 @@ public class TaskScheduler {
             try {
                 task.call();
                 remainingTasks.remove(task);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                new LogObject.Builder().setLevel(LogLevel.ERROR).setThrowable(e).setEndTime(LocalDateTime.now()).build().submit();
+            }
         }, delayMillis, TimeUnit.MILLISECONDS);
     }
 }

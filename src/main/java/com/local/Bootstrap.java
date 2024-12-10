@@ -19,6 +19,7 @@ import com.local.service.scheduler.TaskScheduler;
 import com.local.service.user.UserService;
 import com.local.service.user.UserServiceImpl;
 import com.local.service.usermanagement.UserManagementServiceImpl;
+import com.local.util.logging.LogManager;
 import com.local.util.objectvalidator.ObjectValidator;
 import com.local.util.password.PasswordEncryptor;
 import com.local.util.password.PasswordEncryptorImpl;
@@ -30,7 +31,6 @@ import com.local.servlet.common.CommonWebComponentService;
 import com.local.util.token.JwtManager;
 import com.local.util.token.TokenManager;
 import com.local.util.PropertyManager;
-import com.local.util.logging.BatchLogManager;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 
@@ -38,7 +38,7 @@ import java.lang.reflect.Proxy;
 
 public class Bootstrap implements ServletContextListener {
     private ConnectionPool connectionPool;
-    private BatchLogManager batchLogManager;
+    private LogManager logManager;
     private TaskScheduler taskScheduler;
 
     @Override
@@ -51,9 +51,8 @@ public class Bootstrap implements ServletContextListener {
 
         String relativeBatchLogOutputDirectory = sce.getServletContext().getInitParameter("relativeBatchLogOutputDirectory");
         String absoluteBatchLogOutputDirectory = sce.getServletContext().getRealPath(relativeBatchLogOutputDirectory);
-        batchLogManager = new BatchLogManager(absoluteBatchLogOutputDirectory, 5000, 10);
-        batchLogManager.start();
-        sce.getServletContext().setAttribute("batchLogManager", batchLogManager);
+        logManager = LogManager.getInstance();
+        logManager.start(absoluteBatchLogOutputDirectory, 10 * 1000, 10);
 
         DAOTypeFactory daoTypeFactory = new DAOTypeFactory();
         TransactionManager transactionManager = new DBTransactionManager(connectionPool);
@@ -108,7 +107,7 @@ public class Bootstrap implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         System.out.println("Shutting down ...");
-        batchLogManager.shutDown();
+        logManager.stop();
         taskScheduler.stop();
         connectionPool.closePool();
     }

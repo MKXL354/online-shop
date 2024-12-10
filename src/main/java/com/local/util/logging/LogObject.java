@@ -6,17 +6,19 @@ public class LogObject {
     private LogManager logManager = LogManager.getInstance();
     private String clientIp;
     private String url;
-    private LogLevel level;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private LogLevel level;
+    private int code;
     private Throwable throwable;
 
     private LogObject(Builder builder) {
         this.clientIp = builder.clientIp;
         this.url = builder.url;
-        this.level = builder.level;
         this.startTime = builder.startTime;
         this.endTime = builder.endTime;
+        this.level = builder.level;
+        this.code = builder.code;
         this.throwable = builder.throwable;
     }
 
@@ -28,16 +30,16 @@ public class LogObject {
         return url;
     }
 
-    public LogLevel getLevel() {
-        return level;
-    }
-
     public LocalDateTime getStartTime() {
         return startTime;
     }
 
     public LocalDateTime getEndTime() {
         return endTime;
+    }
+
+    public LogLevel getLevel() {
+        return level;
     }
 
     public Throwable getThrowable() {
@@ -50,35 +52,38 @@ public class LogObject {
 
     @Override
     public String toString() {
-        String clientString = clientIp == null ? "" : "[clientIp: ]" + clientIp;
-        String urlString = url == null ? "" : "[url: ]" + url;
-        String startTimeString = startTime == null ? "" : "[startTime: ]" + startTime;
-        String endTimeString = endTime == null ? "" : "[endTime: ]" + clientIp;
-        String levelString = level == null ? "" : "[level: ]" + level;
-        String throwableString = level != LogLevel.ERROR && throwable == null ? "" : "\n" + getStackTraceLog(throwable);
-        return clientString + urlString + startTimeString + endTimeString + levelString + throwableString;
+        String clientString = clientIp == null ? "" : "[clientIp: " + clientIp + "]";
+        String urlString = url == null ? "" : "[url: " + url + "]";
+        String startTimeString = startTime == null ? "" : "[startTime: " + startTime + "]";
+        String endTimeString = endTime == null ? "" : "[endTime: " + endTime + "]";
+        String levelString = level == null ? "" : "[level: " + level + "]";
+        String codeString = code == 0 ? null : "[code: " + code + "]";
+        String throwableString = level != LogLevel.ERROR && throwable == null ? "" : "\n" + getFullStackTraceLog(throwable);
+        return clientString + urlString + startTimeString + endTimeString + levelString + codeString + throwableString;
     }
 
-    private String getStackTraceLog(Throwable throwable) {
+    private String getFullStackTraceLog(Throwable throwable) {
         level = LogLevel.ERROR;
         StringBuilder stackTrace = new StringBuilder();
-        stackTrace.append(throwable.toString()).append("\n");
+        stackTrace.append(getPartialStackTraceLog(throwable));
 
         Throwable cause = throwable.getCause();
-        if (cause != null) {
-            stackTrace.append("\tCaused by: ").append(cause).append("\n");
+        while (cause != null) {
+            stackTrace.append("Caused by: ").append(getPartialStackTraceLog(cause));
+            cause = cause.getCause();
         }
+        return stackTrace.toString();
+    }
 
+    private String getPartialStackTraceLog(Throwable throwable) {
+        StringBuilder stackTrace = new StringBuilder();
+        stackTrace.append(throwable.getClass().getName());
+        if (throwable.getMessage() != null) {
+            stackTrace.append(": ").append(throwable.getMessage());
+        }
+        stackTrace.append("\n");
         for (StackTraceElement stackTraceElement : throwable.getStackTrace()) {
             stackTrace.append("\tat ").append(stackTraceElement.toString()).append("\n");
-        }
-
-        Throwable currentCause = cause;
-        while (currentCause != null) {
-            for (StackTraceElement element : currentCause.getStackTrace()) {
-                stackTrace.append("\tat ").append(element.toString()).append("\n");
-            }
-            currentCause = currentCause.getCause();
         }
         return stackTrace.toString();
     }
@@ -86,9 +91,10 @@ public class LogObject {
     public static class Builder {
         private String clientIp;
         private String url;
-        private LogLevel level;
         private LocalDateTime startTime;
         private LocalDateTime endTime;
+        private LogLevel level;
+        private int code;
         private Throwable throwable;
 
         public Builder setClientIp(String clientIp) {
@@ -101,11 +107,6 @@ public class LogObject {
             return this;
         }
 
-        public Builder setLevel(LogLevel level) {
-            this.level = level;
-            return this;
-        }
-
         public Builder setStartTime(LocalDateTime startTime) {
             this.startTime = startTime;
             return this;
@@ -113,6 +114,16 @@ public class LogObject {
 
         public Builder setEndTime(LocalDateTime endTime) {
             this.endTime = endTime;
+            return this;
+        }
+
+        public Builder setLevel(LogLevel level) {
+            this.level = level;
+            return this;
+        }
+
+        public Builder setCode(int code) {
+            this.code = code;
             return this;
         }
 
