@@ -1,0 +1,10 @@
+Simple Type Factory/Abstract Factory: Mem/DB DAO
+Prototype: copying models to new objects in MemDB
+Singleton: Log
+
+Adapter/Facade: using 3rd-party libraries
+Proxy: Transaction Manager
+Decorator: CustomConnection class
+
+Template Method: Validation/Authentication Filters
+Command: MemDAO restore operations

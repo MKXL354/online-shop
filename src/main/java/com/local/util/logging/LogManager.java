@@ -20,12 +20,14 @@ public class LogManager {
     private int maxLogsToWrite;
     private ScheduledExecutorService executorService;
     private static Deque<LogObject> logs = new ConcurrentLinkedDeque<>();
-    private static LogManager instance = new LogManager();
 
     private LogManager() {}
 
+    private static class SingletonHelper{
+        private static final LogManager INSTANCE = new LogManager();
+    }
     public static LogManager getInstance() {
-        return instance;
+        return SingletonHelper.INSTANCE;
     }
 
     public void start(String outputDirectory, int maxWaitTimeMillis, int maxLogsToWrite){
@@ -49,7 +51,7 @@ public class LogManager {
         }
     }
 
-    public static void submit(LogObject logObject){
+    public void submit(LogObject logObject){
         logs.addLast(logObject);
     }
 

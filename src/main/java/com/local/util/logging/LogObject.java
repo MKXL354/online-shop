@@ -47,7 +47,7 @@ public class LogObject {
     }
 
     public void submit(){
-        LogManager.submit(this);
+        logManager.submit(this);
     }
 
     @Override
