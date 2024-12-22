@@ -1,5 +1,5 @@
 Simple Type Factory/Abstract Factory: Mem/DB DAO
-Prototype: copying models to new objects in MemDB
+Prototype: copying models to new objects in MemDAO
 Singleton: Log
 
 Adapter/Facade: using 3rd-party libraries

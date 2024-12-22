@@ -3,6 +3,8 @@ package com.local.util.token;
 import com.local.exception.common.ApplicationRuntimeException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Base64;
@@ -10,23 +12,26 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JwtManager extends TokenManager {
+@Component
+public class JwtManager implements TokenManager {
+    private String secretString;
     private SecretKey secretKey;
     private long lifeTimeMillis;
 
-    public JwtManager(String configFileLocation, long lifeTimeMillis) {
-        super(configFileLocation);
-        secretKey = readSecretKey();
-        this.lifeTimeMillis = lifeTimeMillis;
-    }
-
-    private SecretKey readSecretKey() {
-        String secretKey = super.propertyManager.getProperty("secretKey");
-        if (secretKey == null) {
+    public void setSecretString(@Value("${token.secretKey}") String secretString) {
+        this.secretString = secretString;
+        if (secretString == null) {
             throw new ApplicationRuntimeException("bad config file format", null);
         }
-        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+        setSecretKey(Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretString)));
+    }
+
+    public void setSecretKey(SecretKey secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    public void setLifeTimeMillis(@Value("${token.lifeTimeMillis}") long lifeTimeMillis) {
+        this.lifeTimeMillis = lifeTimeMillis;
     }
 
     @Override
@@ -38,6 +43,7 @@ public class JwtManager extends TokenManager {
         return jwtBuilder.issuedAt(new Date(startTimeMillis)).expiration(new Date(endTimeMillis)).signWith(secretKey).compact();
     }
 
+    @Override
     public Map<String, Object> validateSignedToken(String jws, Map<String, Object> claims) throws InvalidTokenException, TokenExpiredException{
         try{
             JwtParserBuilder jwtParserBuilder = Jwts.parser();

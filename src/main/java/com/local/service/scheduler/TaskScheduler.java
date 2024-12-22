@@ -2,25 +2,31 @@ package com.local.service.scheduler;
 
 import com.local.util.logging.LogLevel;
 import com.local.util.logging.LogObject;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.concurrent.*;
 
+@Component
 public class TaskScheduler {
     private int poolSize;
     private ScheduledExecutorService scheduler;
-    private Set<Callable<?>> remainingTasks;
+    private Set<Callable<?>> remainingTasks = ConcurrentHashMap.newKeySet();
 
-    public TaskScheduler(int poolSize) {
+    public void setPoolSize(@Value("${task.poolSize}") int poolSize) {
         this.poolSize = poolSize;
-        this.remainingTasks = ConcurrentHashMap.newKeySet();
     }
 
+    @PostConstruct
     public void start(){
         this.scheduler = Executors.newScheduledThreadPool(poolSize);
     }
 
+    @PreDestroy
     public void stop(){
         scheduler.shutdownNow();
         ExecutorService executorService = Executors.newCachedThreadPool();
@@ -33,7 +39,7 @@ public class TaskScheduler {
         }
     }
 
-    public void submitTask(Callable<?> task, int delayMillis){
+    public void submitTask(Callable<?> task, long delayMillis){
         remainingTasks.add(task);
         scheduler.schedule(() -> {
             try {
@@ -45,5 +51,4 @@ public class TaskScheduler {
         }, delayMillis, TimeUnit.MILLISECONDS);
     }
 }
-//TODO: log for exceptions happening in the tasks? (after rewriting log management)
 //TODO: maybe add pre-mature cancellation(if succeeded in services)

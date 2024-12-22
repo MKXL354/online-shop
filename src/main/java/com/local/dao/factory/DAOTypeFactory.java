@@ -6,7 +6,7 @@ import com.local.exception.common.ApplicationRuntimeException;
 public class DAOTypeFactory {
     private DAOFactory dbFactory;
 
-    public DAOFactory getDbFactory(DAOType type, TransactionManager transactionManager) {
+    public DAOFactory getFactory(DAOType type, TransactionManager transactionManager) {
         switch (type) {
             case DB -> {
                 return new DBDAOFactory(transactionManager);

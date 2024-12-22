@@ -7,19 +7,22 @@ import com.local.dao.transaction.TransactionManager;
 import com.local.dao.transaction.TransactionManagerException;
 import com.local.util.logging.LogLevel;
 import com.local.util.logging.LogObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Component
 public class DBTransactionManager implements TransactionManager {
     private ConnectionPool connectionPool;
-    private ConcurrentHashMap<Thread, Connection> threadConnections;
+    private ConcurrentHashMap<Thread, Connection> threadConnections = new ConcurrentHashMap<>();
 
-    public DBTransactionManager(ConnectionPool connectionPool) {
+    @Autowired
+    public void setConnectionPool(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
-        threadConnections = new ConcurrentHashMap<>();
     }
 
     @Override

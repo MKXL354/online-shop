@@ -2,7 +2,6 @@ package com.local.servlet;
 
 import com.local.dto.ErrorResponse;
 import com.local.servlet.common.CommonWebComponentService;
-import com.local.util.PropertyManager;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
 

@@ -1,6 +1,10 @@
 package com.local.util.logging;
 
 import com.local.exception.common.ApplicationRuntimeException;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -14,9 +18,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class LogManager {
     private String outputDirectory;
-    private int maxWaitTimeMillis;
+    private long maxWaitTimeMillis;
     private int maxLogsToWrite;
     private ScheduledExecutorService executorService;
     private static Deque<LogObject> logs = new ConcurrentLinkedDeque<>();
@@ -30,11 +35,21 @@ public class LogManager {
         return SingletonHelper.INSTANCE;
     }
 
-    public void start(String outputDirectory, int maxWaitTimeMillis, int maxLogsToWrite){
+    public void setOutputDirectory(@Value("${log.output}") String outputDirectory) {
         this.outputDirectory = outputDirectory;
-        createDirectory();
+    }
+
+    public void setMaxWaitTimeMillis(@Value("${log.maxWaitTimeMillis}") long maxWaitTimeMillis) {
         this.maxWaitTimeMillis = maxWaitTimeMillis;
+    }
+
+    public void setMaxLogsToWrite(@Value("${log.maxLogsToWrite}") int maxLogsToWrite) {
         this.maxLogsToWrite = maxLogsToWrite;
+    }
+
+    @PostConstruct
+    public void start(){
+        createDirectory();
         this.executorService = Executors.newSingleThreadScheduledExecutor();
         this.executorService.scheduleWithFixedDelay(this::log, 0, maxWaitTimeMillis, TimeUnit.MILLISECONDS);
     }
@@ -55,6 +70,7 @@ public class LogManager {
         logs.addLast(logObject);
     }
 
+    @PreDestroy
     public void stop(){
         executorService.shutdownNow();
         this.maxLogsToWrite = logs.size();

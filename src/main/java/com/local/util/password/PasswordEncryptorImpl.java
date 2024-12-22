@@ -1,6 +1,7 @@
 package com.local.util.password;
 
 import com.local.exception.common.ApplicationRuntimeException;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -14,9 +15,15 @@ public class PasswordEncryptorImpl implements PasswordEncryptor {
     private int saltLength;
     private int keyLength;
 
-    public PasswordEncryptorImpl(int iterations, int saltLength, int keyLength) {
+    public void setIterations(@Value("${enc.iterations}") int iterations) {
         this.iterations = iterations;
+    }
+
+    public void setSaltLength(@Value("${enc.saltLength}") int saltLength) {
         this.saltLength = saltLength;
+    }
+
+    public void setKeyLength(@Value("${enc.keyLength}") int keyLength) {
         this.keyLength = keyLength;
     }
 
