@@ -1,8 +1,5 @@
 package com.local;
 
-import com.local.dao.factory.DAOFactory;
-import com.local.dao.factory.DAOType;
-import com.local.dao.factory.DAOTypeFactory;
 import com.local.service.scheduler.TaskScheduler;
 import com.local.util.logging.LogManager;
 import com.local.dao.db.dbconnector.ConnectionPool;
@@ -27,7 +24,7 @@ public class Bootstrap implements ServletContextListener {
 //        logManager = LogManager.getInstance();
 //        logManager.start(absoluteBatchLogOutputDirectory, 10 * 1000, 10);
 //
-//        DAOTypeFactory daoTypeFactory = new DAOTypeFactory();
+//        DaoTypeFactory daoTypeFactory = new DaoTypeFactory();
 //        TransactionManager transactionManager = new DBTransactionManager(connectionPool);
 //        DAOFactory daoFactory = daoTypeFactory.getFactory(DAOType.DB, transactionManager);
 //        UserDAO userDAOImpl = daoFactory.getUserDAO();
@@ -85,6 +82,8 @@ public class Bootstrap implements ServletContextListener {
 //        connectionPool.closePool();
     }
 }
+
+//TODO: go back to constructor DI?
 
 //TODO: switch to Boot and a single application.yml
 

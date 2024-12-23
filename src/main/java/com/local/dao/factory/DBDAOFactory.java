@@ -8,21 +8,21 @@ import com.local.dao.db.CartDAODBImpl;
 import com.local.dao.db.PaymentDAODBImpl;
 import com.local.dao.db.ProductDAODBImpl;
 import com.local.dao.db.UserDAODBImpl;
-import com.local.dao.transaction.TransactionManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DBDAOFactory implements DAOFactory {
-    private TransactionManager transactionManager;
     private CartDAO cartDAO;
     private ProductDAO productDAO;
     private PaymentDAO paymentDAO;
     private UserDAO userDAO;
 
-    public DBDAOFactory(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
-        this.cartDAO = new CartDAODBImpl(transactionManager);
-        this.productDAO = new ProductDAODBImpl(transactionManager);
-        this.paymentDAO = new PaymentDAODBImpl(transactionManager);
-        this.userDAO = new UserDAODBImpl(transactionManager);
+    public DBDAOFactory() {
+        this.cartDAO = new CartDAODBImpl();
+        this.productDAO = new ProductDAODBImpl();
+        this.paymentDAO = new PaymentDAODBImpl();
+        this.userDAO = new UserDAODBImpl();
     }
 
     @Override
@@ -43,5 +43,25 @@ public class DBDAOFactory implements DAOFactory {
     @Override
     public UserDAO getUserDAO() {
         return userDAO;
+    }
+
+    @Autowired
+    public void setProductDAO(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
+
+    @Autowired
+    public void setPaymentDAO(PaymentDAO paymentDAO) {
+        this.paymentDAO = paymentDAO;
+    }
+
+    @Autowired
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    @Autowired
+    public void setCartDAO(CartDAO cartDAO) {
+        this.cartDAO = cartDAO;
     }
 }

@@ -6,14 +6,18 @@ import com.local.dao.transaction.TransactionManager;
 import com.local.dao.transaction.TransactionManagerException;
 import com.local.model.User;
 import com.local.model.UserType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
 
+@Repository
 public class UserDAODBImpl implements UserDAO {
     private TransactionManager transactionManager;
 
-    public UserDAODBImpl(TransactionManager transactionManager) {
+    @Autowired
+    public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 

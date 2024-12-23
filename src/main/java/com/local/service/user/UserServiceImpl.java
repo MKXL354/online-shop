@@ -12,12 +12,16 @@ import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.*;
 import com.local.service.common.CommonService;
 import com.local.service.scheduler.TaskScheduler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+@Service
 public class UserServiceImpl implements UserService {
+//    TODO: using Spring Transaction Manager with this is
     private UserService proxy;
     private CommonService commonService;
     private TaskScheduler taskScheduler;
@@ -25,17 +29,35 @@ public class UserServiceImpl implements UserService {
     private ProductDAO productDAO;
     private PaymentDAO paymentDAO;
 
-    public UserServiceImpl(CommonService commonService, TaskScheduler taskScheduler, CartDAO cartDAO, ProductDAO productDAO, PaymentDAO paymentDAO) {
-        this.commonService = commonService;
-        this.taskScheduler = taskScheduler;
-        this.cartDAO = cartDAO;
-        this.productDAO = productDAO;
-        this.paymentDAO = paymentDAO;
-    }
-
+    @Autowired
     @Override
     public void setProxy(UserService proxy) {
         this.proxy = proxy;
+    }
+
+    @Autowired
+    public void setCommonService(CommonService commonService) {
+        this.commonService = commonService;
+    }
+
+    @Autowired
+    public void setTaskScheduler(TaskScheduler taskScheduler) {
+        this.taskScheduler = taskScheduler;
+    }
+
+    @Autowired
+    public void setCartDAO(CartDAO cartDAO) {
+        this.cartDAO = cartDAO;
+    }
+
+    @Autowired
+    public void setProductDAO(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
+
+    @Autowired
+    public void setPaymentDAO(PaymentDAO paymentDAO) {
+        this.paymentDAO = paymentDAO;
     }
 
     @Override

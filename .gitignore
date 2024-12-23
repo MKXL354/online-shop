@@ -1,6 +1,5 @@
 .gitignore
-src/main/resources/db.properties
-src/main/resources/tokenManager.properties
+src/main/resources/application.properties
 TODO.txt
 concurrent_curl.bat
 db/mem/

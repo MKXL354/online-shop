@@ -7,16 +7,20 @@ import com.local.dao.transaction.TransactionManagerException;
 import com.local.model.Product;
 import com.local.model.ProductStatus;
 import com.local.model.ProductType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
+@Repository
 public class ProductDAODBImpl implements ProductDAO {
     private TransactionManager transactionManager;
 
-    public ProductDAODBImpl(TransactionManager transactionManager) {
+    @Autowired
+    public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 

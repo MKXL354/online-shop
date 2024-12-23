@@ -5,15 +5,19 @@ import com.local.dao.PaymentDAO;
 import com.local.dao.transaction.TransactionManagerException;
 import com.local.model.*;
 import com.local.dao.transaction.TransactionManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 
+@Repository
 public class PaymentDAODBImpl implements PaymentDAO {
     private TransactionManager transactionManager;
 
-    public PaymentDAODBImpl(TransactionManager transactionManager) {
+    @Autowired
+    public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 

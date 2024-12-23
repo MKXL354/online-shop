@@ -1,5 +1,6 @@
 package com.local.config;
 
+import com.local.servlet.LoggingFilter;
 import jakarta.servlet.Filter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
@@ -28,6 +29,6 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
         CharacterEncodingFilter cef = new CharacterEncodingFilter();
         cef.setEncoding(StandardCharsets.UTF_8.name());
         cef.setForceEncoding(true);
-        return new Filter[]{new HiddenHttpMethodFilter(), cef};
+        return new Filter[]{new LoggingFilter(), new HiddenHttpMethodFilter(), cef};
     }
 }

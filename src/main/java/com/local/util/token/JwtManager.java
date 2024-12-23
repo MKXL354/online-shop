@@ -3,6 +3,7 @@ package com.local.util.token;
 import com.local.exception.common.ApplicationRuntimeException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +19,9 @@ public class JwtManager implements TokenManager {
     private SecretKey secretKey;
     private long lifeTimeMillis;
 
+    @Autowired
     public void setSecretString(@Value("${token.secretKey}") String secretString) {
         this.secretString = secretString;
-        if (secretString == null) {
-            throw new ApplicationRuntimeException("bad config file format", null);
-        }
         setSecretKey(Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretString)));
     }
 
@@ -30,6 +29,7 @@ public class JwtManager implements TokenManager {
         this.secretKey = secretKey;
     }
 
+    @Autowired
     public void setLifeTimeMillis(@Value("${token.lifeTimeMillis}") long lifeTimeMillis) {
         this.lifeTimeMillis = lifeTimeMillis;
     }

@@ -5,15 +5,19 @@ import com.local.dao.ProductDAO;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.model.Product;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 
+@Service
 public class ProductManagementServiceImpl implements ProductManagementService{
     private ProductDAO productDAO;
 
-    public ProductManagementServiceImpl(ProductDAO productDAO) {
+    @Autowired
+    public void setProductDAO(ProductDAO productDAO) {
         this.productDAO = productDAO;
     }
 

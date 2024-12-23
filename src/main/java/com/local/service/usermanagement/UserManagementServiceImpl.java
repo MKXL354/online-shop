@@ -7,13 +7,21 @@ import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
 import com.local.util.password.PasswordEncryptor;
 import com.local.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserManagementServiceImpl implements UserManagementService{
     private UserDAO userDAO;
     private PasswordEncryptor passwordEncryptor;
 
-    public UserManagementServiceImpl(UserDAO userDAO, PasswordEncryptor passwordEncryptor) {
+    @Autowired
+    public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    @Autowired
+    public void setPasswordEncryptor(PasswordEncryptor passwordEncryptor) {
         this.passwordEncryptor = passwordEncryptor;
     }
 

@@ -29,15 +29,12 @@ public class LoggingFilter implements Filter {
             }
         }
         catch(Exception e){
-            logBuilder.setLevel(LogLevel.ERROR);
-            logBuilder.setThrowable(e);
+            logBuilder.setLevel(LogLevel.ERROR).setThrowable(e);
             httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             httpServletResponse.getWriter().print("Internal Server Error");
         }
         finally{
-            logBuilder.setCode(httpServletResponse.getStatus());
-            logBuilder.setEndTime(LocalDateTime.now());
-            logBuilder.build().submit();
+            logBuilder.setCode(httpServletResponse.getStatus()).setEndTime(LocalDateTime.now()).build().submit();
         }
     }
 }

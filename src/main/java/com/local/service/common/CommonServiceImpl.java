@@ -10,15 +10,27 @@ import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.Cart;
 import com.local.model.Payment;
 import com.local.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CommonServiceImpl implements CommonService {
     private UserDAO userDAO;
     private CartDAO cartDAO;
     private PaymentDAO paymentDAO;
 
-    public CommonServiceImpl(UserDAO userDAO, CartDAO cartDAO, PaymentDAO paymentDAO) {
+    @Autowired
+    public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    @Autowired
+    public void setCartDAO(CartDAO cartDAO) {
         this.cartDAO = cartDAO;
+    }
+
+    @Autowired
+    public void setPaymentDAO(PaymentDAO paymentDAO) {
         this.paymentDAO = paymentDAO;
     }
 

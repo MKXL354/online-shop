@@ -12,23 +12,34 @@ import com.local.model.Payment;
 import com.local.model.PaymentStatus;
 import com.local.model.User;
 import com.local.service.common.CommonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Service
 public class PaymentServiceImpl implements PaymentService{
     private CommonService commonService;
     private UserDAO userDAO;
     private PaymentDAO paymentDAO;
-    private ConcurrentHashMap<Integer, Payment> inProgressPayments;
+    private ConcurrentHashMap<Integer, Payment> inProgressPayments = new ConcurrentHashMap<>();
 
-    public PaymentServiceImpl(CommonService commonService, UserDAO userDAO, PaymentDAO paymentDAO) {
+    @Autowired
+    public void setCommonService(CommonService commonService) {
         this.commonService = commonService;
+    }
+
+    @Autowired
+    public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    @Autowired
+    public void setPaymentDAO(PaymentDAO paymentDAO) {
         this.paymentDAO = paymentDAO;
-        this.inProgressPayments = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -98,4 +109,4 @@ public class PaymentServiceImpl implements PaymentService{
         }
     }
 }
-//TODO: payment cache upper in the layers
+//TODO: payment cache upper in the layers?

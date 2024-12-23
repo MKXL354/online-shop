@@ -1,7 +1,9 @@
 package com.local.util.password;
 
 import com.local.exception.common.ApplicationRuntimeException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -10,20 +12,24 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
+@Component
 public class PasswordEncryptorImpl implements PasswordEncryptor {
     private int iterations;
     private int saltLength;
     private int keyLength;
 
-    public void setIterations(@Value("${enc.iterations}") int iterations) {
+    @Autowired
+    public void setIterations(@Value("${encryptor.iterations}") int iterations) {
         this.iterations = iterations;
     }
 
-    public void setSaltLength(@Value("${enc.saltLength}") int saltLength) {
+    @Autowired
+    public void setSaltLength(@Value("${encryptor.saltLength}") int saltLength) {
         this.saltLength = saltLength;
     }
 
-    public void setKeyLength(@Value("${enc.keyLength}") int keyLength) {
+    @Autowired
+    public void setKeyLength(@Value("${encryptor.keyLength}") int keyLength) {
         this.keyLength = keyLength;
     }
 

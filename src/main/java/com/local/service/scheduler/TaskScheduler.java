@@ -4,6 +4,7 @@ import com.local.util.logging.LogLevel;
 import com.local.util.logging.LogObject;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,8 @@ public class TaskScheduler {
     private ScheduledExecutorService scheduler;
     private Set<Callable<?>> remainingTasks = ConcurrentHashMap.newKeySet();
 
-    public void setPoolSize(@Value("${task.poolSize}") int poolSize) {
+    @Autowired
+    public void setPoolSize(@Value("${scheduler.poolSize}") int poolSize) {
         this.poolSize = poolSize;
     }
 

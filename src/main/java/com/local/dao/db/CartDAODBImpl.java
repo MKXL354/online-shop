@@ -5,16 +5,20 @@ import com.local.dao.DAOException;
 import com.local.model.*;
 import com.local.dao.transaction.TransactionManager;
 import com.local.dao.transaction.TransactionManagerException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
+@Repository
 public class CartDAODBImpl implements CartDAO {
     private TransactionManager transactionManager;
 
-    public CartDAODBImpl(TransactionManager transactionManager) {
+    @Autowired
+    public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 
