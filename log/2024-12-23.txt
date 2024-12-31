@@ -190,3 +190,4 @@ Caused by: java.lang.NullPointerException
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
 
+[clientIp: 0:0:0:0:0:0:0:1][url: http://localhost:8080/online-shop/products][startTime: 2024-12-23T12:36:26.282696700][endTime: 2024-12-23T12:36:26.633792800][level: OK][code: 200]

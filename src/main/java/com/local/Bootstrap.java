@@ -83,7 +83,9 @@ public class Bootstrap implements ServletContextListener {
     }
 }
 
-//TODO: go back to constructor DI?
+//FIXME: you can still use lifecycle methods with @Bean by specifying them as the annotation values
+
+//TODO: go back to constructor DI? and pass the dependencies to @Bean methods?
 
 //TODO: switch to Boot and a single application.yml
 
