@@ -3,7 +3,7 @@ package com.local.controller;
 import com.local.dao.DAOException;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.model.Product;
-import com.local.service.productmanagement.ProductManagementService;
+import com.local.service.ProductManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +11,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/products")
-public class ProductManagementController {
+public class ProductController {
     private ProductManagementService productManagementService;
 
     @Autowired

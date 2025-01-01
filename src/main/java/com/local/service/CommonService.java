@@ -1,4 +1,4 @@
-package com.local.service.common;
+package com.local.service;
 
 import com.local.dao.CartDAO;
 import com.local.dao.DAOException;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CommonServiceImpl implements CommonService {
+public class CommonService {
     private UserDAO userDAO;
     private CartDAO cartDAO;
     private PaymentDAO paymentDAO;
@@ -34,7 +34,6 @@ public class CommonServiceImpl implements CommonService {
         this.paymentDAO = paymentDAO;
     }
 
-    @Override
     public User getUserById(int userId) throws UserNotFoundException, DAOException {
         User user;
         if((user = userDAO.getUserById(userId)) == null) {
@@ -43,7 +42,6 @@ public class CommonServiceImpl implements CommonService {
         return user;
     }
 
-    @Override
     public Cart getActiveCart(int userId) throws UserNotFoundException, DAOException {
         Cart cart = cartDAO.getActiveCart(userId);
         User user = getUserById(userId);
@@ -57,7 +55,6 @@ public class CommonServiceImpl implements CommonService {
         return cart;
     }
 
-    @Override
     public Cart getCartById(int cartId) throws CartNotFoundException, DAOException {
         Cart cart = cartDAO.getCartById(cartId);
         if(cart == null) {
@@ -72,7 +69,6 @@ public class CommonServiceImpl implements CommonService {
         return cart;
     }
 
-    @Override
     public Payment getPendingPayment(int userId) throws UserNotFoundException, DAOException {
         Payment payment = paymentDAO.getPendingPayment(userId);
         if(payment == null) {
@@ -87,4 +83,5 @@ public class CommonServiceImpl implements CommonService {
         return payment;
     }
 }
+//TODO: TransactionManaged added later? also rewriting services and DAOs to work with ids
 

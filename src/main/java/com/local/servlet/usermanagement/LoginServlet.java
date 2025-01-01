@@ -5,7 +5,6 @@ import com.local.model.User;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
 import com.local.util.token.TokenManager;
-import com.local.service.usermanagement.UserManagementService;
 import com.local.servlet.common.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;

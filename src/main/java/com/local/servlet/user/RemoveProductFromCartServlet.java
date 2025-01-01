@@ -2,7 +2,6 @@ package com.local.servlet.user;
 
 import com.local.dao.DAOException;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
-import com.local.service.user.UserService;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;

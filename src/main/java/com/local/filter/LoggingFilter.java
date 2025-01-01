@@ -1,4 +1,4 @@
-package com.local.servlet;
+package com.local.filter;
 
 import com.local.util.logging.LogLevel;
 import com.local.util.logging.LogObject;

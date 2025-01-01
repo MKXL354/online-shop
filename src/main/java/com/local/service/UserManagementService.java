@@ -1,7 +1,8 @@
-package com.local.service.usermanagement;
+package com.local.service;
 
 import com.local.dao.DAOException;
 import com.local.dao.UserDAO;
+import com.local.dao.transaction.ManagedTransaction;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
@@ -11,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserManagementServiceImpl implements UserManagementService{
+public class UserManagementService {
     private UserDAO userDAO;
     private PasswordEncryptor passwordEncryptor;
 
@@ -25,7 +26,7 @@ public class UserManagementServiceImpl implements UserManagementService{
         this.passwordEncryptor = passwordEncryptor;
     }
 
-    @Override
+    @ManagedTransaction
     public User addUser(User user) throws DuplicateUsernameException, DAOException {
         if(userDAO.getUserByUsername(user.getUsername()) != null) {
             throw new DuplicateUsernameException("duplicate username not allowed", null);
@@ -35,7 +36,6 @@ public class UserManagementServiceImpl implements UserManagementService{
         return userDAO.addUser(user);
     }
 
-    @Override
     public User login(String username, String password) throws UserNotFoundException, WrongPasswordException, DAOException {
         User user;
         if((user = userDAO.getUserByUsername(username)) == null) {

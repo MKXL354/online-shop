@@ -1,4 +1,4 @@
-package com.local.servlet.auth;
+package com.local.filter.auth;
 
 import com.local.util.token.InvalidTokenException;
 import com.local.util.token.TokenExpiredException;

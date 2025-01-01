@@ -11,8 +11,8 @@ import java.sql.SQLTransientException;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DBTransactionProxy implements InvocationHandler {
-    private final Object target;
-    private final TransactionManager transactionManager;
+    private Object target;
+    private TransactionManager transactionManager;
 
     public DBTransactionProxy(Object target, TransactionManager transactionManager) {
         this.target = target;

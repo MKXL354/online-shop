@@ -1,7 +1,6 @@
 package com.local.servlet.productmanagement;
 
 import com.local.dao.DAOException;
-import com.local.service.productmanagement.ProductManagementService;
 import com.local.servlet.common.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;

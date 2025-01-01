@@ -3,7 +3,6 @@ package com.local.servlet.usermanagement;
 import com.local.dao.DAOException;
 import com.local.model.User;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
-import com.local.service.usermanagement.UserManagementService;
 import com.local.servlet.common.CommonWebComponentService;
 import com.local.servlet.validation.RequiresValidation;
 import jakarta.servlet.ServletConfig;

@@ -3,7 +3,6 @@ package com.local.servlet.user;
 import com.local.dao.DAOException;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.service.user.UserService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

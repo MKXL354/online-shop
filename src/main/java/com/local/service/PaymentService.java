@@ -1,8 +1,9 @@
-package com.local.service.payment;
+package com.local.service;
 
 import com.local.dao.DAOException;
 import com.local.dao.PaymentDAO;
 import com.local.dao.UserDAO;
+import com.local.dao.transaction.ManagedTransaction;
 import com.local.exception.service.payment.InsufficientBalanceException;
 import com.local.exception.service.payment.PaymentInProgressException;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
@@ -11,7 +12,6 @@ import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.Payment;
 import com.local.model.PaymentStatus;
 import com.local.model.User;
-import com.local.service.common.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class PaymentServiceImpl implements PaymentService{
+public class PaymentService {
     private CommonService commonService;
     private UserDAO userDAO;
     private PaymentDAO paymentDAO;
@@ -42,14 +42,14 @@ public class PaymentServiceImpl implements PaymentService{
         this.paymentDAO = paymentDAO;
     }
 
-    @Override
+    @ManagedTransaction
     public void addBalance(int userId, BigDecimal amount) throws UserNotFoundException, DAOException {
         User user = commonService.getUserById(userId);
         user.setBalance(user.getBalance().add(amount));
         userDAO.updateUser(user);
     }
 
-    @Override
+    @ManagedTransaction
     public void balancePay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, PaymentInProgressException, InsufficientBalanceException, DAOException {
         User user = commonService.getUserById(userId);
         Payment payment = commonService.getPendingPayment(userId);
@@ -76,7 +76,7 @@ public class PaymentServiceImpl implements PaymentService{
         }
     }
 
-    @Override
+    @ManagedTransaction
     public void cardPay(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, PaymentInProgressException, WebPaymentException, DAOException {
         Payment payment = commonService.getPendingPayment(userId);
         if(payment == null){

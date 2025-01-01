@@ -1,4 +1,4 @@
-package com.local.service.scheduler;
+package com.local.scheduler;
 
 import com.local.util.logging.LogLevel;
 import com.local.util.logging.LogObject;

@@ -3,10 +3,10 @@ package com.local.dto;
 import java.time.LocalDateTime;
 
 public class ErrorResponse {
-    private final LocalDateTime timestamp;
-    private final int statusCode;
-    private final String errorResponseType;
-    private final String message;
+    private LocalDateTime timestamp;
+    private int statusCode;
+    private String errorResponseType;
+    private String message;
 
     public ErrorResponse(int statusCode, String errorResponseType, String message) {
         this.timestamp = LocalDateTime.now();

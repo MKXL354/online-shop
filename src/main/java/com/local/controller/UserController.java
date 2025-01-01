@@ -1,11 +1,12 @@
 package com.local.controller;
 
 import com.local.dao.DAOException;
+import com.local.dto.LoginCredentialsDTO;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
 import com.local.model.User;
-import com.local.service.usermanagement.UserManagementService;
+import com.local.service.UserManagementService;
 import com.local.util.token.TokenManager;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class UserManagementController {
+public class UserController {
     private UserManagementService userManagementService;
     private TokenManager tokenManager;
 
@@ -37,9 +38,10 @@ public class UserManagementController {
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody User user, HttpServletResponse response) throws DAOException, UserNotFoundException, WrongPasswordException {
-//        TODO: use a dto here to get the username and password
-//        User user = userManagementService.login(username, password);
+    public User login(@RequestBody LoginCredentialsDTO loginCredentials, HttpServletResponse response) throws UserNotFoundException, DAOException, WrongPasswordException {
+        String username = loginCredentials.getUsername();
+        String password = loginCredentials.getPassword();
+        User user = userManagementService.login(username, password);
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getType().toString());

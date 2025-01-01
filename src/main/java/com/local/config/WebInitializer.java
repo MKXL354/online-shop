@@ -1,6 +1,6 @@
 package com.local.config;
 
-import com.local.servlet.LoggingFilter;
+import com.local.filter.LoggingFilter;
 import jakarta.servlet.Filter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;

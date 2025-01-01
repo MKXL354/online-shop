@@ -1,6 +1,6 @@
 package com.local;
 
-import com.local.service.scheduler.TaskScheduler;
+import com.local.scheduler.TaskScheduler;
 import com.local.util.logging.LogManager;
 import com.local.dao.db.dbconnector.ConnectionPool;
 import jakarta.servlet.ServletContextEvent;
@@ -32,16 +32,16 @@ public class Bootstrap implements ServletContextListener {
 //        CartDAO cartDAOImpl = daoFactory.getCartDAO();
 //        PaymentDAO paymentDAOImpl = daoFactory.getPaymentDAO();
 //
-//        CommonService commonService = new CommonServiceImpl(userDAOImpl, cartDAOImpl, paymentDAOImpl);
+//        CommonService commonService = new CommonService(userDAOImpl, cartDAOImpl, paymentDAOImpl);
 //        CommonService proxyCommonService = (CommonService)Proxy.newProxyInstance(CommonService.class.getClassLoader(), new Class[]{CommonService.class}, new DBTransactionProxy(commonService, transactionManager));
 //        sce.getServletContext().setAttribute("commonService", proxyCommonService);
 //
 //        PasswordEncryptor passwordEncryptorImpl = new PasswordEncryptorImpl(1000, 32, 256);
-//        UserManagementService userManagementService = new UserManagementServiceImpl(userDAOImpl, passwordEncryptorImpl);
+//        UserManagementService userManagementService = new UserManagementService(userDAOImpl, passwordEncryptorImpl);
 //        UserManagementService proxyUserManagementService = (UserManagementService)Proxy.newProxyInstance(UserManagementService.class.getClassLoader(), new Class[]{UserManagementService.class}, new DBTransactionProxy(userManagementService, transactionManager));
 //        sce.getServletContext().setAttribute("userManagementService", proxyUserManagementService);
 //
-//        ProductManagementService productManagementService = new ProductManagementServiceImpl(productDAOImpl);
+//        ProductManagementService productManagementService = new ProductManagementService(productDAOImpl);
 //        ProductManagementService proxyProductManagementService = (ProductManagementService)Proxy.newProxyInstance(ProductManagementService.class.getClassLoader(), new Class[]{ProductManagementService.class}, new DBTransactionProxy(productManagementService, transactionManager));
 //        sce.getServletContext().setAttribute("productManagementService", proxyProductManagementService);
 //
@@ -64,12 +64,12 @@ public class Bootstrap implements ServletContextListener {
 //        taskScheduler = new TaskScheduler(16);
 //        taskScheduler.start();
 //
-//        UserService userServiceImpl = new UserServiceImpl(commonService, taskScheduler, cartDAOImpl, productDAOImpl, paymentDAOImpl);
+//        UserService userServiceImpl = new UserService(commonService, taskScheduler, cartDAOImpl, productDAOImpl, paymentDAOImpl);
 //        UserService proxyUserService = (UserService)Proxy.newProxyInstance(UserService.class.getClassLoader(), new Class[]{UserService.class}, new DBTransactionProxy(userServiceImpl, transactionManager));
 //        userServiceImpl.setProxy(proxyUserService);
 //        sce.getServletContext().setAttribute("userService", proxyUserService);
 //
-//        PaymentService paymentService = new PaymentServiceImpl(commonService, userDAOImpl, paymentDAOImpl);
+//        PaymentService paymentService = new PaymentService(commonService, userDAOImpl, paymentDAOImpl);
 //        PaymentService proxyPaymentService = (PaymentService)Proxy.newProxyInstance(PaymentService.class.getClassLoader(), new Class[]{PaymentService.class}, new DBTransactionProxy(paymentService, transactionManager));
 //        sce.getServletContext().setAttribute("paymentService", proxyPaymentService);
     }
@@ -82,6 +82,8 @@ public class Bootstrap implements ServletContextListener {
 //        connectionPool.closePool();
     }
 }
+
+//TODO: use Spring's validation instead of your filter
 
 //FIXME: you can still use lifecycle methods with @Bean by specifying them as the annotation values
 

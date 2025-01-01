@@ -1,33 +1,36 @@
-//package com.local.service.scheduler.rollback;
+//package com.local.scheduler.rollback;
 //
-//import com.local.dao.CartDAO;
+//import com.local.dao.PaymentDAO;
 //import com.local.dao.ProductDAO;
 //
 //import java.util.concurrent.Executors;
 //
-//public class ReserveRollbackScheduler extends TaskScheduler{
-//    private CartDAO cartDAO;
+//public class PurchaseRollbackScheduler extends TaskScheduler{
+//    private PaymentDAO paymentDAO;
 //    private ProductDAO productDAO;
 //
-//    public ReserveRollbackScheduler(int waitBetweenRollbacksMillis, int waitBeforeRollbackMillis, CartDAO cartDAO, ProductDAO productDAO) {
+//    public PurchaseRollbackScheduler(int waitBetweenRollbacksMillis, int waitBeforeRollbackMillis, PaymentDAO paymentDAO, ProductDAO productDAO) {
 //        super(waitBetweenRollbacksMillis, waitBeforeRollbackMillis);
-//        this.cartDAO = cartDAO;
+//        this.paymentDAO = paymentDAO;
 //        this.productDAO = productDAO;
 //        this.scheduler = Executors.newSingleThreadScheduledExecutor();
 //    }
 //
 //    protected void rollback() {
 ////        try{
-////            HashSet<Cart> activeCarts = cartDAO.getAllActiveCarts();
-////            for(Cart cart : activeCarts){
+////            HashSet<Payment> rollbackCandidates = paymentDAO.getAllPendingPayments();
+////            rollbackCandidates.addAll(paymentDAO.getAllCancelledPayments());
+////            Cart cart;
+////            for (Payment payment : rollbackCandidates) {
+////                cart = payment.getCart();
 ////                if(Duration.between(cart.getLastUpdateTime(), LocalDateTime.now()).toMillis() > waitBeforeRollbackMillis){
 ////                    for(Product product : cart.getProducts().values()){
-////                        cartDAO.removeProductFromCart(cart, product);
 ////                        product.setProductStatus(ProductStatus.AVAILABLE);
 ////                        productDAO.updateProduct(product);
 ////                    }
-////                    cart.setLastUpdateTime(LocalDateTime.now());
-////                    cartDAO.updateCart(cart);
+////                    payment.setPaymentStatus(PaymentStatus.FAILED);
+////                    payment.setLastUpdateTime(LocalDateTime.now());
+////                    paymentDAO.updatePayment(payment);
 ////                }
 ////            }
 ////        }

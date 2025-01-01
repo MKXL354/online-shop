@@ -1,17 +1,17 @@
-package com.local.service.user;
+package com.local.service;
 
 import com.local.dao.DAOException;
 import com.local.dao.CartDAO;
 import com.local.dao.PaymentDAO;
 import com.local.dao.ProductDAO;
+import com.local.dao.transaction.ManagedTransaction;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.exception.service.user.EmptyCartException;
 import com.local.exception.service.user.PreviousPaymentPendingException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.*;
-import com.local.service.common.CommonService;
-import com.local.service.scheduler.TaskScheduler;
+import com.local.scheduler.TaskScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserService {
 //    TODO: using Spring Transaction Manager with this is
     private UserService proxy;
     private CommonService commonService;
@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
     private PaymentDAO paymentDAO;
 
     @Autowired
-    @Override
     public void setProxy(UserService proxy) {
         this.proxy = proxy;
     }
@@ -60,7 +59,7 @@ public class UserServiceImpl implements UserService {
         this.paymentDAO = paymentDAO;
     }
 
-    @Override
+   @ManagedTransaction
     public void addProductToCart(int userId, String productName) throws UserNotFoundException, PreviousPaymentPendingException, ProductNotFoundException, DAOException {
         if(commonService.getPendingPayment(userId) != null){
             throw new PreviousPaymentPendingException("a previous payment is pending", null);
@@ -82,7 +81,7 @@ public class UserServiceImpl implements UserService {
         }, 10 * 60 * 1000);
     }
 
-    @Override
+   @ManagedTransaction
     public void removeProductFromCart(int userId, int productId) throws UserNotFoundException, ProductNotFoundException, DAOException{
         Cart cart = commonService.getActiveCart(userId);
         Product product = cart.getProducts().get(productId);
@@ -96,7 +95,7 @@ public class UserServiceImpl implements UserService {
         cartDAO.updateCart(cart);
     }
 
-    @Override
+   @ManagedTransaction
     public void finalizePurchase(int userId) throws UserNotFoundException, EmptyCartException, DAOException {
         User user = commonService.getUserById(userId);
         Cart cart = commonService.getActiveCart(userId);
@@ -124,7 +123,7 @@ public class UserServiceImpl implements UserService {
         }, 5 * 60 * 1000);
     }
 
-    @Override
+   @ManagedTransaction
     public void cancelPurchase(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, DAOException {
         Payment payment = commonService.getPendingPayment(userId);
         if(payment == null){

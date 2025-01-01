@@ -1,6 +1,5 @@
 package com.local.servlet.payment;
 
-import com.local.service.payment.PaymentService;
 import com.local.servlet.common.CommonWebComponentService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
