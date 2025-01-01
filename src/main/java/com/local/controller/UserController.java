@@ -10,6 +10,7 @@ import com.local.service.UserManagementService;
 import com.local.util.token.TokenManager;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,8 +34,8 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public User addUser(@RequestBody User user) throws DAOException, DuplicateUsernameException {
-        return userManagementService.addUser(user);
+    public ResponseEntity<User> addUser(@RequestBody User user) throws DAOException, DuplicateUsernameException {
+        return ResponseEntity.ok(userManagementService.addUser(user));
     }
 
     @PostMapping("/login")

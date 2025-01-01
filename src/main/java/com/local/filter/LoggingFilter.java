@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public class LoggingFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 
@@ -30,11 +30,10 @@ public class LoggingFilter implements Filter {
         }
         catch(Exception e){
             logBuilder.setLevel(LogLevel.ERROR).setThrowable(e);
-            httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            httpServletResponse.getWriter().print("Internal Server Error");
         }
         finally{
             logBuilder.setCode(httpServletResponse.getStatus()).setEndTime(LocalDateTime.now()).build().submit();
         }
     }
 }
+//TODO: add exception logging to RequestExceptionHandler?

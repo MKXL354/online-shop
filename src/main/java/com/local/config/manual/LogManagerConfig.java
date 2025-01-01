@@ -43,3 +43,4 @@ public class LogManagerConfig {
         logManager.stop();
     }
 }
+//TODO: redo this maybe with @Bean
