@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody LoginCredentialsDTO loginCredentials, HttpServletResponse response) throws UserNotFoundException, DAOException, WrongPasswordException {
+    public ResponseEntity<User> login(@RequestBody LoginCredentialsDTO loginCredentials, HttpServletResponse response) throws UserNotFoundException, DAOException, WrongPasswordException {
         String username = loginCredentials.getUsername();
         String password = loginCredentials.getPassword();
         User user = userManagementService.login(username, password);
@@ -50,6 +50,6 @@ public class UserController {
         String jws = tokenManager.getSignedToken(claims);
 
         response.setHeader("Authorization", jws);
-        return user;
+        return ResponseEntity.ok().header("Authorization", jws).body(user);
     }
 }

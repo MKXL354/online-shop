@@ -12,8 +12,10 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Repository
 public class ProductDAODBImpl implements ProductDAO {
@@ -81,9 +83,9 @@ public class ProductDAODBImpl implements ProductDAO {
     }
 
     @Override
-    public HashSet<Product> getAllProducts() throws DAOException {
-        HashSet<Product> products = new HashSet<>();
-        String query = "select * from PRODUCTS";
+    public List<Product> getAllProducts() throws DAOException {
+        List<Product> products = new ArrayList<>();
+        String query = "select * from PRODUCTS order by ID";
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();

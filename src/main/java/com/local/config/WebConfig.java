@@ -2,7 +2,6 @@ package com.local.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.local.config.manual.GsonHttpMessageConverter;
 import com.local.config.manual.GsonLocalDateTimeAdapter;
 import com.local.config.manual.GsonProductDeserializer;
 import com.local.model.Product;
@@ -10,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -32,3 +32,4 @@ public class WebConfig implements WebMvcConfigurer {
                 .create();
     }
 }
+//TODO: maybe don't do this config manually and pass primitive DTOs to Gson

@@ -10,6 +10,7 @@ import com.local.service.CommonService;
 import com.local.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,29 +30,26 @@ public class UserCartController {
     }
 
     @PostMapping("/products/{name}")
-    public void addProductToCart(@PathVariable String name, HttpServletRequest request) throws UserNotFoundException, DAOException, PreviousPaymentPendingException, ProductNotFoundException {
-        int userId = (int) request.getAttribute("userId");
+    public ResponseEntity<Void> addProductToCart(@PathVariable String name, @RequestAttribute int userId) throws UserNotFoundException, DAOException, PreviousPaymentPendingException, ProductNotFoundException {
         userService.addProductToCart(userId, name);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/products/{id}")
-    public void removeProductFromCart(@PathVariable int id, HttpServletRequest request) throws UserNotFoundException, DAOException, ProductNotFoundException {
-        int userId = (int) request.getAttribute("userId");
+    public ResponseEntity<Void> removeProductFromCart(@PathVariable int id, @RequestAttribute int userId) throws UserNotFoundException, DAOException, ProductNotFoundException {
         userService.removeProductFromCart(userId, id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public Cart getActiveCart(HttpServletRequest request) throws UserNotFoundException, DAOException {
-        int userId = (int) request.getAttribute("userId");
-        return commonService.getActiveCart(userId);
+    public ResponseEntity<Cart> getActiveCart(@RequestAttribute int userId) throws UserNotFoundException, DAOException {
+        return ResponseEntity.ok(commonService.getActiveCart(userId));
     }
 
     @PostMapping("/finalize")
-    public void finalizePurchase(HttpServletRequest request) throws UserNotFoundException, DAOException, EmptyCartException {
-        int userId = (int) request.getAttribute("userId");
+    public ResponseEntity<Void> finalizePurchase(@RequestAttribute int userId) throws UserNotFoundException, DAOException, EmptyCartException {
         userService.finalizePurchase(userId);
+        return ResponseEntity.noContent().build();
     }
-
-
 }
 //TODO: add/remove with unified api? both with name

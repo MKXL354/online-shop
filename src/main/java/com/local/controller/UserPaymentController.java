@@ -6,12 +6,9 @@ import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.Payment;
 import com.local.service.CommonService;
 import com.local.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user/payment")
@@ -30,14 +27,13 @@ public class UserPaymentController {
     }
 
     @GetMapping
-    public Payment getPendingPayment(HttpServletRequest request) throws UserNotFoundException, DAOException {
-        int userId = (int) request.getAttribute("userId");
-        return commonService.getPendingPayment(userId);
+    public ResponseEntity<Payment> getPendingPayment(@RequestAttribute int userId) throws UserNotFoundException, DAOException {
+        return ResponseEntity.ok(commonService.getPendingPayment(userId));
     }
 
     @DeleteMapping
-    public void cancelPurchase(HttpServletRequest request) throws UserNotFoundException, DAOException, PendingPaymentNotFoundException {
-        int userId = (int) request.getAttribute("userId");
+    public ResponseEntity<Void> cancelPurchase(@RequestAttribute int userId) throws UserNotFoundException, DAOException, PendingPaymentNotFoundException {
         userService.cancelPurchase(userId);
+        return ResponseEntity.noContent().build();
     }
 }
