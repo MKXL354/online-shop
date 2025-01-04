@@ -14,26 +14,21 @@ public class LoggingFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-
         String clientIp = httpServletRequest.getRemoteAddr();
         String url = httpServletRequest.getRequestURL().toString();
         LogObject.Builder logBuilder = new LogObject.Builder().setClientIp(clientIp).setUrl(url).setStartTime(LocalDateTime.now());
 
-        try{
-            filterChain.doFilter(servletRequest, servletResponse);
-            if(httpServletResponse.getStatus() < 400){
+        filterChain.doFilter(servletRequest, servletResponse);
+
+        int statusCode = httpServletResponse.getStatus();
+        if(statusCode < 500){
+            if(statusCode < 400){
                 logBuilder.setLevel(LogLevel.OK);
             }
             else{
                 logBuilder.setLevel(LogLevel.FAIL);
             }
-        }
-        catch(Exception e){
-            logBuilder.setLevel(LogLevel.ERROR).setThrowable(e);
-        }
-        finally{
-            logBuilder.setCode(httpServletResponse.getStatus()).setEndTime(LocalDateTime.now()).build().submit();
+            logBuilder.setCode(statusCode).setEndTime(LocalDateTime.now()).build().submit();
         }
     }
 }
-//TODO: add exception logging to RequestExceptionHandler?
