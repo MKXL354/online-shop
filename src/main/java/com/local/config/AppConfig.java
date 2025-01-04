@@ -3,7 +3,7 @@ package com.local.config;
 import com.local.dao.factory.DAOFactory;
 import com.local.dao.factory.DAOType;
 import com.local.dao.factory.DaoTypeFactory;
-import com.local.dto.ErrorResponseMapper;
+import com.local.web.dto.ErrorResponseMapper;
 import com.local.exception.common.ApplicationRuntimeException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

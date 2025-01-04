@@ -1,4 +1,4 @@
-package com.local.filter;
+package com.local.web.filter;
 
 import com.local.util.logging.LogLevel;
 import com.local.util.logging.LogObject;

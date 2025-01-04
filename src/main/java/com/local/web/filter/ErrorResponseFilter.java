@@ -1,6 +1,6 @@
 //package com.local.servlet;
 //
-//import com.local.dto.ErrorResponse;
+//import com.local.web.dto.ErrorResponse;
 //import com.local.servlet.common.CommonWebComponentService;
 //import jakarta.servlet.*;
 //import jakarta.servlet.http.HttpServletResponse;
