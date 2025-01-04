@@ -1,6 +1,5 @@
 package com.local.dao.db.dbconnector;
 
-import com.local.exception.common.ApplicationRuntimeException;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.h2.jdbcx.JdbcConnectionPool;

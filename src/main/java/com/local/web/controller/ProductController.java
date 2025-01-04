@@ -33,4 +33,3 @@ public class ProductController {
         return ResponseEntity.ok(productManagementService.getAllProducts());
     }
 }
-//TODO: substitute Set with List and Map with a List of Holder Objects to adhere to conventions

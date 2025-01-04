@@ -42,3 +42,22 @@ public class AppConfig {
         return errorResponseMapper;
     }
 }
+
+//FIXME: substitute Set with List and Map with a List of Holder Objects to adhere to conventions
+
+//FIXME: use Spring's validation instead of your own
+
+//TODO: go back to constructor DI?
+
+//TODO: switch to Boot and a single application.yml
+
+//TODO: apply Custom AutoClose inside all DBDAOs? -> remove closeConnection() of TransactionManager
+//TODO: one catch block inside DBDAO methods? no waiting for connection exception?
+//TODO: better DAOExceptions being thrown up? as they don't go to the user they can be logged better
+//TODO: DAO to work with ids too(like service)? unified layer interaction, less get methods, faster
+
+//TODO: send model DTO over the web not the full object
+
+//TODO: lazy fetch on aggregates like Cart and Payment(builder inside commonService)? or JPA?
+
+//TODO: better structure of DB select queries? a fluent, table/DAO specific query constructor? or JOOQ?

@@ -37,4 +37,3 @@ public class RequestExceptionHandler {
         return ResponseEntity.internalServerError().build();
     }
 }
-//TODO: @RequestAttribute and authorization filter

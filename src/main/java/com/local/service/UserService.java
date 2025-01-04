@@ -21,7 +21,6 @@ import java.util.Map;
 
 @Service
 public class UserService {
-//    TODO: using Spring Transaction Manager with this is
     private UserService proxy;
     private CommonService commonService;
     private TaskScheduler taskScheduler;

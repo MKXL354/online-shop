@@ -83,5 +83,3 @@ public class CommonService {
         return payment;
     }
 }
-//TODO: TransactionManaged added later? also rewriting services and DAOs to work with ids
-
