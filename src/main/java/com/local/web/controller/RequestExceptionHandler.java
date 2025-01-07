@@ -1,7 +1,7 @@
 package com.local.web.controller;
 
-import com.local.web.dto.ErrorResponse;
-import com.local.web.dto.ErrorResponseMapper;
+import com.local.dto.ErrorResponse;
+import com.local.dto.ErrorResponseMapper;
 import com.local.exception.common.ApplicationException;
 import com.local.util.logging.LogLevel;
 import com.local.util.logging.LogObject;

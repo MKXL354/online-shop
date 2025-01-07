@@ -1,5 +1,6 @@
 package com.local.persistence.db;
 
+import com.local.dto.ProductReportDTO;
 import com.local.persistence.DAOException;
 import com.local.persistence.ProductDAO;
 import com.local.persistence.transaction.TransactionManager;
@@ -175,18 +176,9 @@ public class ProductDAODBImpl implements ProductDAO {
     }
 
     @Override
-    public LinkedHashMap<String, Integer> getProductsSortedBySold() throws DAOException {
-        return getProductsSortedByStatus(ProductStatus.SOLD);
-    }
-
-    @Override
-    public LinkedHashMap<String, Integer> getProductsSortedByAvailable() throws DAOException {
-        return getProductsSortedByStatus(ProductStatus.AVAILABLE);
-    }
-
-    private LinkedHashMap<String, Integer> getProductsSortedByStatus(ProductStatus productStatus) throws DAOException {
-        LinkedHashMap<String, Integer> products = new LinkedHashMap<>();
-        String query = "select NAME, COUNT(*) as COUNT from PRODUCTS where PRODUCT_STATUS = ? group by NAME order by COUNT desc";
+    public List<ProductReportDTO> getProductsSortedByStatus(ProductStatus productStatus) throws DAOException {
+        List<ProductReportDTO> productsDto = new ArrayList<>();
+        String query = "select NAME, PRICE, PRODUCT_TYPE, COUNT(*) as COUNT from PRODUCTS where PRODUCT_STATUS = ? group by NAME order by COUNT desc";
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
@@ -195,11 +187,15 @@ public class ProductDAODBImpl implements ProductDAO {
             statement.setString(1, productStatus.toString());
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
+                int id = 0;
                 String name = resultSet.getString("NAME");
+                BigDecimal price = resultSet.getBigDecimal("PRICE");
+                ProductType productType = ProductType.valueOf(resultSet.getString("PRODUCT_TYPE"));
                 int count = resultSet.getInt("COUNT");
-                products.put(name, count);
+                Product product = new Product(id, name, price, productType, productStatus);
+                productsDto.add(new ProductReportDTO(product, count));
             }
-            return products;
+            return productsDto;
         }
         catch(TransactionManagerException e){
             throw new DAOException(e.getMessage(), e);

@@ -1,4 +1,4 @@
-package com.local.web.dto;
+package com.local.dto;
 
 public class LoginCredentialsDTO {
     private String username;

@@ -1,5 +1,7 @@
 package com.local.service;
 
+import com.local.dto.ProductReportDTO;
+import com.local.model.ProductStatus;
 import com.local.persistence.DAOException;
 import com.local.persistence.ProductDAO;
 import com.local.persistence.transaction.ManagedTransaction;
@@ -10,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -42,11 +43,7 @@ public class ProductManagementService {
         return productDAO.getAllProducts();
     }
 
-    public HashMap<String, Integer> GetProductsSortedBySold() throws DAOException{
-        return productDAO.getProductsSortedBySold();
-    }
-
-    public HashMap<String, Integer> getProductsSortedByAvailable() throws DAOException{
-        return productDAO.getProductsSortedByAvailable();
+    public List<ProductReportDTO> GetProductsSortedByStatus(ProductStatus productStatus) throws DAOException{
+        return productDAO.getProductsSortedByStatus(productStatus);
     }
 }

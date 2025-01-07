@@ -4,7 +4,7 @@ import com.local.persistence.factory.DAOFactory;
 import com.local.persistence.factory.DAOType;
 import com.local.persistence.factory.DaoTypeFactory;
 import com.local.util.property.PropertyManager;
-import com.local.web.dto.ErrorResponseMapper;
+import com.local.dto.ErrorResponseMapper;
 import com.local.exception.common.ApplicationRuntimeException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

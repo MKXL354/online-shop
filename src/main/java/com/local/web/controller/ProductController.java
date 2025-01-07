@@ -1,5 +1,7 @@
 package com.local.web.controller;
 
+import com.local.dto.ProductReportDTO;
+import com.local.model.ProductStatus;
 import com.local.persistence.DAOException;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.model.Product;
@@ -31,5 +33,10 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() throws DAOException {
         return ResponseEntity.ok(productManagementService.getAllProducts());
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<List<ProductReportDTO>> getProductSortedByStatus(@RequestParam ProductStatus status) throws DAOException {
+        return ResponseEntity.ok(productManagementService.GetProductsSortedByStatus(status));
     }
 }

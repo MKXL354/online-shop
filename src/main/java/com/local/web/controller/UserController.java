@@ -3,7 +3,7 @@ package com.local.web.controller;
 import com.local.persistence.DAOException;
 import com.local.model.UserType;
 import com.local.web.auth.AuthRequired;
-import com.local.web.dto.LoginCredentialsDTO;
+import com.local.dto.LoginCredentialsDTO;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
