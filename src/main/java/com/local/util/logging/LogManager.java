@@ -19,7 +19,7 @@ public class LogManager {
     private long maxWaitTimeMillis;
     private int maxLogsToWrite;
     private ScheduledExecutorService executorService;
-    private static Deque<LogObject> logs = new ConcurrentLinkedDeque<>();
+    private Deque<LogObject> logs = new ConcurrentLinkedDeque<>();
 
     private LogManager(){}
     private static class SingletonHelper{
@@ -42,12 +42,6 @@ public class LogManager {
     }
 
     public void start(){
-        createDirectory();
-        this.executorService = Executors.newSingleThreadScheduledExecutor();
-        this.executorService.scheduleWithFixedDelay(this::log, 0, maxWaitTimeMillis, TimeUnit.MILLISECONDS);
-    }
-
-    private void createDirectory(){
         Path path = Path.of(outputDirectory);
         if(!Files.isDirectory(path)){
             try{
@@ -57,6 +51,8 @@ public class LogManager {
                 throw new ApplicationRuntimeException("cannot create logging directory " + e.getMessage(), e);
             }
         }
+        this.executorService = Executors.newSingleThreadScheduledExecutor();
+        this.executorService.scheduleWithFixedDelay(this::log, 0, maxWaitTimeMillis, TimeUnit.MILLISECONDS);
     }
 
     public void submit(LogObject logObject){

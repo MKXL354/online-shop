@@ -41,8 +41,8 @@ jakarta.servlet.ServletException: Request processing failed: java.lang.NullPoint
 Caused by: java.lang.NullPointerException
 	at java.base/java.util.concurrent.ConcurrentHashMap.containsValue(ConcurrentHashMap.java:979)
 	at java.base/java.util.concurrent.ConcurrentHashMap.contains(ConcurrentHashMap.java:2135)
-	at com.local.dao.transaction.db.DBTransactionManager.closeConnection(DBTransactionManager.java:98)
-	at com.local.dao.db.ProductDAODBImpl.getAllProducts(ProductDAODBImpl.java:105)
+	at com.local.persistence.transaction.db.DBTransactionManager.closeConnection(DBTransactionManager.java:98)
+	at com.local.persistence.db.ProductDAODBImpl.getAllProducts(ProductDAODBImpl.java:105)
 	at com.local.service.ProductManagementService.getAllProducts(ProductManagementServiceImpl.java:43)
 	at com.local.web.controller.ProductController.getAllProducts(ProductManagementController.java:29)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
@@ -137,8 +137,8 @@ jakarta.servlet.ServletException: Request processing failed: java.lang.NullPoint
 Caused by: java.lang.NullPointerException
 	at java.base/java.util.concurrent.ConcurrentHashMap.containsValue(ConcurrentHashMap.java:979)
 	at java.base/java.util.concurrent.ConcurrentHashMap.contains(ConcurrentHashMap.java:2135)
-	at com.local.dao.transaction.db.DBTransactionManager.closeConnection(DBTransactionManager.java:98)
-	at com.local.dao.db.ProductDAODBImpl.getAllProducts(ProductDAODBImpl.java:105)
+	at com.local.persistence.transaction.db.DBTransactionManager.closeConnection(DBTransactionManager.java:98)
+	at com.local.persistence.db.ProductDAODBImpl.getAllProducts(ProductDAODBImpl.java:105)
 	at com.local.service.ProductManagementService.getAllProducts(ProductManagementServiceImpl.java:43)
 	at com.local.web.controller.ProductController.getAllProducts(ProductManagementController.java:29)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)

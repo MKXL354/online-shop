@@ -1,4 +1,4 @@
-package com.local.dao.transaction;
+package com.local.persistence.transaction;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

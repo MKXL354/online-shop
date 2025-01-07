@@ -1,9 +1,9 @@
 package com.local.service;
 
-import com.local.dao.DAOException;
-import com.local.dao.PaymentDAO;
-import com.local.dao.UserDAO;
-import com.local.dao.transaction.ManagedTransaction;
+import com.local.persistence.DAOException;
+import com.local.persistence.PaymentDAO;
+import com.local.persistence.UserDAO;
+import com.local.persistence.transaction.ManagedTransaction;
 import com.local.exception.service.payment.InsufficientBalanceException;
 import com.local.exception.service.payment.PaymentInProgressException;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;

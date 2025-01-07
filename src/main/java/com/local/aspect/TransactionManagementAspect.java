@@ -1,6 +1,6 @@
 package com.local.aspect;
 
-import com.local.dao.transaction.TransactionManager;
+import com.local.persistence.transaction.TransactionManager;
 import com.local.exception.common.ApplicationRuntimeException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -22,7 +22,7 @@ public class TransactionManagementAspect {
         this.transactionManager = transactionManager;
     }
 
-    @Pointcut("@annotation(com.local.dao.transaction.ManagedTransaction)")
+    @Pointcut("@annotation(com.local.persistence.transaction.ManagedTransaction)")
     public void managedTransactionMethods() {}
 
     @Pointcut("within(com.local.service..*)")

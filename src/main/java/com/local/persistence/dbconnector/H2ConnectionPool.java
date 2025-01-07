@@ -1,4 +1,4 @@
-package com.local.dao.db.dbconnector;
+package com.local.persistence.dbconnector;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;

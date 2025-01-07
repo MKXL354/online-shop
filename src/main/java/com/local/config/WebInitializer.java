@@ -29,6 +29,6 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
         CharacterEncodingFilter cef = new CharacterEncodingFilter();
         cef.setEncoding(StandardCharsets.UTF_8.name());
         cef.setForceEncoding(true);
-        return new Filter[]{new LoggingFilter(), new HiddenHttpMethodFilter(), cef};
+        return new Filter[]{cef, new HiddenHttpMethodFilter(), new LoggingFilter()};
     }
 }

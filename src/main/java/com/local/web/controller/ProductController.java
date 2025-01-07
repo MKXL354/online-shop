@@ -1,6 +1,6 @@
 package com.local.web.controller;
 
-import com.local.dao.DAOException;
+import com.local.persistence.DAOException;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.model.Product;
 import com.local.model.UserType;

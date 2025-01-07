@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class JwtManager implements TokenManager {
+public class JwsTokenManager implements TokenManager {
     private String secretString;
     private SecretKey secretKey;
     private long lifeTimeMillis;
@@ -34,7 +34,7 @@ public class JwtManager implements TokenManager {
     }
 
     @Override
-    public String getSignedToken(Map<String, Object> claims){
+    public String getToken(Map<String, Object> claims){
         long startTimeMillis = System.currentTimeMillis();
         long endTimeMillis = startTimeMillis + lifeTimeMillis;
         JwtBuilder jwtBuilder = Jwts.builder();
@@ -43,9 +43,9 @@ public class JwtManager implements TokenManager {
     }
 
     @Override
-    public Map<String, Object> getSignedClaims(String jws) throws InvalidTokenException, TokenExpiredException{
+    public Map<String, Object> getClaims(String token) throws InvalidTokenException, TokenExpiredException{
         try{
-            return new HashMap<>(Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jws).getPayload());
+            return new HashMap<>(Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload());
         }
         catch(IllegalArgumentException e){
             throw new InvalidTokenException("empty token", e);

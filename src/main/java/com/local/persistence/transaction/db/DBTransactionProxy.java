@@ -1,7 +1,7 @@
-package com.local.dao.transaction.db;
+package com.local.persistence.transaction.db;
 
-import com.local.dao.transaction.ManagedTransaction;
-import com.local.dao.transaction.TransactionManager;
+import com.local.persistence.transaction.ManagedTransaction;
+import com.local.persistence.transaction.TransactionManager;
 import com.local.exception.common.ApplicationRuntimeException;
 
 import java.lang.reflect.InvocationHandler;

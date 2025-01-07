@@ -1,4 +1,4 @@
-package com.local.dao.factory;
+package com.local.persistence.factory;
 
 public enum DAOType {
     MEM,

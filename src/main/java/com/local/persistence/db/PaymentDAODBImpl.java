@@ -1,10 +1,10 @@
-package com.local.dao.db;
+package com.local.persistence.db;
 
-import com.local.dao.DAOException;
-import com.local.dao.PaymentDAO;
-import com.local.dao.transaction.TransactionManagerException;
+import com.local.persistence.DAOException;
+import com.local.persistence.PaymentDAO;
+import com.local.persistence.transaction.TransactionManagerException;
 import com.local.model.*;
-import com.local.dao.transaction.TransactionManager;
+import com.local.persistence.transaction.TransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package com.local.web.controller;
 
-import com.local.dao.DAOException;
+import com.local.persistence.DAOException;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.model.Payment;

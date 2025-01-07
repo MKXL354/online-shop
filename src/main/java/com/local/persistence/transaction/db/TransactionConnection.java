@@ -1,4 +1,4 @@
-package com.local.dao.transaction.db;
+package com.local.persistence.transaction.db;
 
 import java.sql.*;
 import java.util.Map;

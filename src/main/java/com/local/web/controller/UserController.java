@@ -1,6 +1,6 @@
 package com.local.web.controller;
 
-import com.local.dao.DAOException;
+import com.local.persistence.DAOException;
 import com.local.model.UserType;
 import com.local.web.auth.AuthRequired;
 import com.local.web.dto.LoginCredentialsDTO;
@@ -49,7 +49,7 @@ public class UserController {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getType());
         claims.put("userId", user.getId());
-        String jws = tokenManager.getSignedToken(claims);
+        String jws = tokenManager.getToken(claims);
 
         return ResponseEntity.ok().header("Authorization", jws).body(user);
     }

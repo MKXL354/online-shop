@@ -1,8 +1,8 @@
 package com.local.service;
 
-import com.local.dao.DAOException;
-import com.local.dao.ProductDAO;
-import com.local.dao.transaction.ManagedTransaction;
+import com.local.persistence.DAOException;
+import com.local.persistence.ProductDAO;
+import com.local.persistence.transaction.ManagedTransaction;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.model.Product;

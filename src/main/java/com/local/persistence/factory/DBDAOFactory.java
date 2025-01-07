@@ -1,13 +1,13 @@
-package com.local.dao.factory;
+package com.local.persistence.factory;
 
-import com.local.dao.CartDAO;
-import com.local.dao.PaymentDAO;
-import com.local.dao.ProductDAO;
-import com.local.dao.UserDAO;
-import com.local.dao.db.CartDAODBImpl;
-import com.local.dao.db.PaymentDAODBImpl;
-import com.local.dao.db.ProductDAODBImpl;
-import com.local.dao.db.UserDAODBImpl;
+import com.local.persistence.CartDAO;
+import com.local.persistence.PaymentDAO;
+import com.local.persistence.ProductDAO;
+import com.local.persistence.UserDAO;
+import com.local.persistence.db.CartDAODBImpl;
+import com.local.persistence.db.PaymentDAODBImpl;
+import com.local.persistence.db.ProductDAODBImpl;
+import com.local.persistence.db.UserDAODBImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

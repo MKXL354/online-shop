@@ -1,15 +1,15 @@
 package com.local.config;
 
-import com.local.dao.factory.DAOFactory;
-import com.local.dao.factory.DAOType;
-import com.local.dao.factory.DaoTypeFactory;
+import com.local.persistence.factory.DAOFactory;
+import com.local.persistence.factory.DAOType;
+import com.local.persistence.factory.DaoTypeFactory;
+import com.local.util.property.PropertyManager;
 import com.local.web.dto.ErrorResponseMapper;
 import com.local.exception.common.ApplicationRuntimeException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -25,13 +25,11 @@ public class AppConfig {
 
     @Bean
     public Properties errorResponseProperties(@Value("${err.PropertiesLocation}") String propertiesLocation){
-        Properties properties = new Properties();
-        try (FileInputStream inputStream = new FileInputStream(propertiesLocation)) {
-            properties.load(inputStream);
+        try {
+            return PropertyManager.loadProperties(propertiesLocation);
         } catch (IOException e) {
             throw new ApplicationRuntimeException(e.getMessage(), e);
         }
-        return properties;
     }
 
     @Bean
@@ -42,6 +40,12 @@ public class AppConfig {
         return errorResponseMapper;
     }
 }
+
+//TODO: clean up at the end (remove the excluded and extra files)
+
+//TODO: use Hibernate/JPA and Spring's Transaction Manager
+
+//FIXME: Fix the DAO abstract factory to not create all the objects
 
 //FIXME: substitute Set with List and Map with a List of Holder Objects to adhere to conventions
 

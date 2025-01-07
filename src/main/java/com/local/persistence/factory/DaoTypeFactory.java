@@ -1,4 +1,4 @@
-package com.local.dao.factory;
+package com.local.persistence.factory;
 
 import com.local.exception.common.ApplicationRuntimeException;
 import org.springframework.stereotype.Component;

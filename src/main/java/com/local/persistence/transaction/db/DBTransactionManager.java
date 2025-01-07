@@ -1,10 +1,10 @@
-package com.local.dao.transaction.db;
+package com.local.persistence.transaction.db;
 
-import com.local.dao.db.dbconnector.ConnectionPool;
-import com.local.dao.db.dbconnector.DataBaseConnectionException;
-import com.local.dao.transaction.BadTransactionException;
-import com.local.dao.transaction.TransactionManager;
-import com.local.dao.transaction.TransactionManagerException;
+import com.local.persistence.dbconnector.ConnectionPool;
+import com.local.persistence.dbconnector.DataBaseConnectionException;
+import com.local.persistence.transaction.BadTransactionException;
+import com.local.persistence.transaction.TransactionManager;
+import com.local.persistence.transaction.TransactionManagerException;
 import com.local.util.logging.LogLevel;
 import com.local.util.logging.LogObject;
 import org.springframework.beans.factory.annotation.Autowired;

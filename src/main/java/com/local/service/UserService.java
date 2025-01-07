@@ -1,10 +1,10 @@
 package com.local.service;
 
-import com.local.dao.DAOException;
-import com.local.dao.CartDAO;
-import com.local.dao.PaymentDAO;
-import com.local.dao.ProductDAO;
-import com.local.dao.transaction.ManagedTransaction;
+import com.local.persistence.DAOException;
+import com.local.persistence.CartDAO;
+import com.local.persistence.PaymentDAO;
+import com.local.persistence.ProductDAO;
+import com.local.persistence.transaction.ManagedTransaction;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.exception.service.user.EmptyCartException;

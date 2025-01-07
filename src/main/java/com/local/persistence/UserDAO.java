@@ -1,4 +1,4 @@
-package com.local.dao;
+package com.local.persistence;
 
 import com.local.model.User;
 

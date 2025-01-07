@@ -1,4 +1,4 @@
-package com.local.dao.transaction;
+package com.local.persistence.transaction;
 
 import com.local.exception.common.ApplicationException;
 

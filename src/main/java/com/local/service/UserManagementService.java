@@ -1,8 +1,8 @@
 package com.local.service;
 
-import com.local.dao.DAOException;
-import com.local.dao.UserDAO;
-import com.local.dao.transaction.ManagedTransaction;
+import com.local.persistence.DAOException;
+import com.local.persistence.UserDAO;
+import com.local.persistence.transaction.ManagedTransaction;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
