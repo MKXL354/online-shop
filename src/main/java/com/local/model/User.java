@@ -4,7 +4,6 @@ import com.local.util.objectvalidator.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class User implements Serializable {
     @Serial
