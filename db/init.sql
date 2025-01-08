@@ -42,10 +42,8 @@ create table users(
     username varchar(256) unique not null,
     password varchar(512) not null,
     user_type varchar(64),
-    balance decimal(15, 3) not null,
     foreign key (user_type) references user_type (enum_value)
 );
-insert into users values (0, 'admin', 'nn9EysQOvC9Dm5LwpdhgBkrLj6eUwm0E+gxvTU8ZSaA=:4ZFmj0Gd+Ly8zb/okH5AM+kFpraRJrY4qIBT9PKP164=', 'ADMIN', 0.000);
 
 create table carts(
     id int auto_increment primary key,
@@ -86,3 +84,14 @@ create table payments(
     foreign key (cart_id) references carts(id),
     foreign key (payment_status) references payment_status (enum_value)
 );
+
+create table cards(
+    id int auto_increment primary key,
+    number varchar(16) unique not null,
+    password varchar(6) not null,
+    expiry_date date not null,
+    balance decimal(15, 3) not null
+);
+
+-- Initial Data
+insert into users values (0, 'admin', 'nn9EysQOvC9Dm5LwpdhgBkrLj6eUwm0E+gxvTU8ZSaA=:4ZFmj0Gd+Ly8zb/okH5AM+kFpraRJrY4qIBT9PKP164=', 'ADMIN');

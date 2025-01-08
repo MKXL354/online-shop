@@ -37,7 +37,7 @@ public class CartDAODBImpl implements CartDAO {
                 CartStatus cartStatus = CartStatus.valueOf(resultSet.getString("CART_STATUS"));
 
                 int userId = resultSet.getInt("USER_ID");
-                User user = new User(userId, null, null, null, null);
+                User user = new User(userId, null, null, null);
                 return new Cart(cartId, user, null, lastUpdateTime, cartStatus);
             }
             else{
@@ -70,7 +70,7 @@ public class CartDAODBImpl implements CartDAO {
                 int id = resultSet.getInt("ID");
                 LocalDateTime lastUpdateTime = resultSet.getTimestamp("LAST_UPDATE_TIME").toLocalDateTime();
 
-                User user = new User(userId, null, null, null, null);
+                User user = new User(userId, null, null, null);
                 return new Cart(id, user, null, lastUpdateTime, CartStatus.ACTIVE);
             }
             else{
@@ -148,7 +148,7 @@ public class CartDAODBImpl implements CartDAO {
             try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 generatedKeys.next();
                 int id = generatedKeys.getInt("ID");
-                User user = new User(userId, null, null, null, null);
+                User user = new User(userId, null, null, null);
                 return new Cart(id, user, null, now, CartStatus.ACTIVE);
             }
         }

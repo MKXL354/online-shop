@@ -1,19 +1,19 @@
 package com.local.persistence.db;
 
+import com.local.model.Card;
+import com.local.persistence.CardDAO;
 import com.local.persistence.DAOException;
-import com.local.persistence.PaymentDAO;
-import com.local.persistence.transaction.TransactionManagerException;
-import com.local.model.*;
 import com.local.persistence.transaction.TransactionManager;
+import com.local.persistence.transaction.TransactionManagerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Repository
-public class PaymentDAODBImpl implements PaymentDAO {
+public class CardDAODBImpl implements CardDAO {
     private TransactionManager transactionManager;
 
     @Autowired
@@ -22,31 +22,29 @@ public class PaymentDAODBImpl implements PaymentDAO {
     }
 
     @Override
-    public Payment addPayment(Payment payment) throws DAOException {
-        String query = "insert into PAYMENTS(ID, USER_ID, CART_ID, AMOUNT, LAST_UPDATE_TIME, PAYMENT_STATUS) values(?,?,?,?,?,?)";
+    public Card addCard(Card card) throws DAOException{
+        String query = "insert into CARDS(NUMBER, PASSWORD, EXPIRY_DATE, BALANCE) values(?,?,?,?)";
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-            statement.setInt(1, payment.getId());
-            statement.setInt(2, payment.getUser().getId());
-            statement.setInt(3, payment.getCart().getId());
-            statement.setBigDecimal(4, payment.getAmount());
-            statement.setTimestamp(5, Timestamp.valueOf(payment.getLastUpdateTime()));
-            statement.setString(6, payment.getPaymentStatus().toString());
+            statement.setString(1, card.getNumber());
+            statement.setString(2, card.getPassword());
+            statement.setDate(3, Date.valueOf(card.getExpiryDate()));
+            statement.setBigDecimal(4, new BigDecimal(0));
             statement.executeUpdate();
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 generatedKeys.next();
-                payment.setId(generatedKeys.getInt("ID"));
-                return payment;
+                card.setId(generatedKeys.getInt("ID"));
+                return card;
             }
         }
         catch(TransactionManagerException e){
             throw new DAOException(e.getMessage(), e);
         }
         catch(SQLException e){
-            throw new DAOException("unexpected exception", e);
+            throw new DAOException("constraint violation", e);
         }
         finally {
             transactionManager.closeConnection(connection);
@@ -54,26 +52,21 @@ public class PaymentDAODBImpl implements PaymentDAO {
     }
 
     @Override
-    public Payment getPendingPayment(int userId) throws DAOException {
-        String query = "select ID, CART_ID, AMOUNT, LAST_UPDATE_TIME, PAYMENT_STATUS from PAYMENTS where USER_ID = ? and PAYMENT_STATUS = ?";
+    public Card getCardById(int id) throws DAOException{
+        String query = "select * from CARDS where ID = ?";
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
-            statement.setInt(1, userId);
-            statement.setString(2, PaymentStatus.PENDING.toString());
+            statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
-                int paymentId = resultSet.getInt("ID");
-                int cartId = resultSet.getInt("CART_ID");
-                BigDecimal amount = resultSet.getBigDecimal("AMOUNT");
-                LocalDateTime lastUpdateTime = resultSet.getTimestamp("LAST_UPDATE_TIME").toLocalDateTime();
-                PaymentStatus paymentStatus = PaymentStatus.valueOf(resultSet.getString("PAYMENT_STATUS"));
-
-                User user = new User(userId, null, null, null);
-                Cart cart = new Cart(cartId, null, null, null, null);
-                return new Payment(paymentId, user, cart, amount, lastUpdateTime, paymentStatus);
+                String number = resultSet.getString("NUMBER");
+                String password = resultSet.getString("PASSWORD");
+                LocalDate expiryDate = resultSet.getDate("EXPIRY_DATE").toLocalDate();
+                BigDecimal balance = resultSet.getBigDecimal("BALANCE");
+                return new Card(id, number, password, expiryDate, balance);
             }
             else{
                 return null;
@@ -91,17 +84,18 @@ public class PaymentDAODBImpl implements PaymentDAO {
     }
 
     @Override
-    public void updatePayment(Payment payment) throws DAOException {
-        String query = "update PAYMENTS set AMOUNT = ?, LAST_UPDATE_TIME = ?, PAYMENT_STATUS = ? where ID = ?";
+    public void updateCard(Card card) throws DAOException {
+        String query = "update CARDS set NUMBER = ?, PASSWORD = ?, EXPIRY_DATE = ?, BALANCE = ? where ID = ?";
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
-            statement.setBigDecimal(1, payment.getAmount());
-            statement.setTimestamp(2, Timestamp.valueOf(payment.getLastUpdateTime()));
-            statement.setString(3, payment.getPaymentStatus().toString());
-            statement.setInt(4, payment.getId());
+            statement.setString(1, card.getNumber());
+            statement.setString(2, card.getPassword());
+            statement.setDate(3, Date.valueOf(card.getExpiryDate()));
+            statement.setBigDecimal(4, card.getBalance());
+            statement.setInt(5, card.getId());
             statement.executeUpdate();
         }
         catch(TransactionManagerException e){

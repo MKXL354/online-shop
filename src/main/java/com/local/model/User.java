@@ -21,19 +21,15 @@ public class User implements Serializable {
     @NotNull(message = "wrong or null user type")
     private UserType type;
 
-    @NotNull(message = "user balance can't be null")
-    private BigDecimal balance;
-
-    public User(int id, String username, String password, UserType type, BigDecimal balance) {
+    public User(int id, String username, String password, UserType type) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.type = type;
-        this.balance = balance;
     }
 
     public User(User user){
-        this(user.getId(), user.getUsername(), user.getPassword(), user.getType(), user.getBalance());
+        this(user.getId(), user.getUsername(), user.getPassword(), user.getType());
     }
 
     public int getId() {
@@ -52,10 +48,6 @@ public class User implements Serializable {
         return type;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -70,9 +62,5 @@ public class User implements Serializable {
 
     public void setType(UserType type) {
         this.type = type;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
     }
 }

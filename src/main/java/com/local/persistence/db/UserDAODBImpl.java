@@ -23,7 +23,7 @@ public class UserDAODBImpl implements UserDAO {
 
     @Override
     public User addUser(User user) throws DAOException {
-        String query = "insert into USERS(USERNAME, PASSWORD, USER_TYPE, BALANCE) values(?, ?, ?, ?)";
+        String query = "insert into USERS(USERNAME, PASSWORD, USER_TYPE) values(?,?,?)";
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
@@ -32,7 +32,6 @@ public class UserDAODBImpl implements UserDAO {
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getType().toString());
-            statement.setBigDecimal(4, user.getBalance());
             statement.executeUpdate();
             try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 generatedKeys.next();
@@ -54,7 +53,7 @@ public class UserDAODBImpl implements UserDAO {
 
     @Override
     public void updateUser(User user) throws DAOException {
-        String query = "update USERS set PASSWORD = ?, USER_TYPE = ?, BALANCE = ? where ID = ?";
+        String query = "update USERS set PASSWORD = ?, USER_TYPE = ? where ID = ?";
         Connection connection = null;
         try{
             connection = transactionManager.openConnection();
@@ -62,8 +61,7 @@ public class UserDAODBImpl implements UserDAO {
 
             statement.setString(1, user.getPassword());
             statement.setString(2, user.getType().toString());
-            statement.setBigDecimal(3, user.getBalance());
-            statement.setInt(4, user.getId());
+            statement.setInt(3, user.getId());
             statement.executeUpdate();
         }
         catch(TransactionManagerException e){
@@ -120,7 +118,6 @@ public class UserDAODBImpl implements UserDAO {
         String username = resultSet.getString("USERNAME");
         String password = resultSet.getString("PASSWORD");
         UserType userType = UserType.valueOf(resultSet.getString("USER_TYPE"));
-        BigDecimal balance = resultSet.getBigDecimal("BALANCE");
-        return new User(id, username, password, userType, balance);
+        return new User(id, username, password, userType);
     }
 }
