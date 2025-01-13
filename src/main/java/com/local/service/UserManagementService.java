@@ -27,13 +27,11 @@ public class UserManagementService {
         this.passwordEncryptor = passwordEncryptor;
     }
     
-    public User addUser(User user) throws DuplicateUsernameException {
-        if (userRepo.getUserByUsername(user.getUsername()) != null) {
+    public User addUser(UserDto userDto) throws DuplicateUsernameException {
+        if (userRepo.findByUsername(userDto.getUsername()).isPresent()) {
             throw new DuplicateUsernameException("duplicate username not allowed", null);
         }
-        String hashedPassword = passwordEncryptor.hashPassword(user.getPassword());
-        user.setPassword(hashedPassword);
-        return userRepo.addUser(user);
+        return userRepo.save(new User(userDto.getUsername(), userDto.getPassword(), userDto.getUserType()));
     }
 
     public User login(UserDto userDto) throws UserNotFoundException, WrongPasswordException {

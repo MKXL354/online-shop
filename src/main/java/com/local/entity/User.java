@@ -17,6 +17,14 @@ public class User extends AbstractEntity {
     @Column(nullable = false)
     private UserType userType;
 
+    public User() {}
+
+    public User(String username, String password, UserType userType) {
+        this.username = username;
+        this.password = password;
+        this.userType = userType;
+    }
+
     public String getUsername() {
         return username;
     }

@@ -1,12 +1,11 @@
 package com.local.web.controller;
 
-import com.local.dto.LoginCredentialsDto;
+import com.local.dto.UserDto;
 import com.local.entity.User;
 import com.local.entity.UserType;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
-import com.local.persistence.DAOException;
 import com.local.service.UserManagementService;
 import com.local.util.token.TokenManager;
 import com.local.web.auth.AuthRequired;
@@ -36,22 +35,20 @@ public class UserController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping("/users")
-    public ResponseEntity<User> addUser(@RequestBody User user) throws DAOException, DuplicateUsernameException {
-        return ResponseEntity.ok(userManagementService.addUser(user));
+    public ResponseEntity<Long> addUser(@RequestBody UserDto userDto) throws DuplicateUsernameException {
+        return ResponseEntity.ok(userManagementService.addUser(userDto).getId());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginCredentialsDto loginCredentials) throws UserNotFoundException, DAOException, WrongPasswordException {
-        String username = loginCredentials.getUsername();
-        String password = loginCredentials.getPassword();
-        User user = userManagementService.login(username, password);
+    public ResponseEntity<Void> login(@RequestBody UserDto userDto) throws UserNotFoundException, WrongPasswordException {
+        User user = userManagementService.login(userDto);
 
+        //TODO: use AuthUtil here as well
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", user.getType());
+        claims.put("role", user.getUserType());
         claims.put("userId", user.getId());
         String jws = tokenManager.getToken(claims);
 
-        return ResponseEntity.ok().header("Authorization", jws).body(user);
+        return ResponseEntity.ok().header("Authorization", jws).build();
     }
 }
-//TODO: use AuthUtil here as well

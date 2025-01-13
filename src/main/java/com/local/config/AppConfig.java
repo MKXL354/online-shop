@@ -113,6 +113,8 @@ public class AppConfig {
     }
 }
 
+//TODO: refactor the name of controllers
+
 //TODO: input of controller and service: DTO. output of controller: DTO. output of Service: Entity
 
 //TODO: dedicated controller for bank account
