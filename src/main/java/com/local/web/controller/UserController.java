@@ -1,6 +1,6 @@
 package com.local.web.controller;
 
-import com.local.dto.LoginCredentialsDTO;
+import com.local.dto.LoginCredentialsDto;
 import com.local.entity.User;
 import com.local.entity.UserType;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginCredentialsDTO loginCredentials) throws UserNotFoundException, DAOException, WrongPasswordException {
+    public ResponseEntity<User> login(@RequestBody LoginCredentialsDto loginCredentials) throws UserNotFoundException, DAOException, WrongPasswordException {
         String username = loginCredentials.getUsername();
         String password = loginCredentials.getPassword();
         User user = userManagementService.login(username, password);

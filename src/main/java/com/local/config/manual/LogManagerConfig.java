@@ -43,4 +43,4 @@ public class LogManagerConfig {
         logManager.stop();
     }
 }
-//TODO: redo this maybe with @Bean
+//TODO: redo this and maybe let Spring manage it

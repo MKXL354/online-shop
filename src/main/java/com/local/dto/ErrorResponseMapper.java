@@ -19,3 +19,4 @@ public class ErrorResponseMapper {
         return new ErrorResponse(statusCode, errorResponseType, message);
     }
 }
+//TODO: maybe move this to util

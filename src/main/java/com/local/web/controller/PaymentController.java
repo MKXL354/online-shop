@@ -23,20 +23,20 @@ public class PaymentController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping("/card")
-    public ResponseEntity<Card> addCard(@RequestBody Card card) throws DAOException, DuplicateCardException {
+    public ResponseEntity<Card> addCard(@RequestBody Card card) throws DAOException, DuplicateBankAccountException {
         return ResponseEntity.ok(paymentService.addCard(card));
     }
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping("card/{id}/balance/{amount}")
-    public ResponseEntity<Void> addBalance(@PathVariable int id, @PathVariable BigDecimal amount) throws CardNotFoundException, DAOException {
+    public ResponseEntity<Void> addBalance(@PathVariable int id, @PathVariable BigDecimal amount) throws BankAccountNotFoundException, DAOException {
         paymentService.addBalance(id, amount);
         return ResponseEntity.ok().build();
     }
 
     @AuthRequired(UserType.WEB_USER)
     @PostMapping("user/pay")
-    public ResponseEntity<Void> cardPay(@RequestAttribute int userId, @RequestBody Card card) throws UserNotFoundException, PendingPaymentNotFoundException, InvalidCardException, InsufficientBalanceException, PaymentInProgressException, DAOException {
+    public ResponseEntity<Void> cardPay(@RequestAttribute int userId, @RequestBody Card card) throws UserNotFoundException, PendingPaymentNotFoundException, InvalidBankAccountException, InsufficientBalanceException, PaymentInProgressException, DAOException {
         paymentService.cardPay(userId, card);
         return ResponseEntity.ok().build();
     }

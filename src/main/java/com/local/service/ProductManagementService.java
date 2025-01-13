@@ -1,6 +1,6 @@
 package com.local.service;
 
-import com.local.dto.ProductReportDTO;
+import com.local.dto.ProductReportDto;
 import com.local.entity.Product;
 import com.local.entity.ProductStatus;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
@@ -43,7 +43,7 @@ public class ProductManagementService {
         return productDAO.getAllProducts();
     }
 
-    public List<ProductReportDTO> GetProductsSortedByStatus(ProductStatus productStatus) throws DAOException {
+    public List<ProductReportDto> GetProductsSortedByStatus(ProductStatus productStatus) throws DAOException {
         return productDAO.getProductsSortedByStatus(productStatus);
     }
 }

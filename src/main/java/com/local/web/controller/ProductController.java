@@ -1,6 +1,6 @@
 package com.local.web.controller;
 
-import com.local.dto.ProductReportDTO;
+import com.local.dto.ProductReportDto;
 import com.local.entity.Product;
 import com.local.entity.ProductStatus;
 import com.local.entity.UserType;
@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @GetMapping("/report")
-    public ResponseEntity<List<ProductReportDTO>> getProductSortedByStatus(@RequestParam ProductStatus status) throws DAOException {
+    public ResponseEntity<List<ProductReportDto>> getProductSortedByStatus(@RequestParam ProductStatus status) throws DAOException {
         return ResponseEntity.ok(productManagementService.GetProductsSortedByStatus(status));
     }
 }

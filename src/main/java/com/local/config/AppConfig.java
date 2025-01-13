@@ -2,9 +2,6 @@ package com.local.config;
 
 import com.local.dto.ErrorResponseMapper;
 import com.local.exception.common.ApplicationRuntimeException;
-import com.local.persistence.factory.DAOFactory;
-import com.local.persistence.factory.DAOType;
-import com.local.persistence.factory.DaoTypeFactory;
 import com.local.util.property.PropertyManager;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
@@ -35,11 +32,6 @@ public class AppConfig {
     @Autowired
     public void setEnv(Environment env) {
         this.env = env;
-    }
-
-    @Bean
-    public DAOFactory daoFactory() {
-        return DaoTypeFactory.getFactory(DAOType.DB);
     }
 
     @Bean
@@ -120,6 +112,8 @@ public class AppConfig {
         return Validation.buildDefaultValidatorFactory().getValidator();
     }
 }
+
+//FIXME: Don't forget to use @Valid in your controllers
 
 //TODO: payment cache?
 

@@ -1,12 +1,12 @@
 package com.local.entity;
 
-import com.local.util.validation.ValidationListener;
+import com.local.util.validation.PersistenceValidationListener;
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
-@EntityListeners(ValidationListener.class)
+@EntityListeners(PersistenceValidationListener.class)
 @MappedSuperclass
 public class AbstractEntity {
     @Id
