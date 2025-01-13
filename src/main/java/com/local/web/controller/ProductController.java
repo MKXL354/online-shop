@@ -5,7 +5,6 @@ import com.local.dto.ProductReportDto;
 import com.local.entity.Product;
 import com.local.entity.ProductStatus;
 import com.local.entity.UserType;
-import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.service.ProductManagementService;
 import com.local.web.auth.AuthRequired;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +25,8 @@ public class ProductController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody ProductDto productDto) throws InvalidProductPriceException {
-        return ResponseEntity.ok(productManagementService.addProduct(productDto));
+    public ResponseEntity<Long> addProduct(@RequestBody ProductDto productDto) {
+        return ResponseEntity.ok(productManagementService.addProduct(productDto).getId());
     }
 
     @GetMapping
