@@ -5,7 +5,6 @@ import com.local.entity.Product;
 import com.local.entity.ProductStatus;
 import com.local.entity.UserType;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
-import com.local.persistence.DAOException;
 import com.local.service.ProductManagementService;
 import com.local.web.auth.AuthRequired;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +25,17 @@ public class ProductController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) throws DAOException, InvalidProductPriceException {
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) throws InvalidProductPriceException {
         return ResponseEntity.ok(productManagementService.addProduct(product));
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() throws DAOException {
+    public ResponseEntity<List<Product>> getAllProducts() {
         return ResponseEntity.ok(productManagementService.getAllProducts());
     }
 
     @GetMapping("/report")
-    public ResponseEntity<List<ProductReportDto>> getProductSortedByStatus(@RequestParam ProductStatus status) throws DAOException {
+    public ResponseEntity<List<ProductReportDto>> getProductSortedByStatus(@RequestParam ProductStatus status) {
         return ResponseEntity.ok(productManagementService.GetProductsSortedByStatus(status));
     }
 }
