@@ -121,6 +121,8 @@ public class AppConfig {
     }
 }
 
+//TODO: payment cache?
+
 //TODO: clean up at the end (remove the excluded and extra files)
 
 //TODO: use Hibernate/JPA and Spring's Transaction Manager
