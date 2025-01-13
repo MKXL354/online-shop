@@ -113,6 +113,10 @@ public class AppConfig {
     }
 }
 
+//TODO: dedicated controller for bank account
+
+//TODO: DAOException removed? maybe not bring it back as it is business related
+
 //FIXME: Don't forget to use @Valid in your controllers
 
 //TODO: payment cache?

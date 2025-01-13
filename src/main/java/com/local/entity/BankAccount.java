@@ -25,6 +25,15 @@ public class BankAccount extends AbstractEntity {
     @Column(nullable = false, precision = 15, scale = 3)
     private BigDecimal balance;
 
+    public BankAccount() {}
+
+    public BankAccount(String number, String password, LocalDate expiryDate) {
+        this.number = number;
+        this.password = password;
+        this.expiryDate = expiryDate;
+        this.balance = BigDecimal.ZERO;
+    }
+
     public String getNumber() {
         return number;
     }
