@@ -33,6 +33,10 @@ public class PaymentService {
     public void setBankAccountRepo(BankAccountRepo bankAccountRepo) {
         this.bankAccountRepo = bankAccountRepo;
     }
+
+    public Payment getPendingPayment(long userId) throws PendingPaymentNotFoundException {
+        return paymentRepo.findPaymentByUserIdAndPaymentStatus(userId, PaymentStatus.PENDING).orElseThrow(() -> new PendingPaymentNotFoundException("no active payment found", null));
+    }
     
     public BankAccount addBankAccount(BankAccountDto bankAccountDto) throws DuplicateBankAccountException {
         if(bankAccountRepo.findByNumber(bankAccountDto.getNumber()).isPresent()){
@@ -48,7 +52,7 @@ public class PaymentService {
     }
     
     public void accountPay(long userId, BankAccountDto bankAccountDto) throws PendingPaymentNotFoundException, InvalidBankAccountException, InsufficientBalanceException, ExpiredBankAccountException, PaymentInProgressException {
-        Payment payment = paymentRepo.findPaymentByUserIdAndPaymentStatus(userId, PaymentStatus.PENDING).orElseThrow(() -> new PendingPaymentNotFoundException("no active payment found", null));
+        Payment payment = getPendingPayment(userId);
         BankAccount actualBankAccount = bankAccountRepo.findByNumberAndPassword(bankAccountDto.getNumber(), bankAccountDto.getPassword()).orElseThrow(() -> new InvalidBankAccountException("invalid bank account details", null));
         if(actualBankAccount.getExpiryDate().isBefore(LocalDate.now())){
             throw new ExpiredBankAccountException("bank account is expired", null);

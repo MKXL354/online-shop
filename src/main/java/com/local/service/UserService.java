@@ -14,12 +14,14 @@ import com.local.persistence.transaction.ManagedTransaction;
 import com.local.scheduler.TaskScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
+@Transactional
 public class UserService {
     private UserService proxy;
     private CommonService commonService;
@@ -122,8 +124,7 @@ public class UserService {
         }, 5 * 60 * 1000);
     }
 
-    @ManagedTransaction
-    public void cancelPurchase(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, DAOException {
+    public void cancelPurchase(long userId) throws UserNotFoundException, PendingPaymentNotFoundException {
         Payment payment = commonService.getPendingPayment(userId);
         if (payment == null) {
             throw new PendingPaymentNotFoundException("no active payment found", null);
