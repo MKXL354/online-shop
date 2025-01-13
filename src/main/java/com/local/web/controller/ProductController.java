@@ -1,5 +1,6 @@
 package com.local.web.controller;
 
+import com.local.dto.ProductDto;
 import com.local.dto.ProductReportDto;
 import com.local.entity.Product;
 import com.local.entity.ProductStatus;
@@ -25,8 +26,8 @@ public class ProductController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) throws InvalidProductPriceException {
-        return ResponseEntity.ok(productManagementService.addProduct(product));
+    public ResponseEntity<Product> addProduct(@RequestBody ProductDto productDto) throws InvalidProductPriceException {
+        return ResponseEntity.ok(productManagementService.addProduct(productDto));
     }
 
     @GetMapping

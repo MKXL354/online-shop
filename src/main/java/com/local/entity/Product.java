@@ -19,6 +19,15 @@ public class Product extends AbstractEntity{
     @Column(nullable = false)
     private ProductStatus productStatus;
 
+    public Product() {}
+
+    public Product(String name, BigDecimal price, ProductType productType) {
+        this.name = name;
+        this.price = price;
+        this.productType = productType;
+        this.productStatus = ProductStatus.AVAILABLE;
+    }
+
     public String getName() {
         return name;
     }

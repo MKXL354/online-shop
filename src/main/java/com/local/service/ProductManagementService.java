@@ -1,16 +1,15 @@
 package com.local.service;
 
+import com.local.dto.ProductDto;
 import com.local.dto.ProductReportDto;
 import com.local.entity.Product;
 import com.local.entity.ProductStatus;
-import com.local.exception.service.productmanagement.InvalidProductPriceException;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -23,11 +22,8 @@ public class ProductManagementService {
         this.productRepo = productRepo;
     }
 
-    public Product addProduct(Product product) throws InvalidProductPriceException {
-        if (product.getPrice().compareTo(new BigDecimal(0)) <= 0) {
-            throw new InvalidProductPriceException("product price can't be non positive", null);
-        }
-        return productRepo.save(product);
+    public Product addProduct(ProductDto productDto) {
+        return productRepo.save(new Product(productDto.getName(), productDto.getPrice(), productDto.getProductType()));
     }
 
     public Product getProductById(long id) throws ProductNotFoundException {

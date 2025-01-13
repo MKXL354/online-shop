@@ -54,3 +54,4 @@ public class UserController {
         return ResponseEntity.ok().header("Authorization", jws).body(user);
     }
 }
+//TODO: use AuthUtil here as well

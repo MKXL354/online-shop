@@ -3,6 +3,7 @@ package com.local.dto;
 import com.local.entity.ProductType;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ public class ProductDto {
 
     @NotEmpty
     @Digits(integer = 12, fraction = 3)
+    @Positive
     private BigDecimal price;
 
     @NotEmpty

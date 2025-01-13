@@ -36,25 +36,25 @@ public class PaymentService {
     
     public BankAccount addBankAccount(BankAccountDto bankAccountDto) throws DuplicateBankAccountException {
         if(bankAccountRepo.findByNumber(bankAccountDto.getNumber()).isPresent()){
-            throw new DuplicateBankAccountException("bankAccount already exists", null);
+            throw new DuplicateBankAccountException("duplicate account number not allowed", null);
         }
         return bankAccountRepo.save(new BankAccount(bankAccountDto.getNumber(), bankAccountDto.getPassword(), bankAccountDto.getExpiryDate()));
     }
     
     public void addBalance(long bankAccountId, BigDecimal amount) throws BankAccountNotFoundException {
-        BankAccount bankAccount = bankAccountRepo.findById(bankAccountId).orElseThrow(() -> new BankAccountNotFoundException("bankAccount not found", null));
+        BankAccount bankAccount = bankAccountRepo.findById(bankAccountId).orElseThrow(() -> new BankAccountNotFoundException("bank account not found", null));
         bankAccount.setBalance(bankAccount.getBalance().add(amount));
         bankAccountRepo.save(bankAccount);
     }
     
     public void accountPay(long userId, BankAccountDto bankAccountDto) throws PendingPaymentNotFoundException, InvalidBankAccountException, InsufficientBalanceException, ExpiredBankAccountException, PaymentInProgressException {
         Payment payment = paymentRepo.findPaymentByUserIdAndPaymentStatus(userId, PaymentStatus.PENDING).orElseThrow(() -> new PendingPaymentNotFoundException("no active payment found", null));
-        BankAccount actualBankAccount = bankAccountRepo.findByNumberAndPassword(bankAccountDto.getNumber(), bankAccountDto.getPassword()).orElseThrow(() -> new InvalidBankAccountException("invalid bankAccount details", null));
-        if (actualBankAccount.getBalance().compareTo(payment.getAmount()) < 0) {
-            throw new InsufficientBalanceException("insufficient account balance", null);
-        }
+        BankAccount actualBankAccount = bankAccountRepo.findByNumberAndPassword(bankAccountDto.getNumber(), bankAccountDto.getPassword()).orElseThrow(() -> new InvalidBankAccountException("invalid bank account details", null));
         if(actualBankAccount.getExpiryDate().isBefore(LocalDate.now())){
             throw new ExpiredBankAccountException("bank account is expired", null);
+        }
+        if (actualBankAccount.getBalance().compareTo(payment.getAmount()) < 0) {
+            throw new InsufficientBalanceException("insufficient account balance", null);
         }
         if (inProgressPayments.putIfAbsent(payment.getId(), payment) != null) {
             throw new PaymentInProgressException("payment already in progress", null);

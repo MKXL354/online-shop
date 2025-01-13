@@ -113,6 +113,8 @@ public class AppConfig {
     }
 }
 
+//TODO: input of controller and service: DTO. output of controller: DTO. output of Service: Entity
+
 //TODO: dedicated controller for bank account
 
 //TODO: DAOException removed? maybe not bring it back as it is business related
