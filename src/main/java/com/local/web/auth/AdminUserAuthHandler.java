@@ -1,6 +1,6 @@
 package com.local.web.auth;
 
-import com.local.model.UserType;
+import com.local.entity.UserType;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

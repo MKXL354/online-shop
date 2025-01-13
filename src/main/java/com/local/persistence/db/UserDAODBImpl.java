@@ -1,11 +1,11 @@
 package com.local.persistence.db;
 
+import com.local.entity.User;
+import com.local.entity.UserType;
 import com.local.persistence.DAOException;
 import com.local.persistence.UserDAO;
 import com.local.persistence.transaction.TransactionManager;
 import com.local.persistence.transaction.TransactionManagerException;
-import com.local.model.User;
-import com.local.model.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +24,7 @@ public class UserDAODBImpl implements UserDAO {
     public User addUser(User user) throws DAOException {
         String query = "insert into USERS(USERNAME, PASSWORD, USER_TYPE) values(?,?,?)";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -32,20 +32,17 @@ public class UserDAODBImpl implements UserDAO {
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getType().toString());
             statement.executeUpdate();
-            try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 generatedKeys.next();
                 int id = generatedKeys.getInt("ID");
                 user.setId(id);
                 return user;
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("constraint violation", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -54,7 +51,7 @@ public class UserDAODBImpl implements UserDAO {
     public void updateUser(User user) throws DAOException {
         String query = "update USERS set PASSWORD = ?, USER_TYPE = ? where ID = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -62,14 +59,11 @@ public class UserDAODBImpl implements UserDAO {
             statement.setString(2, user.getType().toString());
             statement.setInt(3, user.getId());
             statement.executeUpdate();
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("constraint violation", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -87,27 +81,23 @@ public class UserDAODBImpl implements UserDAO {
     private User getUserByIdentifier(String columnName, Object value, SQLType type) throws DAOException {
         String query = String.format("select * from USERS where %s = ?", columnName);
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             statement.setObject(1, value, type);
-            try(ResultSet resultSet = statement.executeQuery()){
-                if(resultSet.next()){
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
                     return createUserFromResultSet(resultSet);
-                }
-                else{
+                } else {
                     return null;
                 }
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }

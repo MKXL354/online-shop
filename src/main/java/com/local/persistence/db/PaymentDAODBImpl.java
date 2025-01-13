@@ -1,10 +1,13 @@
 package com.local.persistence.db;
 
+import com.local.entity.Cart;
+import com.local.entity.Payment;
+import com.local.entity.PaymentStatus;
+import com.local.entity.User;
 import com.local.persistence.DAOException;
 import com.local.persistence.PaymentDAO;
-import com.local.persistence.transaction.TransactionManagerException;
-import com.local.model.*;
 import com.local.persistence.transaction.TransactionManager;
+import com.local.persistence.transaction.TransactionManagerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +28,7 @@ public class PaymentDAODBImpl implements PaymentDAO {
     public Payment addPayment(Payment payment) throws DAOException {
         String query = "insert into PAYMENTS(ID, USER_ID, CART_ID, AMOUNT, LAST_UPDATE_TIME, PAYMENT_STATUS) values(?,?,?,?,?,?)";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -41,14 +44,11 @@ public class PaymentDAODBImpl implements PaymentDAO {
                 payment.setId(generatedKeys.getInt("ID"));
                 return payment;
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -57,14 +57,14 @@ public class PaymentDAODBImpl implements PaymentDAO {
     public Payment getPendingPayment(int userId) throws DAOException {
         String query = "select ID, CART_ID, AMOUNT, LAST_UPDATE_TIME, PAYMENT_STATUS from PAYMENTS where USER_ID = ? and PAYMENT_STATUS = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             statement.setInt(1, userId);
             statement.setString(2, PaymentStatus.PENDING.toString());
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 int paymentId = resultSet.getInt("ID");
                 int cartId = resultSet.getInt("CART_ID");
                 BigDecimal amount = resultSet.getBigDecimal("AMOUNT");
@@ -74,18 +74,14 @@ public class PaymentDAODBImpl implements PaymentDAO {
                 User user = new User(userId, null, null, null);
                 Cart cart = new Cart(cartId, null, null, null, null);
                 return new Payment(paymentId, user, cart, amount, lastUpdateTime, paymentStatus);
-            }
-            else{
+            } else {
                 return null;
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -94,7 +90,7 @@ public class PaymentDAODBImpl implements PaymentDAO {
     public void updatePayment(Payment payment) throws DAOException {
         String query = "update PAYMENTS set AMOUNT = ?, LAST_UPDATE_TIME = ?, PAYMENT_STATUS = ? where ID = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -103,14 +99,11 @@ public class PaymentDAODBImpl implements PaymentDAO {
             statement.setString(3, payment.getPaymentStatus().toString());
             statement.setInt(4, payment.getId());
             statement.executeUpdate();
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }

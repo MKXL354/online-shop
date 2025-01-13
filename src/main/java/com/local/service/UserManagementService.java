@@ -1,13 +1,13 @@
 package com.local.service;
 
-import com.local.persistence.DAOException;
-import com.local.persistence.UserDAO;
-import com.local.persistence.transaction.ManagedTransaction;
+import com.local.entity.User;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
+import com.local.persistence.DAOException;
+import com.local.persistence.UserDAO;
+import com.local.persistence.transaction.ManagedTransaction;
 import com.local.util.password.PasswordEncryptor;
-import com.local.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class UserManagementService {
 
     @ManagedTransaction
     public User addUser(User user) throws DuplicateUsernameException, DAOException {
-        if(userDAO.getUserByUsername(user.getUsername()) != null) {
+        if (userDAO.getUserByUsername(user.getUsername()) != null) {
             throw new DuplicateUsernameException("duplicate username not allowed", null);
         }
         String hashedPassword = passwordEncryptor.hashPassword(user.getPassword());
@@ -38,10 +38,10 @@ public class UserManagementService {
 
     public User login(String username, String password) throws UserNotFoundException, WrongPasswordException, DAOException {
         User user;
-        if((user = userDAO.getUserByUsername(username)) == null) {
+        if ((user = userDAO.getUserByUsername(username)) == null) {
             throw new UserNotFoundException("user not found", null);
         }
-        if(!passwordEncryptor.checkPassword(password, user.getPassword())) {
+        if (!passwordEncryptor.checkPassword(password, user.getPassword())) {
             throw new WrongPasswordException("wrong password", null);
         }
         return user;

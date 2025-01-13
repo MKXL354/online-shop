@@ -1,11 +1,11 @@
 package com.local.web.controller;
 
 import com.local.dto.ProductReportDTO;
-import com.local.model.ProductStatus;
-import com.local.persistence.DAOException;
+import com.local.entity.Product;
+import com.local.entity.ProductStatus;
+import com.local.entity.UserType;
 import com.local.exception.service.productmanagement.InvalidProductPriceException;
-import com.local.model.Product;
-import com.local.model.UserType;
+import com.local.persistence.DAOException;
 import com.local.service.ProductManagementService;
 import com.local.web.auth.AuthRequired;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,15 +1,15 @@
 package com.local.web.controller;
 
-import com.local.persistence.DAOException;
-import com.local.model.UserType;
-import com.local.web.auth.AuthRequired;
 import com.local.dto.LoginCredentialsDTO;
+import com.local.entity.User;
+import com.local.entity.UserType;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongPasswordException;
-import com.local.model.User;
+import com.local.persistence.DAOException;
 import com.local.service.UserManagementService;
 import com.local.util.token.TokenManager;
+import com.local.web.auth.AuthRequired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,6 +1,6 @@
 package com.local.dto;
 
-import com.local.model.Product;
+import com.local.entity.Product;
 
 public class ProductReportDTO {
     private Product product;

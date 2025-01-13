@@ -1,6 +1,5 @@
 package com.local.persistence.db;
 
-import com.local.model.Card;
 import com.local.persistence.CardDAO;
 import com.local.persistence.DAOException;
 import com.local.persistence.transaction.TransactionManager;
@@ -22,10 +21,10 @@ public class CardDAODBImpl implements CardDAO {
     }
 
     @Override
-    public Card addCard(Card card) throws DAOException{
+    public Card addCard(Card card) throws DAOException {
         String query = "insert into CARDS(NUMBER, PASSWORD, EXPIRY_DATE, BALANCE) values(?,?,?,?)";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -39,46 +38,39 @@ public class CardDAODBImpl implements CardDAO {
                 card.setId(generatedKeys.getInt("ID"));
                 return card;
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("constraint violation", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
 
     @Override
-    public Card getCardById(int id) throws DAOException{
+    public Card getCardById(int id) throws DAOException {
         String query = "select * from CARDS where ID = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 String number = resultSet.getString("NUMBER");
                 String password = resultSet.getString("PASSWORD");
                 LocalDate expiryDate = resultSet.getDate("EXPIRY_DATE").toLocalDate();
                 BigDecimal balance = resultSet.getBigDecimal("BALANCE");
                 return new Card(id, number, password, expiryDate, balance);
-            }
-            else{
+            } else {
                 return null;
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -87,7 +79,7 @@ public class CardDAODBImpl implements CardDAO {
     public void updateCard(Card card) throws DAOException {
         String query = "update CARDS set NUMBER = ?, PASSWORD = ?, EXPIRY_DATE = ?, BALANCE = ? where ID = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -97,14 +89,11 @@ public class CardDAODBImpl implements CardDAO {
             statement.setBigDecimal(4, card.getBalance());
             statement.setInt(5, card.getId());
             statement.executeUpdate();
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }

@@ -1,20 +1,22 @@
 package com.local.persistence.db;
 
 import com.local.dto.ProductReportDTO;
+import com.local.entity.Product;
+import com.local.entity.ProductStatus;
+import com.local.entity.ProductType;
 import com.local.persistence.DAOException;
 import com.local.persistence.ProductDAO;
 import com.local.persistence.transaction.TransactionManager;
 import com.local.persistence.transaction.TransactionManagerException;
-import com.local.model.Product;
-import com.local.model.ProductStatus;
-import com.local.model.ProductType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 @Repository
@@ -30,7 +32,7 @@ public class ProductDAODBImpl implements ProductDAO {
     public Product addProduct(Product product) throws DAOException {
         String query = "insert into PRODUCTS(NAME, PRICE, PRODUCT_TYPE, PRODUCT_STATUS) values(?, ?, ?, ?)";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -39,19 +41,16 @@ public class ProductDAODBImpl implements ProductDAO {
             statement.setString(3, product.getProductType().toString());
             statement.setString(4, product.getProductStatus().toString());
             statement.executeUpdate();
-            try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 generatedKeys.next();
                 product.setId(generatedKeys.getInt("ID"));
             }
             return product;
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("constraint violation", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -60,7 +59,7 @@ public class ProductDAODBImpl implements ProductDAO {
     public void updateProduct(Product product) throws DAOException {
         String query = "update PRODUCTS set NAME = ?, PRICE = ?, PRODUCT_TYPE = ?, PRODUCT_STATUS = ? where ID = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -70,14 +69,11 @@ public class ProductDAODBImpl implements ProductDAO {
             statement.setString(4, product.getProductStatus().toString());
             statement.setInt(5, product.getId());
             statement.executeUpdate();
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -87,23 +83,20 @@ public class ProductDAODBImpl implements ProductDAO {
         List<Product> products = new ArrayList<>();
         String query = "select * from PRODUCTS order by ID";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 products.add(createProductFromResultSet(resultSet));
             }
             return products;
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -112,27 +105,23 @@ public class ProductDAODBImpl implements ProductDAO {
     public Product getProductById(int id) throws DAOException {
         String query = "select * from PRODUCTS where ID = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             statement.setInt(1, id);
-            try(ResultSet resultSet = statement.executeQuery()){
-                if(resultSet.next()){
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
                     return createProductFromResultSet(resultSet);
-                }
-                else{
+                } else {
                     return null;
                 }
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -141,27 +130,23 @@ public class ProductDAODBImpl implements ProductDAO {
     public Product getProductByName(String name) throws DAOException {
         String query = "select * from PRODUCTS where NAME = ? and PRODUCT_STATUS = 'AVAILABLE'";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             statement.setString(1, name);
-            try(ResultSet resultSet = statement.executeQuery()){
-                if(resultSet.next()){
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
                     return createProductFromResultSet(resultSet);
-                }
-                else{
+                } else {
                     return null;
                 }
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -180,13 +165,13 @@ public class ProductDAODBImpl implements ProductDAO {
         List<ProductReportDTO> productsDto = new ArrayList<>();
         String query = "select NAME, PRICE, PRODUCT_TYPE, COUNT(*) as COUNT from PRODUCTS where PRODUCT_STATUS = ? group by NAME order by COUNT desc";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             statement.setString(1, productStatus.toString());
             ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 int id = 0;
                 String name = resultSet.getString("NAME");
                 BigDecimal price = resultSet.getBigDecimal("PRICE");
@@ -196,14 +181,11 @@ public class ProductDAODBImpl implements ProductDAO {
                 productsDto.add(new ProductReportDTO(product, count));
             }
             return productsDto;
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }

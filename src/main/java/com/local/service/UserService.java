@@ -1,16 +1,16 @@
 package com.local.service;
 
-import com.local.persistence.DAOException;
-import com.local.persistence.CartDAO;
-import com.local.persistence.PaymentDAO;
-import com.local.persistence.ProductDAO;
-import com.local.persistence.transaction.ManagedTransaction;
+import com.local.entity.*;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.exception.service.user.EmptyCartException;
 import com.local.exception.service.user.PreviousPaymentPendingException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.model.*;
+import com.local.persistence.CartDAO;
+import com.local.persistence.DAOException;
+import com.local.persistence.PaymentDAO;
+import com.local.persistence.ProductDAO;
+import com.local.persistence.transaction.ManagedTransaction;
 import com.local.scheduler.TaskScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,14 +58,14 @@ public class UserService {
         this.paymentDAO = paymentDAO;
     }
 
-   @ManagedTransaction
+    @ManagedTransaction
     public void addProductToCart(int userId, String productName) throws UserNotFoundException, PreviousPaymentPendingException, ProductNotFoundException, DAOException {
-        if(commonService.getPendingPayment(userId) != null){
+        if (commonService.getPendingPayment(userId) != null) {
             throw new PreviousPaymentPendingException("a previous payment is pending", null);
         }
         Cart cart = commonService.getActiveCart(userId);
         Product product;
-        if((product = productDAO.getProductByName(productName)) == null){
+        if ((product = productDAO.getProductByName(productName)) == null) {
             throw new ProductNotFoundException("product not found", null);
         }
         product.setProductStatus(ProductStatus.RESERVED);
@@ -80,11 +80,11 @@ public class UserService {
         }, 10 * 60 * 1000);
     }
 
-   @ManagedTransaction
-    public void removeProductFromCart(int userId, int productId) throws UserNotFoundException, ProductNotFoundException, DAOException{
+    @ManagedTransaction
+    public void removeProductFromCart(int userId, int productId) throws UserNotFoundException, ProductNotFoundException, DAOException {
         Cart cart = commonService.getActiveCart(userId);
         Product product = cart.getProducts().get(productId);
-        if(product == null){
+        if (product == null) {
             throw new ProductNotFoundException("product not found in cart", null);
         }
         product.setProductStatus(ProductStatus.AVAILABLE);
@@ -94,17 +94,17 @@ public class UserService {
         cartDAO.updateCart(cart);
     }
 
-   @ManagedTransaction
+    @ManagedTransaction
     public void finalizePurchase(int userId) throws UserNotFoundException, EmptyCartException, DAOException {
         User user = commonService.getUserById(userId);
         Cart cart = commonService.getActiveCart(userId);
         Map<Integer, Product> cartProducts = cart.getProducts();
-        if(cartProducts.isEmpty()){
+        if (cartProducts.isEmpty()) {
             throw new EmptyCartException("user cart is empty", null);
         }
 
         BigDecimal totalPrice = new BigDecimal(0);
-        for(Product product : cartProducts.values()){
+        for (Product product : cartProducts.values()) {
             totalPrice = totalPrice.add(product.getPrice());
             product.setProductStatus(ProductStatus.SOLD);
             productDAO.updateProduct(product);
@@ -122,14 +122,14 @@ public class UserService {
         }, 5 * 60 * 1000);
     }
 
-   @ManagedTransaction
+    @ManagedTransaction
     public void cancelPurchase(int userId) throws UserNotFoundException, PendingPaymentNotFoundException, DAOException {
         Payment payment = commonService.getPendingPayment(userId);
-        if(payment == null){
+        if (payment == null) {
             throw new PendingPaymentNotFoundException("no active payment found", null);
         }
         Cart cart = payment.getCart();
-        for(Product product : cart.getProducts().values()){
+        for (Product product : cart.getProducts().values()) {
             product.setProductStatus(ProductStatus.AVAILABLE);
             productDAO.updateProduct(product);
         }

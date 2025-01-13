@@ -1,13 +1,13 @@
 package com.local.service;
 
 import com.local.dto.ProductReportDTO;
-import com.local.model.ProductStatus;
+import com.local.entity.Product;
+import com.local.entity.ProductStatus;
+import com.local.exception.service.productmanagement.InvalidProductPriceException;
+import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.persistence.DAOException;
 import com.local.persistence.ProductDAO;
 import com.local.persistence.transaction.ManagedTransaction;
-import com.local.exception.service.productmanagement.InvalidProductPriceException;
-import com.local.exception.service.productmanagement.ProductNotFoundException;
-import com.local.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class ProductManagementService {
 
     @ManagedTransaction
     public Product addProduct(Product product) throws InvalidProductPriceException, DAOException {
-        if(product.getPrice().compareTo(new BigDecimal(0)) <= 0){
+        if (product.getPrice().compareTo(new BigDecimal(0)) <= 0) {
             throw new InvalidProductPriceException("product price can't be non positive", null);
         }
         return productDAO.addProduct(product);
@@ -33,17 +33,17 @@ public class ProductManagementService {
 
     public Product getProductById(int id) throws ProductNotFoundException, DAOException {
         Product product;
-        if((product = productDAO.getProductById(id)) == null){
+        if ((product = productDAO.getProductById(id)) == null) {
             throw new ProductNotFoundException("product not found", null);
         }
         return product;
     }
 
-    public List<Product> getAllProducts() throws DAOException{
+    public List<Product> getAllProducts() throws DAOException {
         return productDAO.getAllProducts();
     }
 
-    public List<ProductReportDTO> GetProductsSortedByStatus(ProductStatus productStatus) throws DAOException{
+    public List<ProductReportDTO> GetProductsSortedByStatus(ProductStatus productStatus) throws DAOException {
         return productDAO.getProductsSortedByStatus(productStatus);
     }
 }

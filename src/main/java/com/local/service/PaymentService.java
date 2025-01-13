@@ -1,14 +1,13 @@
 package com.local.service;
 
+import com.local.entity.Payment;
+import com.local.entity.PaymentStatus;
 import com.local.exception.service.payment.*;
-import com.local.model.Card;
+import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.persistence.CardDAO;
 import com.local.persistence.DAOException;
 import com.local.persistence.PaymentDAO;
 import com.local.persistence.transaction.ManagedTransaction;
-import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.model.Payment;
-import com.local.model.PaymentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +39,7 @@ public class PaymentService {
 
     @ManagedTransaction
     public Card addCard(Card card) throws DuplicateCardException, DAOException {
-        if(cardDAO.getCardById(card.getId()) != null){
+        if (cardDAO.getCardById(card.getId()) != null) {
             throw new DuplicateCardException("card already exists", null);
         }
         return cardDAO.addCard(card);
@@ -49,7 +48,7 @@ public class PaymentService {
     @ManagedTransaction
     public void addBalance(int cardId, BigDecimal amount) throws CardNotFoundException, DAOException {
         Card card;
-        if((card = cardDAO.getCardById(cardId)) == null){
+        if ((card = cardDAO.getCardById(cardId)) == null) {
             throw new CardNotFoundException("card not found", null);
         }
         card.setBalance(card.getBalance().add(amount));
@@ -59,29 +58,28 @@ public class PaymentService {
     @ManagedTransaction
     public void cardPay(int userId, Card card) throws UserNotFoundException, PendingPaymentNotFoundException, InvalidCardException, InsufficientBalanceException, PaymentInProgressException, DAOException {
         Payment payment = commonService.getPendingPayment(userId);
-        if(payment == null){
+        if (payment == null) {
             throw new PendingPaymentNotFoundException("no active payment found", null);
         }
         Card actualCard = cardDAO.getCardById(card.getId());
-        if(actualCard == null || !actualCard.getNumber().equals(card.getNumber()) || !actualCard.getPassword().equals(card.getPassword()) || !actualCard.getExpiryDate().equals(card.getExpiryDate())){
+        if (actualCard == null || !actualCard.getNumber().equals(card.getNumber()) || !actualCard.getPassword().equals(card.getPassword()) || !actualCard.getExpiryDate().equals(card.getExpiryDate())) {
             throw new InvalidCardException("invalid card details", null);
         }
-        if(actualCard.getBalance().compareTo(payment.getAmount()) < 0){
+        if (actualCard.getBalance().compareTo(payment.getAmount()) < 0) {
             throw new InsufficientBalanceException("insufficient account balance", null);
         }
-        if(inProgressPayments.putIfAbsent(payment.getId(), payment) != null){
+        if (inProgressPayments.putIfAbsent(payment.getId(), payment) != null) {
             throw new PaymentInProgressException("payment already in progress", null);
         }
 
-        try{
+        try {
             actualCard.setBalance(actualCard.getBalance().subtract(payment.getAmount()));
             cardDAO.updateCard(actualCard);
 
             payment.setLastUpdateTime(LocalDateTime.now());
             payment.setPaymentStatus(PaymentStatus.SUCCESSFUL);
             paymentDAO.updatePayment(payment);
-        }
-        finally {
+        } finally {
             inProgressPayments.remove(payment.getId());
         }
     }

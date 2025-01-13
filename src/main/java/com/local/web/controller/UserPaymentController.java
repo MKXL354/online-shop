@@ -1,10 +1,10 @@
 package com.local.web.controller;
 
-import com.local.persistence.DAOException;
+import com.local.entity.Payment;
+import com.local.entity.UserType;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.model.Payment;
-import com.local.model.UserType;
+import com.local.persistence.DAOException;
 import com.local.service.CommonService;
 import com.local.service.UserService;
 import com.local.web.auth.AuthRequired;

@@ -1,0 +1,53 @@
+package com.local.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+
+import java.math.BigDecimal;
+
+@Entity
+public class Product extends AbstractEntity{
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, precision = 15, scale = 3)
+    private BigDecimal price;
+
+    @Column(nullable = false)
+    private ProductType productType;
+
+    @Column(nullable = false)
+    private ProductStatus productStatus;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public ProductType getProductType() {
+        return productType;
+    }
+
+    public void setProductType(ProductType productType) {
+        this.productType = productType;
+    }
+
+    public ProductStatus getProductStatus() {
+        return productStatus;
+    }
+
+    public void setProductStatus(ProductStatus productStatus) {
+        this.productStatus = productStatus;
+    }
+}

@@ -1,5 +1,5 @@
 .gitignore
-src/main/resources/application.properties
+src/main/resources/*.properties
 TODO.txt
 concurrent_curl.bat
 log/

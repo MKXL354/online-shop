@@ -3,8 +3,6 @@ package com.local.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.local.config.manual.GsonLocalDateTimeAdapter;
-import com.local.config.manual.GsonProductDeserializer;
-import com.local.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -41,9 +39,8 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public Gson gson(){
-        return new GsonBuilder().registerTypeAdapter(Product.class, new GsonProductDeserializer())
-                .registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
+    public Gson gson() {
+        return new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
                 .create();
     }
 }

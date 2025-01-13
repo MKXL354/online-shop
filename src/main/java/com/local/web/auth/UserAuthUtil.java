@@ -1,6 +1,6 @@
 package com.local.web.auth;
 
-import com.local.model.UserType;
+import com.local.entity.UserType;
 import com.local.util.token.InvalidTokenException;
 import com.local.util.token.TokenExpiredException;
 import com.local.util.token.TokenManager;
@@ -27,7 +27,7 @@ public class UserAuthUtil {
     public Map<String, Object> validateToken(String token, AuthRequired authRequired) throws InvalidTokenException, TokenExpiredException {
         Map<String, Object> tokenClaims = tokenManager.getClaims(token);
         for (UserType userType : authRequired.value()) {
-            if(userAuthHandlerRegistry.getUserAuthHandler(userType).validateClaims(tokenClaims)){
+            if (userAuthHandlerRegistry.getUserAuthHandler(userType).validateClaims(tokenClaims)) {
                 return tokenManager.getClaims(token);
             }
         }

@@ -1,15 +1,15 @@
 package com.local.service;
 
+import com.local.entity.Cart;
+import com.local.entity.Payment;
+import com.local.entity.User;
+import com.local.exception.common.ApplicationRuntimeException;
+import com.local.exception.service.common.CartNotFoundException;
+import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.persistence.CartDAO;
 import com.local.persistence.DAOException;
 import com.local.persistence.PaymentDAO;
 import com.local.persistence.UserDAO;
-import com.local.exception.common.ApplicationRuntimeException;
-import com.local.exception.service.common.CartNotFoundException;
-import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.model.Cart;
-import com.local.model.Payment;
-import com.local.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public class CommonService {
 
     public User getUserById(int userId) throws UserNotFoundException, DAOException {
         User user;
-        if((user = userDAO.getUserById(userId)) == null) {
+        if ((user = userDAO.getUserById(userId)) == null) {
             throw new UserNotFoundException("user not found", null);
         }
         return user;
@@ -45,7 +45,7 @@ public class CommonService {
     public Cart getActiveCart(int userId) throws UserNotFoundException, DAOException {
         Cart cart = cartDAO.getActiveCart(userId);
         User user = getUserById(userId);
-        if(cart == null) {
+        if (cart == null) {
             cart = cartDAO.addCartToUser(userId);
             cart.setUser(user);
             return cart;
@@ -57,7 +57,7 @@ public class CommonService {
 
     public Cart getCartById(int cartId) throws CartNotFoundException, DAOException {
         Cart cart = cartDAO.getCartById(cartId);
-        if(cart == null) {
+        if (cart == null) {
             throw new CartNotFoundException("cart not found", null);
         }
         try {
@@ -71,7 +71,7 @@ public class CommonService {
 
     public Payment getPendingPayment(int userId) throws UserNotFoundException, DAOException {
         Payment payment = paymentDAO.getPendingPayment(userId);
-        if(payment == null) {
+        if (payment == null) {
             return null;
         }
         payment.setUser(getUserById(userId));

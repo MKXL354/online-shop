@@ -1,8 +1,8 @@
 package com.local.persistence.db;
 
+import com.local.entity.*;
 import com.local.persistence.CartDAO;
 import com.local.persistence.DAOException;
-import com.local.model.*;
 import com.local.persistence.transaction.TransactionManager;
 import com.local.persistence.transaction.TransactionManagerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,34 +23,30 @@ public class CartDAODBImpl implements CartDAO {
     }
 
     @Override
-    public Cart getCartById(int cartId) throws DAOException{
+    public Cart getCartById(int cartId) throws DAOException {
         String query = "select USER_ID, LAST_UPDATE_TIME, CART_STATUS from CARTS where ID = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             statement.setInt(1, cartId);
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 LocalDateTime lastUpdateTime = resultSet.getTimestamp("LAST_UPDATE_TIME").toLocalDateTime();
                 CartStatus cartStatus = CartStatus.valueOf(resultSet.getString("CART_STATUS"));
 
                 int userId = resultSet.getInt("USER_ID");
                 User user = new User(userId, null, null, null);
                 return new Cart(cartId, user, null, lastUpdateTime, cartStatus);
-            }
-            else{
+            } else {
                 return null;
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -59,31 +55,27 @@ public class CartDAODBImpl implements CartDAO {
     public Cart getActiveCart(int userId) throws DAOException {
         String query = "select ID, LAST_UPDATE_TIME from CARTS where USER_ID = ? and CART_STATUS = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             statement.setInt(1, userId);
             statement.setString(2, CartStatus.ACTIVE.toString());
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 int id = resultSet.getInt("ID");
                 LocalDateTime lastUpdateTime = resultSet.getTimestamp("LAST_UPDATE_TIME").toLocalDateTime();
 
                 User user = new User(userId, null, null, null);
                 return new Cart(id, user, null, lastUpdateTime, CartStatus.ACTIVE);
-            }
-            else{
+            } else {
                 return null;
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -136,7 +128,7 @@ public class CartDAODBImpl implements CartDAO {
     public Cart addCartToUser(int userId) throws DAOException {
         String query = "insert into CARTS(USER_ID, LAST_UPDATE_TIME, CART_STATUS) values (?, ?, ?)";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -145,29 +137,26 @@ public class CartDAODBImpl implements CartDAO {
             statement.setTimestamp(2, Timestamp.valueOf(now));
             statement.setString(3, CartStatus.ACTIVE.toString());
             statement.executeUpdate();
-            try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 generatedKeys.next();
                 int id = generatedKeys.getInt("ID");
                 User user = new User(userId, null, null, null);
                 return new Cart(id, user, null, now, CartStatus.ACTIVE);
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
-    
+
     @Override
     public void updateCart(Cart cart) throws DAOException {
         String query = "update CARTS set LAST_UPDATE_TIME = ?, CART_STATUS = ? where ID = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -175,14 +164,11 @@ public class CartDAODBImpl implements CartDAO {
             statement.setString(2, cart.getCartStatus().toString());
             statement.setInt(3, cart.getId());
             statement.executeUpdate();
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -201,21 +187,18 @@ public class CartDAODBImpl implements CartDAO {
 
     private void updateProductInCart(String query, Cart cart, Product product) throws DAOException {
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             statement.setInt(1, cart.getId());
             statement.setInt(2, product.getId());
             statement.executeUpdate();
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }
@@ -227,13 +210,13 @@ public class CartDAODBImpl implements CartDAO {
                 "from CARTS_PRODUCTS inner join PRODUCTS on PRODUCT_ID = ID " +
                 "where CART_ID = ?";
         Connection connection = null;
-        try{
+        try {
             connection = transactionManager.openConnection();
             PreparedStatement statement = connection.prepareStatement(query);
 
             statement.setInt(1, cartId);
-            try(ResultSet resultSet = statement.executeQuery()){
-                while(resultSet.next()){
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
                     int id = resultSet.getInt("ID");
                     String name = resultSet.getString("NAME");
                     BigDecimal price = resultSet.getBigDecimal("PRICE");
@@ -243,14 +226,11 @@ public class CartDAODBImpl implements CartDAO {
                 }
                 return products;
             }
-        }
-        catch(TransactionManagerException e){
+        } catch (TransactionManagerException e) {
             throw new DAOException(e.getMessage(), e);
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             throw new DAOException("unexpected exception", e);
-        }
-        finally {
+        } finally {
             transactionManager.closeConnection(connection);
         }
     }

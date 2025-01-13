@@ -1,9 +1,8 @@
 package com.local.web.controller;
 
+import com.local.entity.UserType;
 import com.local.exception.service.payment.*;
 import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.model.Card;
-import com.local.model.UserType;
 import com.local.persistence.DAOException;
 import com.local.service.PaymentService;
 import com.local.web.auth.AuthRequired;
