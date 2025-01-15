@@ -1,5 +1,6 @@
 package com.local.repository;
 
+import com.local.dto.ProductDto;
 import com.local.dto.ProductReportDto;
 import com.local.entity.Product;
 import com.local.entity.ProductStatus;
@@ -11,6 +12,9 @@ import java.util.List;
 
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Long> {
+    @Query("select new com.local.dto.ProductDto(p) from Product p")
+    List<ProductDto> findAllDto();
+
     @Query("select p.name, count(p) as quantity from Product p where p.productStatus = :productStatus group by p.name order by quantity desc")
     List<ProductReportDto> findAllByProductStatus(ProductStatus productStatus);
 }

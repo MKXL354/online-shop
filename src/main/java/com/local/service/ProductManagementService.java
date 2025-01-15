@@ -22,16 +22,18 @@ public class ProductManagementService {
         this.productRepo = productRepo;
     }
 
-    public Product addProduct(ProductDto productDto) {
-        return productRepo.save(new Product(productDto.getName(), productDto.getPrice(), productDto.getProductType()));
+    public ProductDto addProduct(ProductDto productDto) {
+        Product product = productRepo.save(new Product(productDto.getName(), productDto.getPrice(), productDto.getProductType()));
+        productDto.setId(product.getId());
+        return productDto;
     }
 
     public Product getProductById(long id) throws ProductNotFoundException {
         return productRepo.findById(id).orElseThrow(() -> new ProductNotFoundException("product not found", null));
     }
 
-    public List<Product> getAllProducts() {
-        return productRepo.findAll();
+    public List<ProductDto> getAllProducts() {
+        return productRepo.findAllDto();
     }
 
     public List<ProductReportDto> GetProductsSortedByStatus(ProductStatus productStatus) {
