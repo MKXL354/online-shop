@@ -38,11 +38,13 @@ public class PaymentService {
         return paymentRepo.findPaymentByUserIdAndPaymentStatus(userId, PaymentStatus.PENDING).orElseThrow(() -> new PendingPaymentNotFoundException("no active payment found", null));
     }
     
-    public BankAccount addBankAccount(BankAccountDto bankAccountDto) throws DuplicateBankAccountException {
+    public BankAccountDto addBankAccount(BankAccountDto bankAccountDto) throws DuplicateBankAccountException {
         if(bankAccountRepo.findByNumber(bankAccountDto.getNumber()).isPresent()){
             throw new DuplicateBankAccountException("duplicate account number not allowed", null);
         }
-        return bankAccountRepo.save(new BankAccount(bankAccountDto.getNumber(), bankAccountDto.getPassword(), bankAccountDto.getExpiryDate()));
+        BankAccount bankAccount = bankAccountRepo.save(new BankAccount(bankAccountDto.getNumber(), bankAccountDto.getPassword(), LocalDate.parse(bankAccountDto.getExpiryDate())));
+        bankAccountDto.setId(bankAccount.getId());
+        return bankAccountDto;
     }
     
     public void addBalance(long bankAccountId, BigDecimal amount) throws BankAccountNotFoundException {
