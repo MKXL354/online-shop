@@ -25,12 +25,12 @@ public class ProductController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping
-    public ResponseEntity<Long> addProduct(@RequestBody ProductDto productDto) {
-        return ResponseEntity.ok(productManagementService.addProduct(productDto).getId());
+    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto productDto) {
+        return ResponseEntity.ok(productManagementService.addProduct(productDto));
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
         return ResponseEntity.ok(productManagementService.getAllProducts());
     }
 

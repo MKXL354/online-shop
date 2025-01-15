@@ -31,9 +31,7 @@ public class UserPaymentController {
     @AuthRequired(UserType.WEB_USER)
     @GetMapping
     public ResponseEntity<PaymentDto> getPendingPayment(@RequestAttribute long userId) throws PendingPaymentNotFoundException {
-        Payment payment = paymentService.getPendingPayment(userId);
-//        FIXME: potential lazy fetch bug
-        return ResponseEntity.ok(new PaymentDto(payment.getUser().getId(), payment.getCart().getId(), payment.getAmount(), payment.getLastUpdateTime().toString(), payment.getPaymentStatus()));
+        return ResponseEntity.ok(paymentService.getPendingPayment(userId));
     }
 
     @AuthRequired(UserType.WEB_USER)

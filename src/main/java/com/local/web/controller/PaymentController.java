@@ -22,8 +22,8 @@ public class PaymentController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping("/account")
-    public ResponseEntity<Long> addBankAccount(@RequestBody BankAccountDto account) throws DuplicateBankAccountException {
-        return ResponseEntity.ok(paymentService.addBankAccount(account).getId());
+    public ResponseEntity<BankAccountDto> addBankAccount(@RequestBody BankAccountDto account) throws DuplicateBankAccountException {
+        return ResponseEntity.ok(paymentService.addBankAccount(account));
     }
 
     @AuthRequired(UserType.ADMIN)

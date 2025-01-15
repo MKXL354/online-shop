@@ -35,8 +35,8 @@ public class UserController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping("/users")
-    public ResponseEntity<Long> addUser(@RequestBody UserDto userDto) throws DuplicateUsernameException {
-        return ResponseEntity.ok(userManagementService.addUser(userDto).getId());
+    public ResponseEntity<UserDto> addUser(@RequestBody UserDto userDto) throws DuplicateUsernameException {
+        return ResponseEntity.ok(userManagementService.addUser(userDto));
     }
 
     @PostMapping("/login")
