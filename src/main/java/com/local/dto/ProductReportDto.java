@@ -1,7 +1,14 @@
 package com.local.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.PositiveOrZero;
+
 public class ProductReportDto {
+    @NotEmpty
     private String productName;
+
+    @NotEmpty
+    @PositiveOrZero
     private int count;
 
     public ProductReportDto(String productName, int count) {

@@ -1,12 +1,12 @@
 package com.local.dto;
 
+import com.local.entity.BankAccount;
+import com.local.util.validation.ValidLocalDate;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
-
-public class BankAccountDto {
+public class BankAccountDto extends AbstractDto{
     @Pattern(regexp = "\\d{16}", message = "invalid format. Expected format is 16 digits")
     @NotEmpty
     private String number;
@@ -16,7 +16,15 @@ public class BankAccountDto {
     private String password;
 
     @NotEmpty
-    private LocalDate expiryDate;
+    @ValidLocalDate
+    private String expiryDate;
+
+    public BankAccountDto(BankAccount bankAccount) {
+        this.id = bankAccount.getId();
+        this.number = bankAccount.getNumber();
+        this.password = bankAccount.getPassword();
+        this.expiryDate = bankAccount.getExpiryDate().toString();
+    }
 
     public String getNumber() {
         return number;
@@ -34,11 +42,11 @@ public class BankAccountDto {
         this.password = password;
     }
 
-    public LocalDate getExpiryDate() {
+    public String getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(LocalDate expiryDate) {
+    public void setExpiryDate(String expiryDate) {
         this.expiryDate = expiryDate;
     }
 }

@@ -1,5 +1,7 @@
 package com.local.dto;
 
+import com.local.entity.Product;
+import com.local.entity.ProductStatus;
 import com.local.entity.ProductType;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
@@ -8,7 +10,7 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
-public class ProductDto {
+public class ProductDto extends AbstractDto{
     @NotEmpty
     @Size(max = 50)
     private String name;
@@ -19,7 +21,18 @@ public class ProductDto {
     private BigDecimal price;
 
     @NotEmpty
+    private ProductStatus productStatus;
+
+    @NotEmpty
     private ProductType productType;
+
+    public ProductDto(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.productStatus = product.getProductStatus();
+        this.productType = product.getProductType();
+    }
 
     public String getName() {
         return name;
@@ -35,6 +48,14 @@ public class ProductDto {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public ProductStatus getProductStatus() {
+        return productStatus;
+    }
+
+    public void setProductStatus(ProductStatus productStatus) {
+        this.productStatus = productStatus;
     }
 
     public ProductType getProductType() {

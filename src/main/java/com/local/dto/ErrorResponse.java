@@ -1,11 +1,21 @@
 package com.local.dto;
 
+import com.local.util.validation.ValidLocalDateTime;
+import jakarta.validation.constraints.NotEmpty;
+
 import java.time.LocalDateTime;
 
 public class ErrorResponse {
+    @NotEmpty
+    @ValidLocalDateTime
     private String timestamp;
+
+    @NotEmpty
     private int statusCode;
+
+    @NotEmpty
     private String errorResponseType;
+
     private String message;
 
     public ErrorResponse(int statusCode, String errorResponseType, String message) {

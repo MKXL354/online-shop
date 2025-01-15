@@ -1,22 +1,40 @@
 package com.local.dto;
 
+import com.local.entity.Payment;
 import com.local.entity.PaymentStatus;
+import com.local.util.validation.ValidLocalDateTime;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
 
-public class PaymentDto {
+public class PaymentDto extends AbstractDto{
+    @NotEmpty
+    @PositiveOrZero
     private long userId;
+
+    @NotEmpty
+    @PositiveOrZero
     private long cartId;
+
+    @NotEmpty
+    @Positive
     private BigDecimal amount;
+
+    @ValidLocalDateTime
     private String lastUpdateTime;
+
+    @NotEmpty
     private PaymentStatus paymentStatus;
 
-    public PaymentDto(long userId, long cartId, BigDecimal amount, String lastUpdateTime, PaymentStatus paymentStatus) {
-        this.userId = userId;
-        this.cartId = cartId;
-        this.amount = amount;
-        this.lastUpdateTime = lastUpdateTime;
-        this.paymentStatus = paymentStatus;
+    public PaymentDto(Payment payment) {
+        this.id = payment.getId();
+        this.userId = payment.getUser().getId();
+        this.cartId = payment.getCart().getId();
+        this.amount = payment.getAmount();
+        this.lastUpdateTime = payment.getLastUpdateTime().toString();
+        this.paymentStatus = payment.getPaymentStatus();
     }
 
     public long getUserId() {
