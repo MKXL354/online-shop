@@ -5,7 +5,7 @@ import com.local.entity.UserType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-public class UserDto extends AbstractDto {
+public class AppUserDto extends AbstractDto {
     @Size(max = 255)
     @NotEmpty
     private String username;
@@ -17,7 +17,7 @@ public class UserDto extends AbstractDto {
     @NotEmpty
     private UserType userType;
 
-    public UserDto(AppUser appUser) {
+    public AppUserDto(AppUser appUser) {
         this.id = appUser.getId();
         this.username = appUser.getUsername();
         this.password = appUser.getPassword();

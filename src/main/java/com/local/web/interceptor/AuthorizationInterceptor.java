@@ -24,12 +24,12 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws InvalidTokenException, TokenExpiredException {
-        AuthRequired authRequired;
-        if(handler instanceof HandlerMethod controller && (authRequired = controller.getMethodAnnotation(AuthRequired.class)) != null){
-            String token = request.getHeader("Authorization");
-            Map<String, Object> tokenClaims = userAuthUtil.validateToken(token, authRequired);
-            request.setAttribute("userId", ((Double) tokenClaims.get("userId")).intValue());
-        }
+//        AuthRequired authRequired;
+//        if(handler instanceof HandlerMethod controller && (authRequired = controller.getMethodAnnotation(AuthRequired.class)) != null){
+//            String token = request.getHeader("Authorization");
+//            Map<String, Object> tokenClaims = userAuthUtil.validateToken(token, authRequired);
+//            request.setAttribute("userId", ((Double) tokenClaims.get("userId")).intValue());
+//        }
         return true;
     }
 }

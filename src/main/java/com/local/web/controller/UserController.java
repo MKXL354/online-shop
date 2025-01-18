@@ -1,6 +1,6 @@
 package com.local.web.controller;
 
-import com.local.dto.UserDto;
+import com.local.dto.AppUserDto;
 import com.local.entity.AppUser;
 import com.local.entity.UserType;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
@@ -35,13 +35,13 @@ public class UserController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping("/users")
-    public ResponseEntity<UserDto> addUser(@RequestBody UserDto userDto) throws DuplicateUsernameException {
-        return ResponseEntity.ok(new UserDto(userManagementService.addUser(userDto)));
+    public ResponseEntity<AppUserDto> addUser(@RequestBody AppUserDto appUserDto) throws DuplicateUsernameException {
+        return ResponseEntity.ok(userManagementService.addUser(appUserDto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody UserDto userDto) throws UserNotFoundException, WrongPasswordException {
-        AppUser appUser = userManagementService.login(userDto);
+    public ResponseEntity<Void> login(@RequestBody AppUserDto appUserDto) throws UserNotFoundException, WrongPasswordException {
+        AppUser appUser = userManagementService.login(appUserDto);
 
         //TODO: use AuthUtil here as well
         Map<String, Object> claims = new HashMap<>();

@@ -5,6 +5,7 @@ import com.local.entity.UserType;
 import com.local.exception.service.payment.*;
 import com.local.service.PaymentService;
 import com.local.web.auth.AuthRequired;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,20 +22,20 @@ public class PaymentController {
     }
 
     @AuthRequired(UserType.ADMIN)
-    @PostMapping("/account")
-    public ResponseEntity<BankAccountDto> addBankAccount(@RequestBody BankAccountDto account) throws DuplicateBankAccountException {
+    @PostMapping("/accounts")
+    public ResponseEntity<BankAccountDto> addBankAccount(@Valid @RequestBody BankAccountDto account) throws DuplicateBankAccountException {
         return ResponseEntity.ok(paymentService.addBankAccount(account));
     }
 
     @AuthRequired(UserType.ADMIN)
-    @PostMapping("account/{id}/balance/{amount}")
+    @PostMapping("/accounts/{id}/balance/{amount}")
     public ResponseEntity<Void> addBalance(@PathVariable long id, @PathVariable BigDecimal amount) throws BankAccountNotFoundException {
         paymentService.addBalance(id, amount);
         return ResponseEntity.ok().build();
     }
 
     @AuthRequired(UserType.WEB_USER)
-    @PostMapping("user/pay")
+    @PostMapping("/user/pay")
     public ResponseEntity<Void> accountPay(@RequestAttribute long userId, @RequestBody BankAccountDto account) throws PendingPaymentNotFoundException, InvalidBankAccountException, InsufficientBalanceException, PaymentInProgressException, ExpiredBankAccountException {
         paymentService.accountPay(userId, account);
         return ResponseEntity.ok().build();

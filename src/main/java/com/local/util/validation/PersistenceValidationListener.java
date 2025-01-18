@@ -28,3 +28,4 @@ public class PersistenceValidationListener {
         }
     }
 }
+//FIXME: not applied because validator cannot be injected. maybe it is not needed at all

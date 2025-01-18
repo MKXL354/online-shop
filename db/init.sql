@@ -1,3 +1,5 @@
+--NOTE: This manual script is old and was used before Hibernate entity schema auto-generation
+
 -- ENUMS
 
 create table cart_status(
@@ -94,4 +96,5 @@ create table cards(
 );
 
 -- Initial Data
+
 insert into users values (0, 'admin', 'nn9EysQOvC9Dm5LwpdhgBkrLj6eUwm0E+gxvTU8ZSaA=:4ZFmj0Gd+Ly8zb/okH5AM+kFpraRJrY4qIBT9PKP164=', 'ADMIN');

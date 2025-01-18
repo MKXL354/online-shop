@@ -11,7 +11,7 @@ public class AppUser extends AbstractEntity {
     private String username;
 
     @Column(nullable = false, length = 511)
-    @Convert(converter = PasswordConverter.class)
+//    @Convert(converter = PasswordConverter.class)
     private String password;
 
     @Column(nullable = false)

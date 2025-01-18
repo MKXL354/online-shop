@@ -117,6 +117,8 @@ public class AppConfig {
     }
 }
 
+//FIXME: Database errors not sent over (not caught as ApplicationException)
+
 //TODO: refactor the name of controllers
 
 //TODO: input of controller and service: DTO. output of controller: DTO. output of Service: Entity

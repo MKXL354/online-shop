@@ -1,6 +1,6 @@
 package com.local.service;
 
-import com.local.dto.UserDto;
+import com.local.dto.AppUserDto;
 import com.local.entity.AppUser;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
@@ -27,15 +27,17 @@ public class UserManagementService {
         this.passwordEncryptor = passwordEncryptor;
     }
     
-    public AppUser addUser(UserDto userDto) throws DuplicateUsernameException {
-        if (userRepo.findByUsername(userDto.getUsername()).isPresent()) {
+    public AppUserDto addUser(AppUserDto appUserDto) throws DuplicateUsernameException {
+        if (userRepo.findByUsername(appUserDto.getUsername()).isPresent()) {
             throw new DuplicateUsernameException("duplicate username not allowed", null);
         }
-        return userRepo.save(new AppUser(userDto.getUsername(), userDto.getPassword(), userDto.getUserType()));
+        AppUser appUser = new AppUser(appUserDto.getUsername(), appUserDto.getPassword(), appUserDto.getUserType());
+        userRepo.save(appUser);
+        return new AppUserDto(appUser);
     }
 
-    public AppUser login(UserDto userDto) throws UserNotFoundException, WrongPasswordException {
-        AppUser appUser = userRepo.findByUsername(userDto.getUsername()).orElseThrow(() -> new UserNotFoundException("appUser not found", null));
+    public AppUser login(AppUserDto appUserDto) throws UserNotFoundException, WrongPasswordException {
+        AppUser appUser = userRepo.findByUsername(appUserDto.getUsername()).orElseThrow(() -> new UserNotFoundException("appUser not found", null));
         if (!passwordEncryptor.checkPassword(appUser.getPassword(), appUser.getPassword())) {
             throw new WrongPasswordException("wrong password", null);
         }

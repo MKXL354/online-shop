@@ -16,7 +16,7 @@ public class BankAccount extends AbstractEntity {
     private String number;
 
     @Column(nullable = false, length = 511)
-    @Convert(converter = PasswordConverter.class)
+//    @Convert(converter = PasswordConverter.class)
     private String password;
 
     @Column(nullable = false)

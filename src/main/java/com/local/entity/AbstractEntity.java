@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
-@EntityListeners(PersistenceValidationListener.class)
+//@EntityListeners(PersistenceValidationListener.class)
 @MappedSuperclass
 public class AbstractEntity {
     @Id
