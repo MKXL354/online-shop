@@ -1,5 +1,0 @@
-To add more checked constraints:
-1- Create your constraint as an @annotation and annotate it by @ValidatedBy("full.validator.class.name")
-2- The constraint annotation should have a message("String message to be shown")
-3- Create the validator class by implementing Validator and public isValid(Object)
-Note: This does not work on inherited annotated fields

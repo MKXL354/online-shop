@@ -90,7 +90,7 @@ public class AppConfig {
     @Bean
     public Properties jpaProperties() {
         try {
-            return PropertyManager.loadProperties(env.getProperty("jpa.propertiesLocation"));
+            return PropertyManager.loadProperties(env.getProperty("hibernate.propertiesLocation"));
         } catch (IOException e) {
             throw new ApplicationRuntimeException(e.getMessage(), e);
         }

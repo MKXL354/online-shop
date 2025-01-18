@@ -36,7 +36,7 @@ public class PaymentController {
 
     @AuthRequired(UserType.WEB_USER)
     @PostMapping("/user/pay")
-    public ResponseEntity<Void> accountPay(@RequestAttribute long userId, @Valid @RequestBody BankAccountDto account) throws PendingPaymentNotFoundException, InvalidBankAccountException, InsufficientBalanceException, PaymentInProgressException, ExpiredBankAccountException {
+    public ResponseEntity<Void> accountPay(@RequestAttribute long userId, @Valid @RequestBody BankAccountDto account) throws PendingPaymentNotFoundException, BankAccountNotFoundException, WrongBankAccountPasswordException, InsufficientBalanceException, PaymentInProgressException, ExpiredBankAccountException {
         paymentService.accountPay(userId, account);
         return ResponseEntity.ok().build();
     }

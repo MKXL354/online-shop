@@ -5,8 +5,10 @@ import com.local.entity.BankAccount;
 import com.local.entity.Payment;
 import com.local.entity.PaymentStatus;
 import com.local.exception.service.payment.*;
+import com.local.exception.service.usermanagement.WrongUserPasswordException;
 import com.local.repository.BankAccountRepo;
 import com.local.repository.PaymentRepo;
+import com.local.util.password.PasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +22,15 @@ import java.util.concurrent.ConcurrentMap;
 @Service
 @Transactional
 public class PaymentService {
+    private PasswordEncryptor passwordEncryptor;
     private PaymentRepo paymentRepo;
     private BankAccountRepo bankAccountRepo;
     private ConcurrentMap<Long, Payment> inProgressPayments = new ConcurrentHashMap<>();
+
+    @Autowired
+    public void setPasswordEncryptor(PasswordEncryptor passwordEncryptor) {
+        this.passwordEncryptor = passwordEncryptor;
+    }
 
     @Autowired
     public void setPaymentRepo(PaymentRepo paymentRepo) {
@@ -42,7 +50,8 @@ public class PaymentService {
         if(bankAccountRepo.findByNumber(bankAccountDto.getNumber()).isPresent()){
             throw new DuplicateBankAccountException("duplicate account number not allowed", null);
         }
-        BankAccount bankAccount = bankAccountRepo.save(new BankAccount(bankAccountDto.getNumber(), bankAccountDto.getPassword(), LocalDate.parse(bankAccountDto.getExpiryDate())));
+        String hashedPassword = passwordEncryptor.hashPassword(bankAccountDto.getPassword());
+        BankAccount bankAccount = bankAccountRepo.save(new BankAccount(bankAccountDto.getNumber(), hashedPassword, LocalDate.parse(bankAccountDto.getExpiryDate())));
         bankAccountDto.setId(bankAccount.getId());
         return bankAccountDto;
     }
@@ -53,9 +62,12 @@ public class PaymentService {
         bankAccountRepo.save(bankAccount);
     }
     
-    public void accountPay(long userId, BankAccountDto bankAccountDto) throws PendingPaymentNotFoundException, InvalidBankAccountException, InsufficientBalanceException, ExpiredBankAccountException, PaymentInProgressException {
+    public void accountPay(long userId, BankAccountDto bankAccountDto) throws PendingPaymentNotFoundException, BankAccountNotFoundException, WrongBankAccountPasswordException, InsufficientBalanceException, ExpiredBankAccountException, PaymentInProgressException {
         Payment payment = getPendingPayment(userId);
-        BankAccount actualBankAccount = bankAccountRepo.findByNumberAndPassword(bankAccountDto.getNumber(), bankAccountDto.getPassword()).orElseThrow(() -> new InvalidBankAccountException("invalid bank account details", null));
+        BankAccount actualBankAccount = bankAccountRepo.findByNumber(bankAccountDto.getNumber()).orElseThrow(() -> new BankAccountNotFoundException("invalid bank account details", null));
+        if(!passwordEncryptor.checkPassword(bankAccountDto.getPassword(), actualBankAccount.getPassword())){
+            throw new WrongBankAccountPasswordException("wrong account password", null);
+        }
         if(actualBankAccount.getExpiryDate().isBefore(LocalDate.now())){
             throw new ExpiredBankAccountException("bank account is expired", null);
         }

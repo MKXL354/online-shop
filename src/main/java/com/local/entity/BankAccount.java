@@ -1,8 +1,6 @@
 package com.local.entity;
 
-import com.local.util.password.PasswordConverter;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Pattern;
 
@@ -16,7 +14,6 @@ public class BankAccount extends AbstractEntity {
     private String number;
 
     @Column(nullable = false, length = 511)
-//    @Convert(converter = PasswordConverter.class)
     private String password;
 
     @Column(nullable = false)

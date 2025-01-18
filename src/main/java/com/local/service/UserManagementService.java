@@ -4,7 +4,7 @@ import com.local.dto.AppUserDto;
 import com.local.entity.AppUser;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
-import com.local.exception.service.usermanagement.WrongPasswordException;
+import com.local.exception.service.usermanagement.WrongUserPasswordException;
 import com.local.repository.UserRepo;
 import com.local.util.password.PasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +31,16 @@ public class UserManagementService {
         if (userRepo.findByUsername(appUserDto.getUsername()).isPresent()) {
             throw new DuplicateUsernameException("duplicate username not allowed", null);
         }
-        AppUser appUser = new AppUser(appUserDto.getUsername(), appUserDto.getPassword(), appUserDto.getUserType());
+        String hashedPassword = passwordEncryptor.hashPassword(appUserDto.getPassword());
+        AppUser appUser = new AppUser(appUserDto.getUsername(), hashedPassword, appUserDto.getUserType());
         userRepo.save(appUser);
         return new AppUserDto(appUser);
     }
 
-    public AppUser login(AppUserDto appUserDto) throws UserNotFoundException, WrongPasswordException {
+    public AppUser login(AppUserDto appUserDto) throws UserNotFoundException, WrongUserPasswordException {
         AppUser appUser = userRepo.findByUsername(appUserDto.getUsername()).orElseThrow(() -> new UserNotFoundException("appUser not found", null));
         if (!passwordEncryptor.checkPassword(appUser.getPassword(), appUser.getPassword())) {
-            throw new WrongPasswordException("wrong password", null);
+            throw new WrongUserPasswordException("wrong user password", null);
         }
         return appUser;
     }
