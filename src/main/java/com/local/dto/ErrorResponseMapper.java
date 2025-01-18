@@ -9,13 +9,17 @@ public class ErrorResponseMapper {
         errorResponseMap.put(errorResponseType, errorResponseCode);
     }
 
-    public ErrorResponse createErrorResponse(Exception exception) {
-        String errorResponseType = exception.getClass().getSimpleName();
+    public ErrorResponse createErrorResponse(Throwable throwable) {
+        String errorResponseType = throwable.getClass().getSimpleName();
         Integer statusCode = errorResponseMap.get(errorResponseType);
         if (statusCode == null) {
-            return null;
+            Throwable cause = throwable.getCause();
+            if(cause == null) {
+                return null;
+            }
+            return createErrorResponse(cause);
         }
-        String message = exception.getMessage();
+        String message = throwable.getMessage();
         return new ErrorResponse(statusCode, errorResponseType, message);
     }
 }

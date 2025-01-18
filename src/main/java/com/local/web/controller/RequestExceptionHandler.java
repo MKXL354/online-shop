@@ -2,12 +2,13 @@ package com.local.web.controller;
 
 import com.local.dto.ErrorResponse;
 import com.local.dto.ErrorResponseMapper;
-import com.local.exception.common.ApplicationException;
 import com.local.util.logging.LogLevel;
 import com.local.util.logging.LogObject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,18 +23,23 @@ public class RequestExceptionHandler {
         this.errorResponseMapper = errorResponseMapper;
     }
 
-    @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<ErrorResponse> applicationException(ApplicationException e, HttpServletRequest request) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exception(Exception e, HttpServletRequest request) {
         ErrorResponse errorResponse = errorResponseMapper.createErrorResponse(e);
         if(errorResponse == null){
-            return exception(e, request);
+            new LogObject.Builder().setClientIp(request.getRemoteAddr()).setUrl(request.getRequestURL().toString()).setCode(500).setLevel(LogLevel.ERROR).setThrowable(e).setEndTime(LocalDateTime.now()).build().submit();
+            return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.status(errorResponse.getStatusCode()).body(errorResponse);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> exception(Exception e, HttpServletRequest request) {
-        new LogObject.Builder().setClientIp(request.getRemoteAddr()).setUrl(request.getRequestURL().toString()).setCode(500).setLevel(LogLevel.ERROR).setThrowable(e).setEndTime(LocalDateTime.now()).build().submit();
-        return ResponseEntity.internalServerError().build();
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
+        StringBuilder message = new StringBuilder();
+        e.getBindingResult().getFieldErrors().forEach((fieldError) -> {
+            String fieldMessage = String.format("%s: %s(rejected): %s", fieldError.getField(), fieldError.getRejectedValue(), fieldError.getDefaultMessage());
+            message.append(fieldMessage).append("\n");
+        });
+        return ResponseEntity.status(400).body(new ErrorResponse(400, "NotValidException", message.toString()));
     }
 }
