@@ -6,8 +6,8 @@ import com.local.util.logging.LogLevel;
 import com.local.util.logging.LogObject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,12 +34,17 @@ public class RequestExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         StringBuilder message = new StringBuilder();
         e.getBindingResult().getFieldErrors().forEach((fieldError) -> {
             String fieldMessage = String.format("%s: %s(rejected): %s", fieldError.getField(), fieldError.getRejectedValue(), fieldError.getDefaultMessage());
             message.append(fieldMessage).append("\n");
         });
         return ResponseEntity.status(400).body(new ErrorResponse(400, "NotValidException", message.toString()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> httpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return ResponseEntity.status(400).body(new ErrorResponse(400, "MessageNotReadableException", "message/json is malformed"));
     }
 }
