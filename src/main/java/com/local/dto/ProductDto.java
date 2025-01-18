@@ -3,10 +3,7 @@ package com.local.dto;
 import com.local.entity.Product;
 import com.local.entity.ProductStatus;
 import com.local.entity.ProductType;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
@@ -15,15 +12,15 @@ public class ProductDto extends AbstractDto{
     @Size(max = 50)
     private String name;
 
-    @NotEmpty
+    @NotNull
     @Digits(integer = 12, fraction = 3)
     @Positive
     private BigDecimal price;
 
-    @NotEmpty
+    @NotNull
     private ProductStatus productStatus;
 
-    @NotEmpty
+    @NotNull
     private ProductType productType;
 
     public ProductDto(Product product) {

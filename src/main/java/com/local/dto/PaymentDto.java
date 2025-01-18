@@ -3,29 +3,27 @@ package com.local.dto;
 import com.local.entity.Payment;
 import com.local.entity.PaymentStatus;
 import com.local.util.validation.ValidLocalDateTime;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
 
 public class PaymentDto extends AbstractDto{
-    @NotEmpty
     @PositiveOrZero
     private long userId;
 
-    @NotEmpty
     @PositiveOrZero
     private long cartId;
 
-    @NotEmpty
+    @NotNull
     @Positive
     private BigDecimal amount;
 
     @ValidLocalDateTime
     private String lastUpdateTime;
 
-    @NotEmpty
+    @NotNull
     private PaymentStatus paymentStatus;
 
     public PaymentDto(Payment payment) {

@@ -4,7 +4,6 @@ import com.local.entity.Cart;
 import com.local.entity.CartStatus;
 import com.local.entity.Product;
 import com.local.util.validation.ValidLocalDateTime;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
@@ -12,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CartDto extends AbstractDto{
-    @NotEmpty
     @PositiveOrZero
     private long userId;
 
@@ -22,7 +20,7 @@ public class CartDto extends AbstractDto{
     @ValidLocalDateTime
     private String lastUpdateTime;
 
-    @NotEmpty
+    @NotNull
     private CartStatus cartStatus;
 
     public CartDto(Cart cart) {

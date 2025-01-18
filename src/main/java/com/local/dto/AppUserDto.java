@@ -3,6 +3,7 @@ package com.local.dto;
 import com.local.entity.AppUser;
 import com.local.entity.UserType;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class AppUserDto extends AbstractDto {
@@ -14,7 +15,7 @@ public class AppUserDto extends AbstractDto {
     @NotEmpty
     private String password;
 
-    @NotEmpty
+    @NotNull
     private UserType userType;
 
     public AppUserDto(AppUser appUser) {

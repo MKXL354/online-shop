@@ -21,7 +21,7 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
-    @AuthRequired(UserType.ADMIN)
+//    @AuthRequired(UserType.ADMIN)
     @PostMapping("/accounts")
     public ResponseEntity<BankAccountDto> addBankAccount(@Valid @RequestBody BankAccountDto account) throws DuplicateBankAccountException {
         return ResponseEntity.ok(paymentService.addBankAccount(account));

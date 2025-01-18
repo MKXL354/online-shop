@@ -110,41 +110,7 @@ public class AppConfig {
     }
 }
 
-//FIXME: Database errors not sent over (not caught as ApplicationException)
-
-//TODO: refactor the name of controllers
-
-//TODO: input of controller and service: DTO. output of controller: DTO. output of Service: Entity
-
-//TODO: dedicated controller for bank account
-
-//TODO: DAOException removed? maybe not bring it back as it is business related
-
-//FIXME: Don't forget to use @Valid in your controllers
-
-//TODO: payment cache?
-
-//TODO: clean up at the end (remove the excluded and extra files)
-
-//TODO: use Hibernate/JPA and Spring's Transaction Manager
-
-//FIXME: Fix the DAO abstract factory to not create all the objects
-
-//FIXME: substitute Set with List and Map with a List of Holder Objects to adhere to conventions
-
-//FIXME: use Spring's validation instead of your own
-
+//TODO: more testing? especially concurrency
+//TODO: refactor the name of controllers and services
 //TODO: go back to constructor DI?
-
 //TODO: switch to Boot and a single application.yml
-
-//TODO: apply Custom AutoClose inside all DBDAOs? -> remove closeConnection() of TransactionManager
-//TODO: one catch block inside DBDAO methods? no waiting for connection exception?
-//TODO: better DAOExceptions being thrown up? as they don't go to the user they can be logged better
-//TODO: DAO to work with ids too(like service)? unified layer interaction, less get methods, faster
-
-//TODO: send entity DTO over the web not the full object
-
-//TODO: lazy fetch on aggregates like Cart and Payment(builder inside commonService)? or JPA?
-
-//TODO: better structure of DB select queries? a fluent, table/DAO specific query constructor? or JOOQ?

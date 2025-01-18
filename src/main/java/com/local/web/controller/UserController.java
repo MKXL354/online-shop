@@ -2,12 +2,10 @@ package com.local.web.controller;
 
 import com.local.dto.AppUserDto;
 import com.local.entity.AppUser;
-import com.local.entity.UserType;
 import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongUserPasswordException;
 import com.local.service.UserManagementService;
-import com.local.web.auth.AuthRequired;
 import com.local.web.auth.UserAuthUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ public class UserController {
         this.userAuthUtil = userAuthUtil;
     }
 
-    @AuthRequired(UserType.ADMIN)
+//    @AuthRequired(UserType.ADMIN)
     @PostMapping("/users")
     public ResponseEntity<AppUserDto> addUser(@Valid @RequestBody AppUserDto appUserDto) throws DuplicateUsernameException {
         return ResponseEntity.ok(userManagementService.addUser(appUserDto));

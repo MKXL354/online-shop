@@ -7,7 +7,6 @@ public class ProductReportDto {
     @NotEmpty
     private String productName;
 
-    @NotEmpty
     @PositiveOrZero
     private int count;
 

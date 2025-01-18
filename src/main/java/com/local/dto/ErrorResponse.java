@@ -10,7 +10,6 @@ public class ErrorResponse {
     @ValidLocalDateTime
     private String timestamp;
 
-    @NotEmpty
     private int statusCode;
 
     @NotEmpty
