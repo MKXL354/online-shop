@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Payment extends AbstractEntity{
     @ManyToOne(optional = false)
-    private User user;
+    private AppUser appUser;
 
     @ManyToOne(optional = false)
     private Cart cart;
@@ -24,12 +24,22 @@ public class Payment extends AbstractEntity{
     @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
-    public User getUser() {
-        return user;
+    public Payment() {}
+
+    public Payment(AppUser appUser, Cart cart, BigDecimal amount, LocalDateTime lastUpdateTime, PaymentStatus paymentStatus) {
+        this.appUser = appUser;
+        this.cart = cart;
+        this.amount = amount;
+        this.lastUpdateTime = lastUpdateTime;
+        this.paymentStatus = paymentStatus;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public AppUser getUser() {
+        return appUser;
+    }
+
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public Cart getCart() {

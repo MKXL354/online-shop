@@ -1,7 +1,6 @@
 package com.local.web.controller;
 
 import com.local.dto.PaymentDto;
-import com.local.entity.Payment;
 import com.local.entity.UserType;
 import com.local.exception.service.payment.PendingPaymentNotFoundException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
@@ -31,7 +30,7 @@ public class UserPaymentController {
     @AuthRequired(UserType.WEB_USER)
     @GetMapping
     public ResponseEntity<PaymentDto> getPendingPayment(@RequestAttribute long userId) throws PendingPaymentNotFoundException {
-        return ResponseEntity.ok(paymentService.getPendingPayment(userId));
+        return ResponseEntity.ok(new PaymentDto(paymentService.getPendingPayment(userId)));
     }
 
     @AuthRequired(UserType.WEB_USER)

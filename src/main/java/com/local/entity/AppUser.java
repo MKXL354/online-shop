@@ -6,7 +6,7 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 
 @Entity
-public class User extends AbstractEntity {
+public class AppUser extends AbstractEntity {
     @Column(unique = true, nullable = false)
     private String username;
 
@@ -17,9 +17,9 @@ public class User extends AbstractEntity {
     @Column(nullable = false)
     private UserType userType;
 
-    public User() {}
+    public AppUser() {}
 
-    public User(String username, String password, UserType userType) {
+    public AppUser(String username, String password, UserType userType) {
         this.username = username;
         this.password = password;
         this.userType = userType;

@@ -39,7 +39,7 @@ public class UserCartController {
     @AuthRequired(UserType.WEB_USER)
     @GetMapping
     public ResponseEntity<CartDto> getActiveCart(@RequestAttribute int userId) throws UserNotFoundException {
-        return ResponseEntity.ok(commonService.getActiveCart(userId));
+        return ResponseEntity.ok(userService.getActiveCartDto(userId));
     }
 
     @AuthRequired(UserType.WEB_USER)

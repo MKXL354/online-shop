@@ -29,7 +29,7 @@ public class CartDto extends AbstractDto{
         this.id = cart.getId();
         this.userId = cart.getUser().getId();
         this.productIds = new HashSet<>();
-        for (Product product : cart.getProducts()) {
+        for (Product product : cart.getProducts().values()) {
             this.productIds.add(product.getId());
         }
         this.cartStatus = cart.getCartStatus();

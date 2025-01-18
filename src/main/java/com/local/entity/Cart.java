@@ -1,21 +1,18 @@
 package com.local.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 public class Cart extends AbstractEntity {
     @ManyToOne(optional = false)
-    private User user;
+    private AppUser appUser;
 
-    @OneToMany
-    private Set<Product> products = new HashSet<>();
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Map<Long, Product> products = new HashMap<>();
 
     @Column(nullable = false)
     private LocalDateTime lastUpdateTime;
@@ -23,19 +20,27 @@ public class Cart extends AbstractEntity {
     @Column(nullable = false)
     private CartStatus cartStatus;
 
-    public User getUser() {
-        return user;
+    public Cart() {}
+
+    public Cart(AppUser appUser) {
+        this.appUser = appUser;
+        this.lastUpdateTime = LocalDateTime.now();
+        this.cartStatus = CartStatus.ACTIVE;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public Set<Product> getProducts() {
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
+    }
+
+    public Map<Long, Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<Product> products) {
+    public void setProducts(Map<Long, Product> products) {
         this.products = products;
     }
 

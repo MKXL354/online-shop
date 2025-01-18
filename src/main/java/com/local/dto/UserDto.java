@@ -1,6 +1,6 @@
 package com.local.dto;
 
-import com.local.entity.User;
+import com.local.entity.AppUser;
 import com.local.entity.UserType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -17,11 +17,11 @@ public class UserDto extends AbstractDto {
     @NotEmpty
     private UserType userType;
 
-    public UserDto(User user) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.userType = user.getUserType();
+    public UserDto(AppUser appUser) {
+        this.id = appUser.getId();
+        this.username = appUser.getUsername();
+        this.password = appUser.getPassword();
+        this.userType = appUser.getUserType();
     }
 
     public String getUsername() {

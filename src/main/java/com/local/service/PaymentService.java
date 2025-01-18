@@ -35,7 +35,7 @@ public class PaymentService {
     }
 
     public Payment getPendingPayment(long userId) throws PendingPaymentNotFoundException {
-        return paymentRepo.findPaymentByUserIdAndPaymentStatus(userId, PaymentStatus.PENDING).orElseThrow(() -> new PendingPaymentNotFoundException("no active payment found", null));
+        return paymentRepo.findPaymentByAppUserIdAndPaymentStatus(userId, PaymentStatus.PENDING).orElseThrow(() -> new PendingPaymentNotFoundException("no active payment found", null));
     }
     
     public BankAccountDto addBankAccount(BankAccountDto bankAccountDto) throws DuplicateBankAccountException {

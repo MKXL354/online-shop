@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Long> {
@@ -17,4 +18,6 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     @Query("select p.name, count(p) as quantity from Product p where p.productStatus = :productStatus group by p.name order by quantity desc")
     List<ProductReportDto> findAllByProductStatus(ProductStatus productStatus);
+
+    Optional<Product> findByNameAndProductStatus(String name, ProductStatus productStatus);
 }
