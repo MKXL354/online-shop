@@ -8,6 +8,7 @@ import com.local.entity.UserType;
 import com.local.exception.service.productmanagement.ProductNotFoundException;
 import com.local.service.ProductManagementService;
 import com.local.web.auth.AuthRequired;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class ProductController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping
-    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> addProduct(@Valid @RequestBody ProductDto productDto) {
         return ResponseEntity.ok(productManagementService.addProduct(productDto));
     }
 

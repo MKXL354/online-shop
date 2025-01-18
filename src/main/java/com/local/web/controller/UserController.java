@@ -9,6 +9,7 @@ import com.local.exception.service.usermanagement.WrongPasswordException;
 import com.local.service.UserManagementService;
 import com.local.util.token.TokenManager;
 import com.local.web.auth.AuthRequired;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,12 +36,12 @@ public class UserController {
 
     @AuthRequired(UserType.ADMIN)
     @PostMapping("/users")
-    public ResponseEntity<AppUserDto> addUser(@RequestBody AppUserDto appUserDto) throws DuplicateUsernameException {
+    public ResponseEntity<AppUserDto> addUser(@Valid @RequestBody AppUserDto appUserDto) throws DuplicateUsernameException {
         return ResponseEntity.ok(userManagementService.addUser(appUserDto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody AppUserDto appUserDto) throws UserNotFoundException, WrongPasswordException {
+    public ResponseEntity<Void> login(@Valid @RequestBody AppUserDto appUserDto) throws UserNotFoundException, WrongPasswordException {
         AppUser appUser = userManagementService.login(appUserDto);
 
         //TODO: use AuthUtil here as well
