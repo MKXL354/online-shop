@@ -33,4 +33,8 @@ public class UserAuthUtil {
         }
         throw new InvalidTokenException("invalid claims", null);
     }
+
+    public String getToken(Map<String, Object> claims) {
+        return tokenManager.getToken(claims);
+    }
 }

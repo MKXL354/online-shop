@@ -44,7 +44,7 @@ public class RequestExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> httpMessageNotReadableException(HttpMessageNotReadableException e) {
+    public ResponseEntity<ErrorResponse> httpMessageNotReadableException() {
         return ResponseEntity.status(400).body(new ErrorResponse(400, "MessageNotReadableException", "message/json is malformed"));
     }
 }

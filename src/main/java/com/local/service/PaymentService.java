@@ -5,7 +5,6 @@ import com.local.entity.BankAccount;
 import com.local.entity.Payment;
 import com.local.entity.PaymentStatus;
 import com.local.exception.service.payment.*;
-import com.local.exception.service.usermanagement.WrongUserPasswordException;
 import com.local.repository.BankAccountRepo;
 import com.local.repository.PaymentRepo;
 import com.local.util.password.PasswordEncryptor;

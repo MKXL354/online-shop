@@ -5,8 +5,6 @@ import com.local.exception.common.ApplicationRuntimeException;
 import com.local.util.property.PropertyManager;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,11 +107,6 @@ public class AppConfig {
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
-    }
-
-    @Bean
-    public Validator validator(){
-        return Validation.buildDefaultValidatorFactory().getValidator();
     }
 }
 

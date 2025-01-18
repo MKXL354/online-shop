@@ -41,4 +41,3 @@ public class PaymentController {
         return ResponseEntity.ok().build();
     }
 }
-//TODO: controller validation

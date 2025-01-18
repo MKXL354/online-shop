@@ -7,8 +7,8 @@ import com.local.exception.service.usermanagement.DuplicateUsernameException;
 import com.local.exception.service.usermanagement.UserNotFoundException;
 import com.local.exception.service.usermanagement.WrongUserPasswordException;
 import com.local.service.UserManagementService;
-import com.local.util.token.TokenManager;
 import com.local.web.auth.AuthRequired;
+import com.local.web.auth.UserAuthUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import java.util.Map;
 @RestController
 public class UserController {
     private UserManagementService userManagementService;
-    private TokenManager tokenManager;
+    private UserAuthUtil userAuthUtil;
 
     @Autowired
     public void setUserManagementService(UserManagementService userManagementService) {
@@ -30,8 +30,8 @@ public class UserController {
     }
 
     @Autowired
-    public void setTokenManager(TokenManager tokenManager) {
-        this.tokenManager = tokenManager;
+    public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
+        this.userAuthUtil = userAuthUtil;
     }
 
     @AuthRequired(UserType.ADMIN)
@@ -44,11 +44,10 @@ public class UserController {
     public ResponseEntity<Void> login(@Valid @RequestBody AppUserDto appUserDto) throws UserNotFoundException, WrongUserPasswordException {
         AppUser appUser = userManagementService.login(appUserDto);
 
-        //TODO: use AuthUtil here as well
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", appUser.getUserType());
         claims.put("userId", appUser.getId());
-        String jws = tokenManager.getToken(claims);
+        String jws = userAuthUtil.getToken(claims);
 
         return ResponseEntity.ok().header("Authorization", jws).build();
     }
