@@ -76,7 +76,7 @@ public class UserService {
         if (paymentRepo.findPaymentByAppUserIdAndPaymentStatus(userId, PaymentStatus.PENDING).isPresent()) {
             throw new PreviousPaymentPendingException("a previous payment is pending", null);
         }
-        Product product = productRepo.findByNameAndProductStatus(productName, ProductStatus.AVAILABLE).orElseThrow(() -> new ProductNotFoundException("product not found", null));
+        Product product = productRepo.findTopByNameAndProductStatus(productName, ProductStatus.AVAILABLE).orElseThrow(() -> new ProductNotFoundException("product not found", null));
         product.setProductStatus(ProductStatus.RESERVED);
         productRepo.save(product);
 

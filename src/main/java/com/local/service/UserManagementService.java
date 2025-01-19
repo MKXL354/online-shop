@@ -38,10 +38,10 @@ public class UserManagementService {
     }
 
     public AppUser login(AppUserDto appUserDto) throws UserNotFoundException, WrongUserPasswordException {
-        AppUser appUser = userRepo.findByUsername(appUserDto.getUsername()).orElseThrow(() -> new UserNotFoundException("appUser not found", null));
-        if (!passwordEncryptor.checkPassword(appUser.getPassword(), appUser.getPassword())) {
+        AppUser actualUser = userRepo.findByUsername(appUserDto.getUsername()).orElseThrow(() -> new UserNotFoundException("appUser not found", null));
+        if (!passwordEncryptor.checkPassword(appUserDto.getPassword(), actualUser.getPassword())) {
             throw new WrongUserPasswordException("wrong user password", null);
         }
-        return appUser;
+        return actualUser;
     }
 }

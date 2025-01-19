@@ -16,8 +16,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query("select new com.local.dto.ProductDto(p) from Product p")
     List<ProductDto> findAllDto();
 
-    @Query("select p.name, count(p) as quantity from Product p where p.productStatus = :productStatus group by p.name order by quantity desc")
+    @Query("select new com.local.dto.ProductReportDto(p.name, count(p)) from Product p where p.productStatus = :productStatus group by p.name order by count(p) desc")
     List<ProductReportDto> findAllByProductStatus(ProductStatus productStatus);
 
-    Optional<Product> findByNameAndProductStatus(String name, ProductStatus productStatus);
+    Optional<Product> findTopByNameAndProductStatus(String name, ProductStatus productStatus);
 }

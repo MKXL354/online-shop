@@ -8,9 +8,9 @@ public class ProductReportDto {
     private String productName;
 
     @PositiveOrZero
-    private int count;
+    private long count;
 
-    public ProductReportDto(String productName, int count) {
+    public ProductReportDto(String productName, long count) {
         this.productName = productName;
         this.count = count;
     }
@@ -23,11 +23,11 @@ public class ProductReportDto {
         this.productName = productName;
     }
 
-    public int getCount() {
+    public long getCount() {
         return count;
     }
     
-    public void setCount(int count) {
+    public void setCount(long count) {
         this.count = count;
     }
 }
