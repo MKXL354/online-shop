@@ -3,7 +3,6 @@ package com.local.util.logging;
 import java.time.LocalDateTime;
 
 public class LogObject {
-    private LogManager logManager = LogManager.getInstance();
     private String clientIp;
     private String url;
     private LocalDateTime startTime;
@@ -44,10 +43,6 @@ public class LogObject {
 
     public Throwable getThrowable() {
         return throwable;
-    }
-
-    public void submit(){
-        logManager.submit(this);
     }
 
     @Override

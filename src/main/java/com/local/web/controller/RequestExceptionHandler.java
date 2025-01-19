@@ -3,6 +3,7 @@ package com.local.web.controller;
 import com.local.dto.ErrorResponse;
 import com.local.dto.ErrorResponseMapper;
 import com.local.util.logging.LogLevel;
+import com.local.util.logging.LogManager;
 import com.local.util.logging.LogObject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,13 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class RequestExceptionHandler {
+    private LogManager logManager;
     private ErrorResponseMapper errorResponseMapper;
+
+    @Autowired
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
 
     @Autowired
     public void setErrorResponseMapper(ErrorResponseMapper errorResponseMapper) {
@@ -27,7 +34,7 @@ public class RequestExceptionHandler {
     public ResponseEntity<ErrorResponse> exception(Exception e, HttpServletRequest request) {
         ErrorResponse errorResponse = errorResponseMapper.createErrorResponse(e);
         if(errorResponse == null){
-            new LogObject.Builder().setClientIp(request.getRemoteAddr()).setUrl(request.getRequestURL().toString()).setCode(500).setLevel(LogLevel.ERROR).setThrowable(e).setEndTime(LocalDateTime.now()).build().submit();
+            logManager.submit(new LogObject.Builder().setClientIp(request.getRemoteAddr()).setUrl(request.getRequestURL().toString()).setCode(500).setLevel(LogLevel.ERROR).setThrowable(e).setEndTime(LocalDateTime.now()).build());
             return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.status(errorResponse.getStatusCode()).body(errorResponse);

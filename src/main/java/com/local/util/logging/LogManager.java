@@ -1,6 +1,11 @@
 package com.local.util.logging;
 
 import com.local.exception.common.ApplicationRuntimeException;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -14,6 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class LogManager {
     private String outputDirectory;
     private long maxWaitTimeMillis;
@@ -21,26 +27,22 @@ public class LogManager {
     private ScheduledExecutorService executorService;
     private Deque<LogObject> logs = new ConcurrentLinkedDeque<>();
 
-    private LogManager(){}
-    private static class SingletonHelper{
-        private static final LogManager INSTANCE = new LogManager();
-    }
-    public static LogManager getInstance() {
-        return SingletonHelper.INSTANCE;
-    }
-
-    public void setOutputDirectory(String outputDirectory) {
+    @Autowired
+    public void setOutputDirectory(@Value("${log.output}") String outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
 
-    public void setMaxWaitTimeMillis(long maxWaitTimeMillis) {
-        this.maxWaitTimeMillis = maxWaitTimeMillis;
-    }
-
-    public void setMaxLogsToWrite(int maxLogsToWrite) {
+    @Autowired
+    public void setMaxLogsToWrite(@Value("${log.maxLogsToWrite}") int maxLogsToWrite) {
         this.maxLogsToWrite = maxLogsToWrite;
     }
 
+    @Autowired
+    public void setMaxWaitTimeMillis(@Value("${log.maxWaitTimeMillis}") long maxWaitTimeMillis) {
+        this.maxWaitTimeMillis = maxWaitTimeMillis;
+    }
+
+    @PostConstruct
     public void start(){
         Path path = Path.of(outputDirectory);
         if(!Files.isDirectory(path)){
@@ -59,6 +61,7 @@ public class LogManager {
         logs.addLast(logObject);
     }
 
+    @PreDestroy
     public void stop(){
         executorService.shutdownNow();
         this.maxLogsToWrite = logs.size();
