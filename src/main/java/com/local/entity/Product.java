@@ -2,6 +2,8 @@ package com.local.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 import java.math.BigDecimal;
 
@@ -14,9 +16,11 @@ public class Product extends AbstractEntity{
     private BigDecimal price;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ProductType productType;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
     public Product() {}

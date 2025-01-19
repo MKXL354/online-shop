@@ -1,8 +1,6 @@
 package com.local.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,6 +20,7 @@ public class Payment extends AbstractEntity{
     private LocalDateTime lastUpdateTime;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
     public Payment() {}

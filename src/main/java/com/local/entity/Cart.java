@@ -18,6 +18,7 @@ public class Cart extends AbstractEntity {
     private LocalDateTime lastUpdateTime;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private CartStatus cartStatus;
 
     public Cart() {}

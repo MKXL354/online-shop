@@ -2,6 +2,8 @@ package com.local.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Entity
 public class AppUser extends AbstractEntity {
@@ -12,6 +14,7 @@ public class AppUser extends AbstractEntity {
     private String password;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserType userType;
 
     public AppUser() {}
