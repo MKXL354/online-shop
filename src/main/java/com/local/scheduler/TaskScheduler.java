@@ -1,6 +1,7 @@
 package com.local.scheduler;
 
 import com.local.util.logging.LogLevel;
+import com.local.util.logging.LogManager;
 import com.local.util.logging.LogObject;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -14,9 +15,15 @@ import java.util.concurrent.*;
 
 @Component
 public class TaskScheduler {
+    private LogManager logManager;
     private int poolSize;
     private ScheduledExecutorService scheduler;
     private Set<Callable<?>> remainingTasks = ConcurrentHashMap.newKeySet();
+
+    @Autowired
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
 
     @Autowired
     public void setPoolSize(@Value("${scheduler.poolSize}") int poolSize) {
@@ -35,10 +42,12 @@ public class TaskScheduler {
         remainingTasks.forEach(executorService::submit);
         executorService.shutdown();
         try {
-            executorService.awaitTermination(24, TimeUnit.HOURS);
+            executorService.awaitTermination(15, TimeUnit.MINUTES);
+            executorService.shutdownNow();
         } catch (InterruptedException e) {
             executorService.shutdownNow();
         }
+        executorService.close();
     }
 
     public void submitTask(Callable<?> task, long delayMillis){
@@ -48,9 +57,8 @@ public class TaskScheduler {
                 task.call();
                 remainingTasks.remove(task);
             } catch (Exception e) {
-                new LogObject.Builder().setLevel(LogLevel.ERROR).setThrowable(e).setEndTime(LocalDateTime.now()).build().submit();
+                logManager.submit(new LogObject.Builder().setLevel(LogLevel.ERROR).setThrowable(e).setEndTime(LocalDateTime.now()).build());
             }
         }, delayMillis, TimeUnit.MILLISECONDS);
     }
 }
-//TODO: maybe add pre-mature cancellation(if succeeded in services)

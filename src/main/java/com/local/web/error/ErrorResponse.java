@@ -1,4 +1,4 @@
-package com.local.dto;
+package com.local.web.error;
 
 import com.local.util.validation.ValidLocalDateTime;
 import jakarta.validation.constraints.NotEmpty;

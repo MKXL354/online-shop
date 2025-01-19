@@ -1,4 +1,4 @@
-package com.local.dto;
+package com.local.web.error;
 
 import java.util.concurrent.ConcurrentHashMap;
 
