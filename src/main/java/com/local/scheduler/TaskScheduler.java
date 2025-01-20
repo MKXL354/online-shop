@@ -39,11 +39,19 @@ public class TaskScheduler {
     public void stop(){
         scheduler.shutdownNow();
         ExecutorService executorService = Executors.newCachedThreadPool();
-        remainingTasks.forEach(executorService::submit);
+        remainingTasks.forEach((task) -> executorService.submit(() -> {
+            try {
+                task.call();
+            } catch (Exception e) {
+                logManager.submit(new LogObject.Builder().setLevel(LogLevel.ERROR).setThrowable(e).setEndTime(LocalDateTime.now()).build());
+            }
+
+        }));
         executorService.shutdown();
         try {
-            executorService.awaitTermination(15, TimeUnit.MINUTES);
-            executorService.shutdownNow();
+            if(!executorService.awaitTermination(15, TimeUnit.MINUTES)){
+                executorService.shutdownNow();
+            }
         } catch (InterruptedException e) {
             executorService.shutdownNow();
         }
@@ -54,9 +62,10 @@ public class TaskScheduler {
         remainingTasks.add(task);
         scheduler.schedule(() -> {
             try {
-                task.call();
                 remainingTasks.remove(task);
+                task.call();
             } catch (Exception e) {
+                remainingTasks.add(task);
                 logManager.submit(new LogObject.Builder().setLevel(LogLevel.ERROR).setThrowable(e).setEndTime(LocalDateTime.now()).build());
             }
         }, delayMillis, TimeUnit.MILLISECONDS);
