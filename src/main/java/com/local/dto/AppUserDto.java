@@ -2,17 +2,17 @@ package com.local.dto;
 
 import com.local.entity.AppUser;
 import com.local.entity.UserType;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class AppUserDto extends AbstractDto {
     @Size(max = 255)
-    @NotEmpty
+    @NotBlank
     private String username;
 
     @Size(max = 64)
-    @NotEmpty
+    @NotBlank
     private String password;
 
     @NotNull

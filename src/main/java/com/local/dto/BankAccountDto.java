@@ -2,20 +2,20 @@ package com.local.dto;
 
 import com.local.entity.BankAccount;
 import com.local.util.validation.ValidLocalDate;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class BankAccountDto extends AbstractDto{
     @Pattern(regexp = "\\d{16}", message = "invalid format. Expected format is 16 digits")
-    @NotEmpty
+    @NotBlank
     private String number;
 
     @Size(max = 64)
-    @NotEmpty
+    @NotBlank
     private String password;
 
-    @NotEmpty
+    @NotBlank
     @ValidLocalDate
     private String expiryDate;
 

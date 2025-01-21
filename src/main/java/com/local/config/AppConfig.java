@@ -110,8 +110,9 @@ public class AppConfig {
     }
 }
 
-//FIXME: pre destroy not working for the log manager. database bean in closed before queries being run
 //TODO: more testing? especially concurrency
+//TODO: @Retry for automatic optimistic retries?
 //TODO: refactor the web API, controller and service names
+//TODO: outsource all the hard-coded string messages to a properties file
 //TODO: revert to constructor DI?
 //TODO: switch to Boot and a single application.yml

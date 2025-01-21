@@ -8,7 +8,7 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 public class ProductDto extends AbstractDto{
-    @NotEmpty
+    @NotBlank
     @Size(max = 50)
     private String name;
 

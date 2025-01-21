@@ -1,18 +1,18 @@
 package com.local.web.error;
 
 import com.local.util.validation.ValidLocalDateTime;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 
 public class ErrorResponse {
-    @NotEmpty
+    @NotBlank
     @ValidLocalDateTime
     private String timestamp;
 
     private int statusCode;
 
-    @NotEmpty
+    @NotBlank
     private String errorResponseType;
 
     private String message;
